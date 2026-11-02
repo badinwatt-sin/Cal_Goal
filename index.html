@@ -286,7 +286,7 @@ input[type=range]{width:100%;accent-color:var(--lime);padding:0;background:none;
 .obopt[aria-pressed="true"]{background:var(--lime);color:var(--on-accent);box-shadow:2px 2px 0 var(--shadow)}
 .seg button[disabled]{opacity:.4}
 /* ===== Dark sport theme ===== */
-html{scroll-behavior:smooth}
+html{scroll-behavior:auto}
 h1,h2,h3{font-style:italic;font-weight:600;letter-spacing:-.01em}
 .card{border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 30px var(--shadow)}
 .btn{border:0;border-radius:16px;font-style:italic;letter-spacing:0;background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent);box-shadow:0 6px 16px color-mix(in srgb,var(--lime) 30%,transparent);transition:transform .15s,box-shadow .2s,filter .2s}
@@ -447,6 +447,27 @@ body.beep-open .beep-dock{opacity:0;pointer-events:none;transform:scale(.6)}
 .beep-dock{transition:top .25s ease,opacity .2s,transform .2s}
 @media (prefers-reduced-motion:reduce){.bbody,.bhand,.blid,.bshd{animation:none!important}}
 .srcb{display:inline-block;font-size:10.5px;font-weight:600;padding:0 6px;border-radius:999px;background:var(--tint);color:var(--lime);line-height:1.6}
+
+/* ===== ลื่นขึ้น: ไม่ซูม ไม่กระตุก, หน้าค้นหาเต็มจอ ===== */
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,input,select,textarea,.food,.chip{touch-action:manipulation}
+input,select,textarea{font-size:16px!important}
+#app:not(.enter) .mascot{animation:none}
+body.sheet-open{overflow:hidden}
+#sheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#sheetWrap.full{align-items:stretch;top:var(--vvt,0px);bottom:auto;height:var(--vvh,100dvh)}
+#sheetWrap.full #sheet{max-height:none;height:100%;border-radius:0;border:0;overflow:hidden;padding-top:calc(12px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:10px;animation:fadeIn .2s}
+#sheet .sh-top{flex:none;display:flex;flex-direction:column;gap:10px}
+#sheet .sh-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+#sheet.searching .collapse{display:none!important}
+.sbox{position:relative}
+.sbox input{padding:12px 44px 12px 42px;border-radius:16px}
+.sbox .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;opacity:.8}
+.sbox .sx{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:var(--soft);color:var(--mute);font-size:14px}
+.sbox .sx[hidden]{display:none}
+.rcount{font-size:12.5px;color:var(--mute);padding:0 2px}
+mark.hit{background:color-mix(in srgb,var(--lime) 35%,transparent);color:inherit;border-radius:4px;padding:0 1px}
+.results .food{padding:12px 14px}
 </style>
 
 </head>
@@ -1453,7 +1474,7 @@ function accountCard(){
 }
 /* ---------- avatar picker, Beep chat, PWA install ---------- */
 const EMOJIS=['🐶','🐱','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐸','🐵','🐧','🐥','🦄','🐷','🐹','🐙','🦖','🍓','🌈'];
-function openAvatar(){ui.sh={mode:'avatar'};$('#sheetWrap').classList.add('open');renderSheet()}
+function openAvatar(){ui.sh={mode:'avatar'};$('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');renderSheet()}
 function renderAvatarSheet(){
   $('#sheet').innerHTML=`<div class="row between"><h2>รูปโปรไฟล์</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
   <div style="display:grid;place-items:center">${avatarHTML('big')}</div>
@@ -1678,7 +1699,7 @@ function renderMain(){
   const sy=window.scrollY,changed=ui._rt!==ui.tab;ui._rt=ui.tab;
   $('#app').classList.toggle('enter',changed);
   $('#app').innerHTML=VIEWS[ui.tab]()+tabbar();
-  window.scrollTo(0,sy);
+  window.scrollTo({top:sy,left:0,behavior:'instant'});
   avLife();
 }
 
@@ -1686,24 +1707,39 @@ function renderMain(){
 function openAdd(meal,ask){
   ui.sh={meal:meal,step:ask?'meal':'choose',tab:'search',cat:'ทั้งหมด',q:'',sel:null,qty:1,
     ai:{text:'',img:null,blob:null,loading:false,items:null,err:'',note:''},cu:{name:'',kcal:'',p:'',c:'',f:'',keep:true}};
-  $('#sheetWrap').classList.add('open');renderSheet();
+  $('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');renderSheet();
 }
-function closeSheet(){ui.sh=null;$('#sheetWrap').classList.remove('open');$('#sheet').innerHTML=''}
+function closeSheet(){ui.sh=null;document.body.classList.remove('sheet-open');$('#sheetWrap').classList.remove('open','full');$('#sheet').innerHTML=''}
 function foodPool(){return FOODS.concat(S.custom.map(c=>({...c,cat:'ของฉัน'})))}
 function foodMatches(){
   const sh=ui.sh,toks=sh.q.toLowerCase().split(/\s+/).filter(Boolean);
   let pool=foodPool();
   if(sh.cat==='ล่าสุด'){pool=S.recent.map(n=>pool.find(f=>f.name===n)).filter(Boolean)}
   else if(sh.cat!=='ทั้งหมด')pool=pool.filter(f=>f.cat===sh.cat);
-  if(toks.length)pool=pool.filter(f=>toks.every(t=>(f.name+' '+f.cat+' '+(f.en||'')).toLowerCase().includes(t)));
+  if(toks.length){
+    pool=pool.filter(f=>toks.every(t=>(f.name+' '+f.cat+' '+(f.en||'')).toLowerCase().includes(t)));
+    const q0=toks[0];
+    const score=f=>{const n=f.name.toLowerCase();let s=n.startsWith(q0)?0:n.includes(q0)?1:(f.en||'').toLowerCase().includes(q0)?3:2;if(!f.src)s-=0.5;return s*1000+n.length};
+    pool=pool.map(f=>[score(f),f]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+  }
   return pool;
 }
+function hl(name){
+  const q=(ui.sh&&ui.sh.q||'').trim().split(/\s+/)[0];let e=esc(name);
+  if(!q)return e;const i=name.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0)return e;return esc(name.slice(0,i))+'<mark class="hit">'+esc(name.slice(i,i+q.length))+'</mark>'+esc(name.slice(i+q.length));
+}
+function countText(){const n=foodMatches().length;return ui.sh.q.trim()?`พบ ${fmt(n)} รายการ`:`${fmt(n)} รายการ${n>80?' · พิมพ์เพื่อค้นหา':''}`}
 function foodRows(){
   const m=foodMatches();
   if(!m.length)return `<p class="empty">ไม่เจอเมนูนี้ ลองให้ AI ประเมินจากชื่อหรือรูป หรือเพิ่มเองในแท็บ “กำหนดเอง”</p>`;
-  return m.slice(0,80).map((f,i)=>`<button class="food" data-act="pickFood" data-n="${esc(f.name)}"><div class="grow"><div class="nm" style="font-weight:500">${CE[f.cat]||'🍽️'} ${esc(f.name)}</div><div class="tiny mute">${esc(f.serving)} · ${esc(f.cat)}${f.src?` · <span class="srcb">${f.src==='N'?'ฉลากผู้ผลิต':'กรมอนามัย'}</span>`:''}</div></div><span class="kc">${fmt(f.kcal)} <span class="tiny mute">kcal</span></span></button>`).join('')+(m.length>80?`<p class="tiny mute" style="text-align:center">แสดง 80 รายการแรก พิมพ์ค้นหาเพิ่มเติมได้</p>`:'');
+  return m.slice(0,80).map((f,i)=>`<button class="food" data-act="pickFood" data-n="${esc(f.name)}"><div class="grow"><div class="nm" style="font-weight:500">${CE[f.cat]||'🍽️'} ${hl(f.name)}</div><div class="tiny mute">${esc(f.serving)} · ${esc(f.cat)}${f.src?` · <span class="srcb">${f.src==='N'?'ฉลากผู้ผลิต':'กรมอนามัย'}</span>`:''}</div></div><span class="kc">${fmt(f.kcal)} <span class="tiny mute">kcal</span></span></button>`).join('')+(m.length>80?`<p class="tiny mute" style="text-align:center">แสดง 80 รายการแรก พิมพ์ค้นหาเพิ่มเติมได้</p>`:'');
 }
-function renderResults(){const r=$('#results');if(r)r.innerHTML=foodRows()}
+function renderResults(){
+  const r=$('#results');if(!r)return;r.innerHTML=foodRows();r.scrollTop=0;
+  const c=$('#rcount');if(c)c.textContent=countText();
+  const x=document.querySelector('.sbox .sx');if(x)x.hidden=!ui.sh.q;
+}
 function aiTotal(){const it=ui.sh.ai.items||[];return it.reduce((a,x)=>a+(+x.kcal||0),0)}
 
 function renderSheet(){
@@ -1717,7 +1753,7 @@ function renderSheet(){
     return;
   }
   let h=`<div class="row between"><h2>เพิ่มอาหาร</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
-  <div class="chips" role="group" aria-label="มื้อ">${MEALS.map(m=>`<button class="chip" data-act="setMeal" data-v="${m[0]}" aria-pressed="${sh.meal===m[0]}">${m[2]} ${m[1]}</button>`).join('')}</div>`;
+  <div class="chips collapse" role="group" aria-label="มื้อ">${MEALS.map(m=>`<button class="chip" data-act="setMeal" data-v="${m[0]}" aria-pressed="${sh.meal===m[0]}">${m[2]} ${m[1]}</button>`).join('')}</div>`;
   if(sh.step==='choose'){
     h+=`<p class="small mute">เพิ่มอาหารด้วยวิธีไหนดี</p>
     <button class="choice" data-act="pickMode" data-v="search"><span class="ci">🔍</span><span class="grow"><b>เลือกจากเมนูในแอป</b><small>ค้นหาเมนูไทยและนานาชาติ ${FOODS.length}+ รายการ</small></span><span>›</span></button>
@@ -1726,7 +1762,7 @@ function renderSheet(){
     $('#sheet').innerHTML=h;return;
   }
   h+=`
-  <div class="seg"><button data-act="shTab" data-v="search" aria-pressed="${sh.tab==='search'}">ค้นหาเมนู</button><button data-act="shTab" data-v="ai" aria-pressed="${sh.tab==='ai'}">ถ่ายรูป / AI</button><button data-act="shTab" data-v="custom" aria-pressed="${sh.tab==='custom'}">กำหนดเอง</button></div>`;
+  <div class="seg collapse"><button data-act="shTab" data-v="search" aria-pressed="${sh.tab==='search'}">ค้นหาเมนู</button><button data-act="shTab" data-v="ai" aria-pressed="${sh.tab==='ai'}">ถ่ายรูป / AI</button><button data-act="shTab" data-v="custom" aria-pressed="${sh.tab==='custom'}">กำหนดเอง</button></div>`;
   if(sh.tab==='search'){
     if(sh.sel){
       const f=sh.sel,q=sh.qty;
@@ -1735,9 +1771,10 @@ function renderSheet(){
       <div class="eq"><div><span class="tiny mute">พลังงาน</span><b id="pvK">${fmt(f.kcal*q)}</b></div>${f.nomac?`<div><span class="tiny mute">ปริมาณรวม</span><b id="pvG">${f.g?fmt(f.g*q)+' ก.':'—'}</b></div><div><span class="tiny mute">สารอาหาร</span><b style="font-size:13px">ไม่มีข้อมูล</b></div>`:`<div><span class="tiny mute">โปรตีน</span><b id="pvP">${Math.round(f.p*q)}g</b></div><div><span class="tiny mute">คาร์บ/ไขมัน</span><b id="pvCF">${Math.round(f.c*q)}/${Math.round(f.f*q)}g</b></div>`}</div>
       <button class="btn" data-act="confirmFood">เพิ่มลง${esc(MEALS.find(m=>m[0]===sh.meal)[1])}</button></div>`;
     }else{
-      h+=`<input type="text" id="q" data-model="sh.q" data-after="results" placeholder="ค้นหา เช่น กะเพรา, ชานม, ซูชิ" value="${esc(sh.q)}" aria-label="ค้นหาเมนู" autocomplete="off">
-      <div class="chips" role="group" aria-label="หมวด">${['ทั้งหมด','ล่าสุด','ของฉัน'].concat(CATS).map(c=>`<button class="chip" data-act="cat" data-v="${esc(c)}" aria-pressed="${sh.cat===c}">${CE[c]||''} ${esc(c)}</button>`).join('')}</div>
-      <div class="results" id="results">${foodRows()}</div>`;
+      h=`<div class="sh-top">${h}<div class="sbox"><span class="si" aria-hidden="true">🔍</span><input type="text" id="q" data-model="sh.q" data-after="results" placeholder="ค้นหา เช่น กะเพรา, ชานม, tuna" value="${esc(sh.q)}" aria-label="ค้นหาเมนู" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search"><button class="sx" data-act="qClear" aria-label="ล้างคำค้น" ${sh.q?'':'hidden'}>✕</button></div>
+      <div class="chips" id="catChips" role="group" aria-label="หมวด">${['ทั้งหมด','ล่าสุด','ของฉัน'].concat(CATS).map(c=>`<button class="chip" data-act="cat" data-v="${esc(c)}" aria-pressed="${sh.cat===c}">${CE[c]||''} ${esc(c)}</button>`).join('')}</div>
+      <div class="rcount" id="rcount">${countText()}</div></div>
+      <div class="results sh-list" id="results">${foodRows()}</div>`;
     }
   }else if(sh.tab==='ai'){
     const a=sh.ai;
@@ -1763,6 +1800,9 @@ function renderSheet(){
     <button class="btn" data-act="confirmCustom">เพิ่มลง${esc(MEALS.find(m=>m[0]===sh.meal)[1])}</button></div>`;
   }
   $('#sheet').innerHTML=h;
+  const full=sh.tab==='search'&&!sh.sel;
+  $('#sheetWrap').classList.toggle('full',full);$('#sheet').classList.toggle('searching',false);
+  if(full){const ac=$('#catChips [aria-pressed="true"]');if(ac)ac.scrollIntoView({block:'nearest',inline:'center'})}
 }
 
 function pushMeal(o,meal){ui.react='eat';
@@ -1878,6 +1918,7 @@ document.addEventListener('click',e=>{
     case 'close':closeSheet();break;
     case 'setMeal':sh.meal=v;renderSheet();break;
     case 'shTab':sh.tab=v;renderSheet();break;
+    case 'qClear':{ui.sh.q='';const q=$('#q');if(q){q.value='';q.focus()}renderResults();break}
     case 'cat':sh.cat=v;renderSheet();break;
     case 'pickFood':{const f=foodPool().find(x=>x.name===el.dataset.n);if(f){sh.sel=f;sh.qty=1;renderSheet()}break}
     case 'unpick':sh.sel=null;renderSheet();break;
@@ -1965,6 +2006,11 @@ $('#photoCam').addEventListener('change',e=>{onPhoto(e.target.files[0]);e.target
 $('#photoPick').addEventListener('change',e=>{onPhoto(e.target.files[0]);e.target.value=''});
 $('#avatarIn').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
 $('#avatarCam').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
+document.addEventListener('focusin',e=>{if(e.target.id==='q'){const s=$('#sheet');if(s)s.classList.add('searching')}});
+document.addEventListener('focusout',e=>{if(e.target.id==='q'){setTimeout(()=>{const s=$('#sheet');if(s&&document.activeElement&&document.activeElement.id!=='q')s.classList.remove('searching')},120)}});
+function setVV(){const vv=window.visualViewport;const r=document.documentElement.style;r.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px');r.setProperty('--vvt',(vv?vv.offsetTop:0)+'px')}
+if(window.visualViewport){visualViewport.addEventListener('resize',setVV);visualViewport.addEventListener('scroll',setVV)}window.addEventListener('resize',setVV);setVV();
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='q'){e.preventDefault();e.target.blur()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='chatIn'){e.preventDefault();beepSend(e.target.value)}if(e.key==='Escape'&&ui.beepOpen&&!ui.sh)closeBeepPanel()});
 async function doExport(){
   const data=JSON.stringify(S);
