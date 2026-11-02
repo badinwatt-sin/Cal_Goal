@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>แคลพอดี</title>
+<title>Chompy</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1139,7 +1139,7 @@ function obView(){
   const back=st>0?`<button class="btn alt" data-act="obBack">‹ ย้อนกลับ</button>`:'';
   let h=`<div class="ob-dots" role="img" aria-label="ขั้นที่ ${st+1} จาก 5">${dots}</div>`;
   if(st===0){
-    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:24px">สวัสดี! ยินดีต้อนรับสู่ แคลพอดี 👋</h1>
+    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:24px">สวัสดี! ยินดีต้อนรับสู่ Chompy 👋</h1>
     <p class="small mute">ตอบไม่กี่ข้อ แอปจะคำนวณพลังงานและเป้าหมายที่เหมาะกับคุณ ใช้เวลาไม่ถึง 1 นาที ไม่ต้องล็อกอิน</p>
     <label class="f" style="text-align:left">เรียกคุณว่าอะไรดี<input type="text" data-bind="profile.name" maxlength="24" value="${esc(p.name)}" placeholder="เช่น มิ้นท์"></label>
     <div style="text-align:left"><div class="small mute" style="margin-bottom:6px">เพศ (ใช้ในสมการคำนวณพลังงาน)</div><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div>
@@ -1251,7 +1251,7 @@ function authLoading(){return `<div class="card stack" style="text-align:center;
 function loginView(){
   const a=ui.auth||(ui.auth={email:'',code:'',sent:false,busy:false,err:''});
   let h=`<div class="card stack" style="text-align:center;margin-top:24px"><div class="ob-av">${mascot('happy',{id:'l'})}</div>
-  <h1 style="font-size:24px">แคลพอดี</h1><p class="small mute">เข้าสู่ระบบเพื่อเก็บข้อมูลไว้ในบัญชี เปิดใช้ได้ทุกเครื่อง ข้อมูลไม่หาย</p>`;
+  <h1 style="font-size:24px">Chompy</h1><p class="small mute">เข้าสู่ระบบเพื่อเก็บข้อมูลไว้ในบัญชี เปิดใช้ได้ทุกเครื่อง ข้อมูลไม่หาย</p>`;
   if(CFG.google!==false)h+=`<button class="btn" data-act="gLogin" ${a.busy?'disabled':''}>เข้าสู่ระบบด้วย Google</button><div class="small mute">หรือ</div>`;
   if(!a.sent){
     h+=`<label class="f" style="text-align:left">อีเมล<input type="email" id="authEmail" data-model="auth.email" inputmode="email" autocomplete="email" placeholder="you@example.com" value="${esc(a.email)}"></label>
@@ -1559,7 +1559,7 @@ $('#avatarIn').addEventListener('change',async e=>{
 });
 async function doExport(){
   const data=JSON.stringify(S);
-  const name='kaelpodi-backup-'+todayKey()+'.json';
+  const name='chompy-backup-'+todayKey()+'.json';
   if(HAS_DL){try{await HAS_DL.save({filename:name,data:data});toast('สำรองข้อมูลแล้ว');return}catch(e){if(e&&e.code==='cancelled')return}}
   try{await navigator.clipboard.writeText(data);toast('คัดลอกข้อมูลสำรองแล้ว วางเก็บไว้ในโน้ตได้เลย')}catch(e){toast('สำรองข้อมูลไม่สำเร็จ ลองเปิดผ่าน Claude')}
 }
