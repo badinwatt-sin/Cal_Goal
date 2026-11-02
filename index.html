@@ -446,6 +446,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 body.beep-open .beep-dock{opacity:0;pointer-events:none;transform:scale(.6)}
 .beep-dock{transition:top .25s ease,opacity .2s,transform .2s}
 @media (prefers-reduced-motion:reduce){.bbody,.bhand,.blid,.bshd{animation:none!important}}
+.srcb{display:inline-block;font-size:10.5px;font-weight:600;padding:0 6px;border-radius:999px;background:var(--tint);color:var(--lime);line-height:1.6}
 </style>
 
 </head>
@@ -460,6 +461,7 @@ body.beep-open .beep-dock{opacity:0;pointer-events:none;transform:scale(.6)}
 <input type="file" id="avatarCam" accept="image/*" capture="user" hidden>
 <input type="file" id="importIn" accept="application/json,.json" hidden>
 
+<script src="foods-th.js"></script>
 <script src="config.js"></script>
 <script>
 (function(){
@@ -727,6 +729,8 @@ const FOODS=[];
   if(l[0]==='#'){cat=l.slice(1);CATS.push(cat);return}
   const a=l.split('|');const k=+a[2],p=+a[3],f=+a[4];
   FOODS.push({name:a[0],serving:a[1],kcal:k,p:p,f:f,c:Math.max(0,Math.round((k-4*p-9*f)/4)),cat:cat})})})();
+// เมนูจากกรมอนามัย 2561 (src D, ต่อ 100 ก.ส่วนที่กินได้ หรือหน่วยครัวเรือน) และฉลาก Nissin (src N) — มีเฉพาะพลังงาน ไม่มีสารอาหาร
+(window.FOODS_EXTRA||[]).forEach(a=>{if(!CATS.includes(a[1]))CATS.push(a[1]);FOODS.push({name:a[0],cat:a[1],serving:a[2],kcal:a[3],p:0,c:0,f:0,en:a[4]||'',src:a[5],g:a[6]||null,nomac:true})});
 
 /* ---------- activities (MET จาก Compendium of Physical Activities) ---------- */
 const ACTS=[
@@ -736,7 +740,7 @@ const ACTS=[
  ['ฟุตบอล',7,'⚽'],['บาสเกตบอล',6.5,'🏀'],['เทนนิส',7.3,'🎾'],['ปิงปอง / ตะกร้อ',4,'🏓'],['ขึ้นบันได',8.8,'🪜'],['เดินป่า / ปีนเขา',6,'🥾'],['ทำงานบ้าน',3.3,'🧹']
 ];
 const MEALS=[['b','มื้อเช้า','🌅'],['l','มื้อกลางวัน','🍱'],['d','มื้อเย็น','🌙'],['s','ของว่าง/ขนม','🍿']];
-const CE={'ข้าว/จานเดียว':'🍛','ก๋วยเตี๋ยว/เส้น':'🍜','กับข้าว/อีสาน':'🍲','ของหวาน/เบเกอรี่':'🍰','เครื่องดื่ม':'🧋','ฟาสต์ฟู้ด/ตะวันตก':'🍔','ญี่ปุ่น':'🍣','เกาหลี':'🥘','จีน/เอเชีย':'🥟','ผลไม้':'🍉','ของว่าง/ร้านสะดวกซื้อ':'🍿','ของฉัน':'⭐','ล่าสุด':'🕘','ทั้งหมด':'🍽️'};
+const CE={'อาหารปรุงสำเร็จ':'🥘','ผัก':'🥬','ปลา & อาหารทะเล':'🐟','ของทอด & ของว่าง':'🍤','บะหมี่กึ่งสำเร็จรูป':'🍥','เนื้อสัตว์ & ไข่':'🍗','ถั่ว & เมล็ดพืช':'🥜','ข้าว & ธัญพืช':'🌾','เครื่องปรุง':'🧂','นม & โยเกิร์ต':'🥛','ข้าว/จานเดียว':'🍛','ก๋วยเตี๋ยว/เส้น':'🍜','กับข้าว/อีสาน':'🍲','ของหวาน/เบเกอรี่':'🍰','เครื่องดื่ม':'🧋','ฟาสต์ฟู้ด/ตะวันตก':'🍔','ญี่ปุ่น':'🍣','เกาหลี':'🥘','จีน/เอเชีย':'🥟','ผลไม้':'🍉','ของว่าง/ร้านสะดวกซื้อ':'🍿','ของฉัน':'⭐','ล่าสุด':'🕘','ทั้งหมด':'🍽️'};
 const SKINS=['#FBE0CC','#F3CBA6','#E3AE82','#C98F62','#A96F48','#7A4A2E'];
 const KITS=[['#00E0B8','มินต์'],['#4DA3FF','น้ำเงิน'],['#FFD60A','เหลือง'],['#FF6B8B','ชมพู']];
 function foodEmoji(n){const f=foodPool().find(x=>x.name===n);return f?(CE[f.cat]||'🍽️'):'🍽️'}
@@ -868,7 +872,7 @@ function viewToday(){
     h+=`<div class="card"><div class="meal-h"><div><h3><span class="mi mi-${m[0]}">${m[2]}</span>${m[1]}</h3><span class="small mute num">${fmt(sum)} kcal</span></div><button class="btn sm" data-act="add" data-meal="${m[0]}">+ เพิ่ม</button></div>`;
     if(!items.length)h+=`<p class="empty">ยังไม่มีรายการ แตะ “เพิ่ม” เพื่อบันทึก</p>`;
     items.forEach(x=>{h+=`<div class="item">${x.img?`<img class="thumb" src="${x.img}" alt="">`:`<div class="thumb" style="background:var(--soft);font-size:24px">${foodEmoji(x.name)}</div>`}
-      <div class="grow"><div class="nm">${esc(x.name)}</div><div class="tiny mute">${x.qty!==1?x.qty+' × ':''}${esc(x.serving||'')} · P${Math.round(x.p)} C${Math.round(x.c)} F${Math.round(x.f)}</div></div>
+      <div class="grow"><div class="nm">${esc(x.name)}</div><div class="tiny mute">${x.qty!==1?x.qty+' × ':''}${esc(x.serving||'')} · ${(x.p+x.c+x.f)>0?`P${Math.round(x.p)} C${Math.round(x.c)} F${Math.round(x.f)}`:'ไม่มีข้อมูลสารอาหาร'}</div></div>
       <span class="kc">${fmt(x.kcal)}</span><button class="icon-btn" data-act="delMeal" data-id="${x.id}" aria-label="ลบ ${esc(x.name)}">${IC.x}</button></div>`});
     h+='</div>'});
   if(L.workouts.length){h+=`<div class="card"><h3>🔥 ออกกำลังกายวันนี้</h3>`;L.workouts.forEach(w=>{h+=`<div class="item"><div class="grow"><div class="nm">${w.ic||'🔥'} ${esc(w.name)}</div><div class="tiny mute">${w.min} นาที</div></div><span class="kc" style="color:var(--mute)">−${fmt(w.kcal)}</span></div>`});h+='</div>'}
@@ -955,7 +959,9 @@ function viewGoal(){
    <li>พลังงานจากก้าวเดิน: ความยาวก้าว ≈ ส่วนสูง × 0.415 และใช้ ~0.5 kcal ต่อ กก. ต่อ กม.</li>
    <li>เป้าก้าวเดิน: งานวิเคราะห์อภิมาน (Paluch et al., Lancet Public Health 2022) และคำแนะนำกิจกรรมทางกาย WHO 2020 (150–300 นาที/สัปดาห์)</li>
    <li>BMI ใช้เกณฑ์เอเชีย-แปซิฟิกของ WHO (ปกติ 18.5–22.9)</li>
-   <li>ค่าแคลอรี่อาหารในแอปเป็นค่าเฉลี่ยโดยประมาณ ต่อหนึ่งหน่วยเสิร์ฟทั่วไป ยังไม่ได้ตรวจเทียบรายตัวกับฐานข้อมูลโภชนาการไทย (กรมอนามัย / INMUCAL) หรือ USDA FoodData Central ปริมาณจริงขึ้นกับร้านและขนาดจาน</li>
+   <li>เมนูที่มีป้าย “กรมอนามัย” ใช้ค่าพลังงานจาก สำนักโภชนาการ กรมอนามัย “ตารางแสดงคุณค่าทางโภชนาการของอาหารไทย” พ.ศ. 2561 (ส่วนใหญ่เป็นค่าต่อ 100 กรัมส่วนที่กินได้ ไม่ใช่ต่อจาน) ชื่อเมนูถอดจากเอกสารด้วย OCR และแก้ไขแล้ว อาจยังมีสะกดผิดบางรายการ ข้อมูลชุดนี้มีเฉพาะพลังงาน ไม่มีโปรตีน คาร์บ ไขมัน</li>
+   <li>เมนูที่มีป้าย “ฉลากผู้ผลิต” (บะหมี่ Nissin) ใช้ค่าจากฉลากโภชนาการของผู้ผลิต</li>
+   <li>เมนูอื่นเป็นค่าเฉลี่ยโดยประมาณต่อหนึ่งหน่วยเสิร์ฟทั่วไป ยังไม่ได้ตรวจเทียบกับฐานข้อมูลทางการ ปริมาณจริงขึ้นกับร้านและขนาดจาน</li>
    <li>แอปนี้ให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการแพทย์ ผู้มีโรคประจำตัว ตั้งครรภ์ หรือต้องการลดน้ำหนักมาก ควรปรึกษาแพทย์/นักกำหนดอาหาร</li></ul></details></div>`;
 }
 
@@ -1689,13 +1695,13 @@ function foodMatches(){
   let pool=foodPool();
   if(sh.cat==='ล่าสุด'){pool=S.recent.map(n=>pool.find(f=>f.name===n)).filter(Boolean)}
   else if(sh.cat!=='ทั้งหมด')pool=pool.filter(f=>f.cat===sh.cat);
-  if(toks.length)pool=pool.filter(f=>toks.every(t=>(f.name+' '+f.cat).toLowerCase().includes(t)));
+  if(toks.length)pool=pool.filter(f=>toks.every(t=>(f.name+' '+f.cat+' '+(f.en||'')).toLowerCase().includes(t)));
   return pool;
 }
 function foodRows(){
   const m=foodMatches();
   if(!m.length)return `<p class="empty">ไม่เจอเมนูนี้ ลองให้ AI ประเมินจากชื่อหรือรูป หรือเพิ่มเองในแท็บ “กำหนดเอง”</p>`;
-  return m.slice(0,80).map((f,i)=>`<button class="food" data-act="pickFood" data-n="${esc(f.name)}"><div class="grow"><div class="nm" style="font-weight:500">${CE[f.cat]||'🍽️'} ${esc(f.name)}</div><div class="tiny mute">${esc(f.serving)} · ${esc(f.cat)}</div></div><span class="kc">${fmt(f.kcal)} <span class="tiny mute">kcal</span></span></button>`).join('')+(m.length>80?`<p class="tiny mute" style="text-align:center">แสดง 80 รายการแรก พิมพ์ค้นหาเพิ่มเติมได้</p>`:'');
+  return m.slice(0,80).map((f,i)=>`<button class="food" data-act="pickFood" data-n="${esc(f.name)}"><div class="grow"><div class="nm" style="font-weight:500">${CE[f.cat]||'🍽️'} ${esc(f.name)}</div><div class="tiny mute">${esc(f.serving)} · ${esc(f.cat)}${f.src?` · <span class="srcb">${f.src==='N'?'ฉลากผู้ผลิต':'กรมอนามัย'}</span>`:''}</div></div><span class="kc">${fmt(f.kcal)} <span class="tiny mute">kcal</span></span></button>`).join('')+(m.length>80?`<p class="tiny mute" style="text-align:center">แสดง 80 รายการแรก พิมพ์ค้นหาเพิ่มเติมได้</p>`:'');
 }
 function renderResults(){const r=$('#results');if(r)r.innerHTML=foodRows()}
 function aiTotal(){const it=ui.sh.ai.items||[];return it.reduce((a,x)=>a+(+x.kcal||0),0)}
@@ -1724,9 +1730,9 @@ function renderSheet(){
   if(sh.tab==='search'){
     if(sh.sel){
       const f=sh.sel,q=sh.qty;
-      h+=`<div class="card stack"><div class="row between"><div class="grow"><h2>${esc(f.name)}</h2><p class="small mute">1 หน่วย = ${esc(f.serving)}</p></div><button class="icon-btn" data-act="unpick" aria-label="กลับไปรายการ">${IC.left}</button></div>
+      h+=`<div class="card stack"><div class="row between"><div class="grow"><h2>${esc(f.name)}</h2><p class="small mute">1 หน่วย = ${esc(f.serving)}${f.src?` · <span class="srcb">${f.src==='N'?'ฉลากผู้ผลิต':'กรมอนามัย 2561'}</span>`:''}</p>${f.en?`<p class="tiny mute">${esc(f.en)}</p>`:''}${f.serving==='100 ก.'?`<p class="tiny mute">ค่าต่อ 100 กรัมส่วนที่กินได้ · 1 จานโดยประมาณ 250–350 ก. (2.5–3.5 หน่วย)</p>`:''}</div><button class="icon-btn" data-act="unpick" aria-label="กลับไปรายการ">${IC.left}</button></div>
       <div class="qty"><button class="icon-btn" data-act="qty" data-v="-0.5" aria-label="ลดจำนวน">−</button><input type="number" id="qtyIn" step="0.5" min="0.5" inputmode="decimal" value="${q}" aria-label="จำนวน"><button class="icon-btn" data-act="qty" data-v="0.5" aria-label="เพิ่มจำนวน">+</button><span class="small mute">หน่วย</span></div>
-      <div class="eq"><div><span class="tiny mute">พลังงาน</span><b id="pvK">${fmt(f.kcal*q)}</b></div><div><span class="tiny mute">โปรตีน</span><b id="pvP">${Math.round(f.p*q)}g</b></div><div><span class="tiny mute">คาร์บ/ไขมัน</span><b id="pvCF">${Math.round(f.c*q)}/${Math.round(f.f*q)}g</b></div></div>
+      <div class="eq"><div><span class="tiny mute">พลังงาน</span><b id="pvK">${fmt(f.kcal*q)}</b></div>${f.nomac?`<div><span class="tiny mute">ปริมาณรวม</span><b id="pvG">${f.g?fmt(f.g*q)+' ก.':'—'}</b></div><div><span class="tiny mute">สารอาหาร</span><b style="font-size:13px">ไม่มีข้อมูล</b></div>`:`<div><span class="tiny mute">โปรตีน</span><b id="pvP">${Math.round(f.p*q)}g</b></div><div><span class="tiny mute">คาร์บ/ไขมัน</span><b id="pvCF">${Math.round(f.c*q)}/${Math.round(f.f*q)}g</b></div>`}</div>
       <button class="btn" data-act="confirmFood">เพิ่มลง${esc(MEALS.find(m=>m[0]===sh.meal)[1])}</button></div>`;
     }else{
       h+=`<input type="text" id="q" data-model="sh.q" data-after="results" placeholder="ค้นหา เช่น กะเพรา, ชานม, ซูชิ" value="${esc(sh.q)}" aria-label="ค้นหาเมนู" autocomplete="off">
@@ -1835,7 +1841,7 @@ document.addEventListener('input',e=>{
   if(el.id==='wMin'){ui.w.min=Math.max(1,parseInt(el.value)||1);ui.w.kcal=actKcal(ACTS[ui.w.i][1],ui.w.min);$('#wKcal').value=ui.w.kcal}
   if(el.id==='wKcal')ui.w.kcal=Math.max(0,parseInt(el.value)||0);
 });
-function pv(){const f=ui.sh.sel,q=ui.sh.qty;$('#pvK').textContent=fmt(f.kcal*q);$('#pvP').textContent=Math.round(f.p*q)+'g';$('#pvCF').textContent=Math.round(f.c*q)+'/'+Math.round(f.f*q)+'g'}
+function pv(){const f=ui.sh.sel,q=ui.sh.qty;$('#pvK').textContent=fmt(f.kcal*q);if(f.nomac){const g=$('#pvG');if(g)g.textContent=f.g?fmt(f.g*q)+' ก.':'—';return}$('#pvP').textContent=Math.round(f.p*q)+'g';$('#pvCF').textContent=Math.round(f.c*q)+'/'+Math.round(f.f*q)+'g'}
 document.addEventListener('change',e=>{
   const el=e.target;
   if(el.dataset.live){render();return}

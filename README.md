@@ -36,3 +36,8 @@
 ## PWA และ Beep
 - ติดตั้งเป็นแอปได้ (manifest + service worker) ดูปุ่ม/วิธีติดตั้งในแท็บโปรไฟล์
 - Beep ผู้ช่วยลอยข้างจอ (ลากย้ายได้ แชตเปิดค้างระหว่างใช้แอป เด้งเตือนตามสถานการณ์; แชต AI) เรียก `/api/chat` ใช้ `GEMINI_API_KEY` ตัวเดียวกับ `/api/estimate` (ไม่บังคับ: `CHAT_LIMIT` ค่าเริ่มต้น 30 ข้อความ/IP/วัน)
+
+## ฐานข้อมูลอาหาร
+- เมนูหลักในแอป: ค่าประมาณต่อหน่วยเสิร์ฟ (อยู่ใน `index.html`)
+- `foods-th.js`: 633 เมนูจากกรมอนามัย 2561 (ส่วนใหญ่ต่อ 100 ก.) และฉลาก Nissin สร้างจาก `data/thai_food_calories_633.csv` ด้วย `python3 data/build_foods_th.py data/thai_food_calories_633.csv`
+- `data/foods_th_review.csv`: เทียบชื่อเดิม (OCR) กับชื่อที่แก้แล้ว ไว้ตรวจทาน

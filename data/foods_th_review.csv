@@ -1,0 +1,634 @@
+﻿food_id,ชื่อเดิม(OCR),ชื่อที่ใช้ในแอป,english,หมวดในแอป,หน่วยบริโภค,kcal,energy_basis
+DOH2018-11013,"ก๋วยเตี๋ยวเส้นเล็ก,ลูกชิ้น,เนื้อสด,น้้า","ก๋วยเตี๋ยวเส้นเล็ก, ลูกชิ้น, เนื้อสด, น้ำ","Rice noodles, small size with beef ball, beef and soup",อาหารปรุงสำเร็จ,100 ก.,65,per_100_g_edible_portion
+DOH2018-11014,"ก๋วยเตี๋ยวเส้นเล็ก,หมู,ต้มยํา","ก๋วยเตี๋ยวเส้นเล็ก, หมู, ต้มยำ","Rice noodles, small size with pork, Spicy and sour soup",อาหารปรุงสำเร็จ,100 ก.,117,per_100_g_edible_portion
+DOH2018-11015,"ก๋วยเดียวเส้นเล็ก,หมู,ตับ,แห้ง","ก๋วยเตี๋ยวเส้นเล็ก, หมู, ตับ, แห้ง","Rice noodles, small size with pork and liver, without soup",อาหารปรุงสำเร็จ,100 ก.,227,per_100_g_edible_portion
+DOH2018-11017,"ก๋วยเตี๋ยวเส้นเล็ก,หมู,แห้ง","ก๋วยเตี๋ยวเส้นเล็ก, หมู, แห้ง","Rice noodles, small size with pork, without soup",อาหารปรุงสำเร็จ,100 ก.,271,per_100_g_edible_portion
+DOH2018-11018,"ก๋วยเตี๋ยวเส้นเล็ก,หมูเลียง,น่า","ก๋วยเตี๋ยวเส้นเล็ก, หมูเลียง, น้ำ","Rice noodles, small size with pork and soup",อาหารปรุงสำเร็จ,100 ก.,79,per_100_g_edible_portion
+DOH2018-11019,"ก๋วยเตี๋ยวเส้นหมี,ต้มยํา","ก๋วยเตี๋ยวเส้นหมี่, ต้มยำ","Rice noodles, fine thread with spicy and sour soup",อาหารปรุงสำเร็จ,100 ก.,94,per_100_g_edible_portion
+DOH2018-11020,"ก๋วยเตี๋ยวเส้นหมี,เนื่อ,นําตก","ก๋วยเตี๋ยวเส้นหมี่, เนื้อ, น้ำตก","Rice noodles, fine thread with mix beef and soup",อาหารปรุงสำเร็จ,100 ก.,64,per_100_g_edible_portion
+DOH2018-11021,"ก๋วยเตี๋ยวเส้นหมี,ลูกขิ้น,น่า","ก๋วยเตี๋ยวเส้นหมี่, ลูกชิ้น, น้ำ","Rice noodles, fine thread with pork ball and",อาหารปรุงสำเร็จ,100 ก.,43,per_100_g_edible_portion
+DOH2018-11023,"ก๋วยเตี๋ยวเส้นหมี,หมูตุ๋น,แห้ง","ก๋วยเตี๋ยวเส้นหมี่, หมูตุ๋น, แห้ง","soup Rice noodles, fine thread with stewed pork, wihout",อาหารปรุงสำเร็จ,100 ก.,107,per_100_g_edible_portion
+DOH2018-11025,"ก๋วยเตี๋ยวเส้นใหญ่,ปลา,นํา","ก๋วยเตี๋ยวเส้นใหญ่, ปลา, น้ำ","Rice noodles, big size with blanched fish and",อาหารปรุงสำเร็จ,100 ก.,68,per_100_g_edible_portion
+DOH2018-11026,"ก๋วยเตี๋ยวเส้นใหญ่,ผัดซีอิว","ก๋วยเตี๋ยวเส้นใหญ่, ผัดซีอิ๊ว","soup Rice noodles, big size with pork, egg and fried",อาหารปรุงสำเร็จ,100 ก.,198,per_100_g_edible_portion
+DOH2018-11027,"'ก๋วยเตี๋ยวเส้นใหญ่,ผัดซีอิ๋ว,ใส่ไข่","ก๋วยเตี๋ยวเส้นใหญ่, ผัดซีอิ๊ว, ใส่ไข่","soysauce, Rice noodles, big size with pork, egg and fried",อาหารปรุงสำเร็จ,100 ก.,195,per_100_g_edible_portion
+DOH2018-11028,"ก๋วยเตี๋ยวเส้นใหญ่,เย็นตาโฟ,น่า","ก๋วยเตี๋ยวเส้นใหญ่, เย็นตาโฟ, น้ำ","soysauce, Rice noodles, big size with fish ball, swamp cabbage, red sauce and",อาหารปรุงสำเร็จ,100 ก.,73,per_100_g_edible_portion
+DOH2018-11029,"ก๋วยเตี๋ยวเส้นใหญ่,ราดหน้า,กุ้ง","ก๋วยเตี๋ยวเส้นใหญ่, ราดหน้า, กุ้ง","soup (Yen-ta-fo) Rice noodles, big size topped with shrimps, chinese kale and",อาหารปรุงสำเร็จ,100 ก.,84,per_100_g_edible_portion
+DOH2018-11030,",ก๋วยเตี๋ยวเส้นใหญ่,ราดหน้า,ไก่","ก๋วยเตี๋ยวเส้นใหญ่, ราดหน้า, ไก่","gravy (Guay-teaw-rad-na) Rice noodies, big size topped with chicken, chinese kale and",อาหารปรุงสำเร็จ,100 ก.,109,per_100_g_edible_portion
+DOH2018-11031,"ก๋วยเตี๋ยวเส้นใหญ่,ราดหน้า,หมู","ก๋วยเตี๋ยวเส้นใหญ่, ราดหน้า, หมู","gravy (Guay-teaw-rad-na) Rice noodles, big size topped with pork, chinese kale and",อาหารปรุงสำเร็จ,100 ก.,112,per_100_g_edible_portion
+DOH2018-11032,"ก๋วยเตี๋ยวเส้นใหญ่,ราดหน้า,หมูสับ","ก๋วยเตี๋ยวเส้นใหญ่, ราดหน้า, หมูสับ","Rice noodles, big size topped with minced pork, chinese kale and gravy",อาหารปรุงสำเร็จ,100 ก.,96,per_100_g_edible_portion
+DOH2018-11033,"ก๋วยเตี๋ยวเส้นใหญ่,ลูกขึ้น,หมูตุ้น,น้า","ก๋วยเตี๋ยวเส้นใหญ่, ลูกชิ้น, หมูตุ๋น, น้ำ","(Guay-teaw-rad-na) Rice noodles, big size with pork ball, stewed pork and soup",อาหารปรุงสำเร็จ,100 ก.,60,per_100_g_edible_portion
+DOH2018-11034,ก๋วยเตี๋ยวหลอด,ก๋วยเตี๋ยวหลอด,Steamed rice noodle rails,อาหารปรุงสำเร็จ,100 ก.,102,per_100_g_edible_portion
+DOH2018-11035,เกาเหลาเนือตุ๋น,เกาเหลาเนื้อตุ๋น,"Stewed beef with morning glory, bean sprout and soup",อาหารปรุงสำเร็จ,100 ก.,48,per_100_g_edible_portion
+DOH2018-11036,เกาเหลาหมู,เกาเหลาหมู,"Pork with morning glory, bean sprout and soup",อาหารปรุงสำเร็จ,100 ก.,32,per_100_g_edible_portion
+DOH2018-11037,เกียวนํา,เกี๊ยวน้ำ,Wonton soup (Giew-nham),อาหารปรุงสำเร็จ,100 ก.,27,per_100_g_edible_portion
+DOH2018-11039,"ขนมผักกาดผัด,ใส่ไข่","ขนมผักกาดผัด, ใส่ไข่",Radish rice cake fried,อาหารปรุงสำเร็จ,100 ก.,196,per_100_g_edible_portion
+DOH2018-11040,ข้าวกล้องราดแกงตัวสับปะรด,ข้าวกล้องราดแกงคั่วสับปะรด,Brown rice topped with pineapple curry,อาหารปรุงสำเร็จ,100 ก.,123,per_100_g_edible_portion
+DOH2018-11041,ข้าวกล้องราดต้มจับฉ่าย,ข้าวกล้องราดต้มจับฉ่าย,Brown rice topped with Chinese vegetable stew,อาหารปรุงสำเร็จ,100 ก.,97,per_100_g_edible_portion
+DOH2018-11042,ข้าวขาหมู,ข้าวขาหมู,Rice topped with pork leg and gravy,อาหารปรุงสำเร็จ,100 ก.,152,per_100_g_edible_portion
+DOH2018-11045,ข้าวมันไก่,ข้าวมันไก่,Rice cooked in chicken-broth topped with chicken,อาหารปรุงสำเร็จ,100 ก.,219,per_100_g_edible_portion
+DOH2018-11046,ข้าวราดแกงชีเหล็ก,ข้าวราดแกงขี้เหล็ก,"Rice topped with curry, cassia leaves and flowers",อาหารปรุงสำเร็จ,100 ก.,115,per_100_g_edible_portion
+DOH2018-11051,ข้าวราดแกงเทโพหมูสามชัน,ข้าวราดแกงเทโพหมูสามชั้น,"Rice topped with curry, pork and water spinach",อาหารปรุงสำเร็จ,100 ก.,85,per_100_g_edible_portion
+DOH2018-11052,ข้าวราดแกงพะแนงหมู,ข้าวราดแกงพะแนงหมู,"Rice topped with curry, pork (Pha-naeng)",อาหารปรุงสำเร็จ,100 ก.,136,per_100_g_edible_portion
+DOH2018-11053,ข้าวราดแกงมัสมันไก่,ข้าวราดแกงมัสมั่นไก่,"Rice topped with curry, matsaman, chicken",อาหารปรุงสำเร็จ,100 ก.,138,per_100_g_edible_portion
+DOH2018-11054,ข้าวราดแกงส้มชะอมทอด,ข้าวราดแกงส้มชะอมทอด,Rice topped with accacia leave and omelet in tamarind flavor,อาหารปรุงสำเร็จ,100 ก.,107,per_100_g_edible_portion
+DOH2018-11055,ข้าวราดแกงสัมผักรวม,ข้าวราดแกงส้มผักรวม,"soup Rice topped with tamarind flavor soup,",อาหารปรุงสำเร็จ,100 ก.,85,per_100_g_edible_portion
+DOH2018-11080,ข้าวราดยําไข่ดาว,ข้าวราดยำไข่ดาว,Rice topped with fried egg salad,อาหารปรุงสำเร็จ,100 ก.,174,per_100_g_edible_portion
+DOH2018-11082,ข้าวราดยําหมูยอ,ข้าวราดยำหมูยอ,Rice topped with pork sausage salad,อาหารปรุงสำเร็จ,100 ก.,144,per_100_g_edible_portion
+DOH2018-11083,ข้าวราดหน้าไก่ผัดใบกะเพรา,ข้าวราดหน้าไก่ผัดใบกะเพรา,Rice topped with stir-fried chicken and holy basil leaves,อาหารปรุงสำเร็จ,100 ก.,191,per_100_g_edible_portion
+DOH2018-11084,ข้าวราดหมูทอดกระเทียมพริกไทย,ข้าวราดหมูทอดกระเทียมพริกไทย,"Rice topped with fried pork, garlic and pepper",อาหารปรุงสำเร็จ,100 ก.,193,per_100_g_edible_portion
+DOH2018-11085,ข้าวราดหมูสับผัดแม็กกี,ข้าวราดหมูสับผัดแม็กกี,Rice topped with stir-fried minced pork and soysauce,อาหารปรุงสำเร็จ,100 ก.,190,per_100_g_edible_portion
+DOH2018-11087,ข้าวหมูแดง,ข้าวหมูแดง,Rice with roasted (red) pork and gravy,อาหารปรุงสำเร็จ,100 ก.,169,per_100_g_edible_portion
+DOH2018-11088,ข้าวหมูอบ,ข้าวหมูอบ,Rice with baked seasoning pork,อาหารปรุงสำเร็จ,100 ก.,174,per_100_g_edible_portion
+DOH2018-11089,"ข้าวเหนียวซุบไข่,ปิ่ง","ข้าวเหนียวซุบไข่, ปิ้ง","Glutinous rice, steamed, dipped with egg, roasted",อาหารปรุงสำเร็จ,100 ก.,231,per_100_g_edible_portion
+DOH2018-11096,หมึกะทิ,หมี่กะทิ,gravy Fine thread rice noodles cooked with coconut milk,อาหารปรุงสำเร็จ,100 ก.,173,per_100_g_edible_portion
+DOH2018-11097,หอยทอด,หอยทอด,"Green mussel fried with flour, egg and and mungbean sprout (Hoi-tod)",อาหารปรุงสำเร็จ,100 ก.,292,per_100_g_edible_portion
+DOH2018-11098,"แกงกะหรื,ทูน่า","แกงกะหรี่, ทูน่า","Curry, yellow, tuna",อาหารปรุงสำเร็จ,100 ก.,129,per_100_g_edible_portion
+DOH2018-11099,"แกงเขียวหวาน,ทูน่า","แกงเขียวหวาน, ทูน่า","Curry, green, tuna",อาหารปรุงสำเร็จ,100 ก.,169,per_100_g_edible_portion
+DOH2018-11100,"แกงเผ็ด,เนือ","แกงเผ็ด, เนื้อ","Curry, red, beef",อาหารปรุงสำเร็จ,100 ก.,136,per_100_g_edible_portion
+DOH2018-11101,แกงเลียง,แกงเลียง,Spicy vegetable and prawn soup,อาหารปรุงสำเร็จ,100 ก.,30,per_100_g_edible_portion
+DOH2018-11102,"ไก่,ทอดกระเทียมพริกไทย","ไก่, ทอดกระเทียมพริกไทย",Fried chicken with garlic and pepper,อาหารปรุงสำเร็จ,100 ก.,186,per_100_g_edible_portion
+DOH2018-11103,"ต้มข่า,ทูน่า","ต้มข่า, ทูน่า","Soup, coconut milk with galangal, tuna (Tom-kha-tuna)",อาหารปรุงสำเร็จ,100 ก.,104,per_100_g_edible_portion
+DOH2018-11104,ต้มเลือดหมู,ต้มเลือดหมู,Tom-leud-moo,อาหารปรุงสำเร็จ,100 ก.,36,per_100_g_edible_portion
+DOH2018-11106,นําพริกปลาทู+ผัก,น้ำพริกปลาทู+ผัก,Fried mackerel paste sauce with vegetable,อาหารปรุงสำเร็จ,100 ก.,32,per_100_g_edible_portion
+DOH2018-11107,"ปลาซาบะ,ในซอสมะเขือเทศ","ปลาซาบะ, ในซอสมะเขือเทศ",Steamed saba in tomato sauce,อาหารปรุงสำเร็จ,100 ก.,187,per_100_g_edible_portion
+DOH2018-11108,"ปลาซาบะ,ย่างซีอิว","ปลาซาบะ, ย่างซีอิ๊ว","Saba, grilled with soy sauce",อาหารปรุงสำเร็จ,100 ก.,187,per_100_g_edible_portion
+DOH2018-11109,"ปลาซาร์ดีน,ทอด,รสเผ็ด","ปลาซาร์ดีน, ทอด, รสเผ็ด","Sardine, fried, spicy",อาหารปรุงสำเร็จ,100 ก.,239,per_100_g_edible_portion
+DOH2018-11110,"ปลาซาร์ดีน,ในซอสมะเขือเทศ","ปลาซาร์ดีน, ในซอสมะเขือเทศ",Steamed sardine in tomato sauce,อาหารปรุงสำเร็จ,100 ก.,211,per_100_g_edible_portion
+DOH2018-11112,"ปลาดุกอุย,ทอด,รสเผ็ด","ปลาดุกอุย, ทอด, รสเผ็ด","Fresh-water catfish, fried, spicy",อาหารปรุงสำเร็จ,100 ก.,317,per_100_g_edible_portion
+DOH2018-11113,"ปลาทู,3รส","ปลาทู, 3รส","Short bodied mackerel, 3 flavors",อาหารปรุงสำเร็จ,100 ก.,149,per_100_g_edible_portion
+DOH2018-11114,"ปลาทูน่า,ชนิดก้อน,ในน่ามันพีช","ปลาทูน่า, ชนิดก้อน, ในน้ำมันพืช",Steamed tuna in vegetable oil,อาหารปรุงสำเร็จ,100 ก.,178,per_100_g_edible_portion
+DOH2018-11116,"ปลาทูน่า,เนื้อขาว,ชนิดก้อน,ในนําเกลือ","ปลาทูน่า, เนื้อขาว, ชนิดก้อน, ในน้ำเกลือ","White tuna, canned in brine",อาหารปรุงสำเร็จ,100 ก.,112,per_100_g_edible_portion
+DOH2018-11117,"ปลาทูน่า,เนื้อขาวชนิดก้อน,ในน่าแร่","ปลาทูน่า, เนื้อขาวชนิดก้อน, ในน้ำแร่","White tuna, canned in water",อาหารปรุงสำเร็จ,100 ก.,115,per_100_g_edible_portion
+DOH2018-11118,"ปลาทูน่า,ในน่าเกลือ","ปลาทูน่า, ในน้ำเกลือ","Tuna, canned in brine",อาหารปรุงสำเร็จ,100 ก.,129,per_100_g_edible_portion
+DOH2018-11119,"ปลาทูน่า,ผสมกระเทียม","ปลาทูน่า, ผสมกระเทียม","Tuna, canned in brine and garlic",อาหารปรุงสำเร็จ,100 ก.,326,per_100_g_edible_portion
+DOH2018-11120,"ปลาทูน่า,ผัดพริกใบกะเพรา","ปลาทูน่า, ผัดพริกใบกะเพรา","Tuna, stir-fried in basail sauce",อาหารปรุงสำเร็จ,100 ก.,200,per_100_g_edible_portion
+DOH2018-11121,"ปลาทูน่า,มายองเนส","ปลาทูน่า, มายองเนส",Tuna in mayonnaise,อาหารปรุงสำเร็จ,100 ก.,158,per_100_g_edible_portion
+DOH2018-11124,"ปลาแมกเคอเรล,ในซอสมะเชือเทศ","ปลาแมกเคอเรล, ในซอสมะเขือเทศ","Mackerel, canned in tomato sauce",อาหารปรุงสำเร็จ,100 ก.,122,per_100_g_edible_portion
+DOH2018-11125,ปลาแมคเคอเรลราดพริก,ปลาแมคเคอเรลราดพริก,"Mackerel, canned in chilli sauce",อาหารปรุงสำเร็จ,100 ก.,203,per_100_g_edible_portion
+DOH2018-11126,"ปลาหลังขาว,3รส","ปลาหลังขาว, 3รส","Lung khao fish, 3 flavors",อาหารปรุงสำเร็จ,100 ก.,293,per_100_g_edible_portion
+DOH2018-11127,พะแนงหมู,พะแนงหมู,"Pork, curry (Pha-naeng)",อาหารปรุงสำเร็จ,100 ก.,158,per_100_g_edible_portion
+DOH2018-11128,มัสมั่นทูน่า,มัสมั่นทูน่า,"Tuna, curry, matsaman",อาหารปรุงสำเร็จ,100 ก.,235,per_100_g_edible_portion
+DOH2018-11129,ลาบปลาดุก,ลาบปลาดุก,Spicy minced catfish salad,อาหารปรุงสำเร็จ,100 ก.,153,per_100_g_edible_portion
+DOH2018-11130,"หมู,ทอดกระเทียมพริกไทย","หมู, ทอดกระเทียมพริกไทย",Fried pork with garlic and pepper,อาหารปรุงสำเร็จ,100 ก.,241,per_100_g_edible_portion
+DOH2018-11131,"หอยแครง,ปรุงรส","หอยแครง, ปรุงรส",Seasoned cockle,อาหารปรุงสำเร็จ,100 ก.,265,per_100_g_edible_portion
+DOH2018-11132,"หอยลาย,ทอด,รสเผ็ด","หอยลาย, ทอด, รสเผ็ด",Seasoned clam,อาหารปรุงสำเร็จ,100 ก.,309,per_100_g_edible_portion
+DOH2018-11133,"ก๋วยเตี๋ยวผัดปู,รวมถ้่วงอกดิบ","ก๋วยเตี๋ยวผัดปู, รวมถั่วงอกดิบ","Rice noodles, fried with crab and",อาหารปรุงสำเร็จ,100 ก.,243,per_100_g_edible_portion
+DOH2018-11134,แกงชีเหล็ก,แกงขี้เหล็ก,"Curry, cassia leaves",อาหารปรุงสำเร็จ,100 ก.,182,per_100_g_edible_portion
+DOH2018-11135,แกงเชียวหวานหมู,แกงเขียวหวานหมู,"Green curry, pork",อาหารปรุงสำเร็จ,100 ก.,136,per_100_g_edible_portion
+DOH2018-11136,แกงบอน,แกงบอน,Kang-bon,อาหารปรุงสำเร็จ,100 ก.,39,per_100_g_edible_portion
+DOH2018-11137,แกงสัมผักรวมกับปลาช่อน,แกงส้มผักรวมกับปลาช่อน,"Kang-som, vegetables and striped snakehead fish",อาหารปรุงสำเร็จ,100 ก.,24,per_100_g_edible_portion
+DOH2018-11138,แกงหมูชะมวง,แกงหมูชะมวง,Kang-moo-chamoung,อาหารปรุงสำเร็จ,100 ก.,194,per_100_g_edible_portion
+DOH2018-11139,แกงหอยขม,แกงหอยขม,"Curry, river snail",อาหารปรุงสำเร็จ,100 ก.,126,per_100_g_edible_portion
+DOH2018-11140,ขนมจีนซาวน่า,ขนมจีนซาวน้ำ,"Round rice noodles with coconut milk, pineapple, ground shrimps and garlic",อาหารปรุงสำเร็จ,100 ก.,120,per_100_g_edible_portion
+DOH2018-11141,ขนมจีนน่าพริก,ขนมจีนน้ำพริก,"Round rice noodles with shrimp, mungbean, peanut and",อาหารปรุงสำเร็จ,100 ก.,168,per_100_g_edible_portion
+DOH2018-11143,ขนมจีนนํายา,ขนมจีนน้ำยา,Round rice noodles with fish curry and coconut milk,อาหารปรุงสำเร็จ,100 ก.,95,per_100_g_edible_portion
+DOH2018-11144,"ขนมจีนน่ายา,รวมผัก","ขนมจีนน้ำยา, รวมผัก","Round rice noodles with fish curry,",อาหารปรุงสำเร็จ,100 ก.,80,per_100_g_edible_portion
+DOH2018-11147,"เต้าเจียว,หลน","เต้าเจี้ยว, หลน",Preserved soy bean dip (Lhon tao jiew),อาหารปรุงสำเร็จ,100 ก.,72,per_100_g_edible_portion
+DOH2018-11148,"นําพริก,ปลาร้า,ผักลวก","น้ำพริก, ปลาร้า, ผักลวก",Namprik-pla-ra with blanched vegetable,อาหารปรุงสำเร็จ,100 ก.,88,per_100_g_edible_portion
+DOH2018-11152,แกงไข่(ไข่เป็ด),แกงไข่(ไข่เป็ด),"Curry, duck egg",อาหารปรุงสำเร็จ,100 ก.,158,per_100_g_edible_portion
+DOH2018-11154,แกงนําเคย(แกงเคยปลา),แกงน้ำเคย(แกงเคยปลา),"Curry, fermented tiny fish",อาหารปรุงสำเร็จ,100 ก.,39,per_100_g_edible_portion
+DOH2018-11155,แกงพริกปลาตัวเล็ก,แกงพริกปลาตัวเล็ก,"Curry, small fish",อาหารปรุงสำเร็จ,100 ก.,74,per_100_g_edible_portion
+DOH2018-11156,แกงมัสมันเนื่อ,แกงมัสมั่นเนื้อ,"Curry, matsaman, beef",อาหารปรุงสำเร็จ,100 ก.,252,per_100_g_edible_portion
+DOH2018-11159,ไก่กอและ,ไก่กอและ,"Chicken, fried",อาหารปรุงสำเร็จ,100 ก.,233,per_100_g_edible_portion
+DOH2018-11164,"ข้าวยํา,ข้าวสีม่วง","ข้าวยำ, ข้าวสีม่วง",Purple rice with assorted vegeta-ble served with Budu sauce,อาหารปรุงสำเร็จ,100 ก.,169,per_100_g_edible_portion
+DOH2018-11166,ข้าวยําปักษ์ใต้,ข้าวยำปักษ์ใต้,Rice with assorted vegetable served with Budu sauce,อาหารปรุงสำเร็จ,100 ก.,164,per_100_g_edible_portion
+DOH2018-11168,นาชิดาแม-แกงกุ้ง(ข้าวเจ้า+ข้าวเหนียวหกับะทิาแกกุ้ง),นาซิดาแฆ-แกงกุ้ง(ข้าวเจ้า+ข้าวเหนียวหุงกับกะทิราดแกงกุ้ง),Rice and glutinous rice boiled with coconut with,อาหารปรุงสำเร็จ,100 ก.,213,per_100_g_edible_portion
+DOH2018-11169,นาชิดาแฆ-แกงปลา(ข้าวเจ้า+ข้าวเหนียวหุงกับกะทิราดแกงปลา),นาซิดาแฆ-แกงปลา(ข้าวเจ้า+ข้าวเหนียวหุงกับกะทิราดแกงปลา),"Rice and glutinous rice boiled with coconut milk, with fish",อาหารปรุงสำเร็จ,100 ก.,163,per_100_g_edible_portion
+DOH2018-11171,"นาชิมีเยาะ(ข้าวเจ้าหุงกับกะทิราดแกงตุ๊มิ,แกงปลา)","นาซิมีเยาะ(ข้าวเจ้าหุงกับกะทิราดแกงตุ๊มิ, แกงปลา)","Rice boiled with coconut milk, with fish curry",อาหารปรุงสำเร็จ,100 ก.,172,per_100_g_edible_portion
+DOH2018-11173,ผัดหมี่ไทย,ผัดหมี่ไทย,"Fine rice noodles, fried",อาหารปรุงสำเร็จ,100 ก.,208,per_100_g_edible_portion
+DOH2018-11174,ยาบูดู,ยาบูดู,"Budu, Muslim fish sauce, spicy salad",อาหารปรุงสำเร็จ,100 ก.,50,per_100_g_edible_portion
+DOH2018-11177,"เส้นหมี,ผัดซีอิว","เส้นหมี่, ผัดซีอิ๊ว","Rice noodles, fine thread, stir-fried with pork, egg and soysauce",อาหารปรุงสำเร็จ,100 ก.,164,per_100_g_edible_portion
+DOH2018-11178,แกงขนุนอ่อน,แกงขนุนอ่อน,"Curry, young jackfruit",อาหารปรุงสำเร็จ,100 ก.,49,per_100_g_edible_portion
+DOH2018-11184,"ลาบคัว,หมู","ลาบคั่ว, หมู",Spicy minced pork salad,อาหารปรุงสำเร็จ,100 ก.,175,per_100_g_edible_portion
+DOH2018-11185,ลาบคัวหมูผสมตับ,ลาบคั่วหมูผสมตับ,Spicy minced pork and liver salad,อาหารปรุงสำเร็จ,100 ก.,172,per_100_g_edible_portion
+DOH2018-11186,ไส้อัว,ไส้อั่ว,"Sausage, northern style",อาหารปรุงสำเร็จ,100 ก.,420,per_100_g_edible_portion
+DOH2018-11187,ก้อยอีสาน,ก้อยอีสาน,Chopped beef cooked,อาหารปรุงสำเร็จ,100 ก.,105,per_100_g_edible_portion
+DOH2018-11188,แงกล้วยกับไก่,แกงกล้วยกับไก่,"Curry, banana and chicken",อาหารปรุงสำเร็จ,100 ก.,105,per_100_g_edible_portion
+DOH2018-11195,ขนมจีนนํายาป่า,ขนมจีนน้ำยาป่า,Round rice noodles with fish curry (without coconut milk),อาหารปรุงสำเร็จ,100 ก.,47,per_100_g_edible_portion
+DOH2018-11202,"ลาบเลือด,อีสาน","ลาบเลือด, อีสาน",Spicy beef and ox-blood salad,อาหารปรุงสำเร็จ,100 ก.,99,per_100_g_edible_portion
+DOH2018-11204,"สัมตํา,อีสาน","ส้มตำ, อีสาน","Papaya, salad",อาหารปรุงสำเร็จ,100 ก.,28,per_100_g_edible_portion
+DOH2018-11205,"ไส้กรอก,อีสาน","ไส้กรอก, อีสาน","Sausage, northeastem style",อาหารปรุงสำเร็จ,100 ก.,398,per_100_g_edible_portion
+DOH2018-11206,ห่อหมกไข่ปลา,ห่อหมกไข่ปลา,"Fish roe with curry, steamed",อาหารปรุงสำเร็จ,100 ก.,230,per_100_g_edible_portion
+DOH2018-11207,กาน่าฉ่าย,กาน้ำฉ่าย,"Vegetarian, check of mustard (Ghana chai)",อาหารปรุงสำเร็จ,100 ก.,249,per_100_g_edible_portion
+DOH2018-11208,กุ้งเจ,กุ้งเจ,"Vegetarian, shrimp",อาหารปรุงสำเร็จ,100 ก.,72,per_100_g_edible_portion
+DOH2018-11209,"เกียนทอด,อาหารเจ","เกียนทอด, อาหารเจ","Vegetarian, fried wontons",อาหารปรุงสำเร็จ,100 ก.,197,per_100_g_edible_portion
+DOH2018-11210,"แกงสัมผักรวม,อาหารเจ","แกงส้มผักรวม, อาหารเจ","Vegetarian, sour soup mixed vegetables",อาหารปรุงสำเร็จ,100 ก.,33,per_100_g_edible_portion
+DOH2018-11211,"แกงอ่อมมะระใส่เห็ด,อาหารเจ","แกงอ่อมมะระใส่เห็ด, อาหารเจ","Vegetarian, gaeng om ma ra with mushroom",อาหารปรุงสำเร็จ,100 ก.,49,per_100_g_edible_portion
+DOH2018-11212,"ข้าวกล้องราดลาบเห็ด,อาหารเจ","ข้าวกล้องราดลาบเห็ด, อาหารเจ",Brown rice topped with Spicy minced mushroom salad,อาหารปรุงสำเร็จ,100 ก.,158,per_100_g_edible_portion
+DOH2018-11214,"ต้มพะโล้,อาหารเจ","ต้มพะโล้, อาหารเจ","Vegetarian, sweet brown sauce",อาหารปรุงสำเร็จ,100 ก.,121,per_100_g_edible_portion
+DOH2018-11215,"ต้มหน่อไม้จีน,อาหารเจ","ต้มหน่อไม้จีน, อาหารเจ","Vegetarian, foodie chubby lawyer",อาหารปรุงสำเร็จ,100 ก.,36,per_100_g_edible_portion
+DOH2018-11216,"ทอดมันถัวเขียว,อาหารเจ","ทอดมันถั่วเขียว, อาหารเจ","Vegetarian, fried mung bean-paste bails",อาหารปรุงสำเร็จ,100 ก.,248,per_100_g_edible_portion
+DOH2018-11217,"เนื่อเป็ด,อาหารเจ","เนื้อเป็ด, อาหารเจ","Vegetarian, duck meat",อาหารปรุงสำเร็จ,100 ก.,137,per_100_g_edible_portion
+DOH2018-11218,"ปลาเค็ม,อาหารเจ","ปลาเค็ม, อาหารเจ","Vegetarian, salted fish",อาหารปรุงสำเร็จ,100 ก.,222,per_100_g_edible_portion
+DOH2018-11221,"ผัดยากิโซบะ,อาหารเจ","ผัดยากิโซบะ, อาหารเจ","Vegetarian, chinese style preserved bamboo",อาหารปรุงสำเร็จ,100 ก.,138,per_100_g_edible_portion
+DOH2018-11222,"ผัดวุ้นเส้น(ผัดโฮ๊ะ),อาหารเจ","ผัดวุ้นเส้น(ผัดโฮ๊ะ), อาหารเจ","soup Vegetarian, pad woon sen",อาหารปรุงสำเร็จ,100 ก.,152,per_100_g_edible_portion
+DOH2018-11223,"ผัดหมีซัว,อาหารเจ","ผัดหมี่ซั่ว, อาหารเจ","Vegetarian, stir-fried rice noodles",อาหารปรุงสำเร็จ,100 ก.,119,per_100_g_edible_portion
+DOH2018-11224,"ฟองเต้าหู้,อาหารเจ","ฟองเต้าหู้, อาหารเจ","Vegetarian, soybean sheet",อาหารปรุงสำเร็จ,100 ก.,226,per_100_g_edible_portion
+DOH2018-11225,"ยําก๋วยเตี๋ยวเชียงไฮ้,อาหารเจ","ยำก๋วยเตี๋ยวเชียงไฮ้, อาหารเจ","Vegetarian, spicy shanghai soodle salad",อาหารปรุงสำเร็จ,100 ก.,80,per_100_g_edible_portion
+DOH2018-11226,"เย็นตาโฟ,อาหารเจ","เย็นตาโฟ, อาหารเจ","Vegetarian, yentafo noodles soup",อาหารปรุงสำเร็จ,100 ก.,188,per_100_g_edible_portion
+DOH2018-11227,"ลูกชินไส้เห็ด,อาหารเจ","ลูกชิ้นไส้เห็ด, อาหารเจ","Vegetarian, mushroom ball",อาหารปรุงสำเร็จ,100 ก.,87,per_100_g_edible_portion
+DOH2018-11228,"ไส้อัว,อาหารเจ","ไส้อั่ว, อาหารเจ","Vegetarian, Thai spicy sausage (Sai-aour)",อาหารปรุงสำเร็จ,100 ก.,162,per_100_g_edible_portion
+DOH2018-11229,"หมีกรอบ,อาหารเจ","หมี่กรอบ, อาหารเจ","Vegetarian, crispy fried noodles",อาหารปรุงสำเร็จ,100 ก.,182,per_100_g_edible_portion
+DOH2018-11230,"หมีกิงรวม,อาหารเจ","หมี่กึงรวม, อาหารเจ","Vegetarian, kueng rice noodles",อาหารปรุงสำเร็จ,100 ก.,134,per_100_g_edible_portion
+DOH2018-11231,"หมีเหลืองผัดซีอิว,อาหารเจ","หมี่เหลืองผัดซีอิ๊ว, อาหารเจ","Vegetarian, fried yellow noodles in soy sauce",อาหารปรุงสำเร็จ,100 ก.,131,per_100_g_edible_portion
+DOH2018-11232,"หมู-ไต,อาหารเจ","หมู-ไต, อาหารเจ","Vegetarian, pork-pig kidney",อาหารปรุงสำเร็จ,100 ก.,36,per_100_g_edible_portion
+DOH2018-11233,"หมูย่าง,อาหารเจ","หมูย่าง, อาหารเจ","Vegetarian, roasted pork",อาหารปรุงสำเร็จ,100 ก.,231,per_100_g_edible_portion
+DOH2018-11234,"หมูสามชั้น,อาหารเจ","หมูสามชั้น, อาหารเจ","Vegetarian, streaky pork",อาหารปรุงสำเร็จ,100 ก.,98,per_100_g_edible_portion
+DOH2018-12001,กล้วยแขก,กล้วยแขก,"Banana, deep fried",ของหวาน/เบเกอรี่,1 ชิ้น (27 ก.),85,source_household_portion
+DOH2018-12003,ขนมกล้วย,ขนมกล้วย,Ka-nom gluay,ของหวาน/เบเกอรี่,1 ชิ้น (50 ก.),91,source_household_portion
+DOH2018-12004,ขนมเกลือ/เข้าหนมเกือ,ขนมเกลือ/เข้าหนมเกือ,"Ka-nom-glae, Northern style",ของหวาน/เบเกอรี่,1 ชิ้น (50 ก.),55,source_household_portion
+DOH2018-12005,ขนมโก้,ขนมโก้,Ka-nom-goh,ของหวาน/เบเกอรี่,1 ชิ้น (30 ก.),127,source_household_portion
+DOH2018-12006,ขนมโกสุ่ย/ขนมถ้วยน่าตาลแดง,ขนมโกสุ่ย/ขนมถ้วยน้ำตาลแดง,"Ka-nom-go-sui, Southern style",ของหวาน/เบเกอรี่,1 ถ้วย (40 ก.),75,source_household_portion
+DOH2018-12007,ขนมชีมอด,ขนมขี้มอด,"Ka-nom-ki-mod, Southern style",ของหวาน/เบเกอรี่,1 ห่อ (40 ก.),177,source_household_portion
+DOH2018-12008,ขนมชีมัน/ขนมเปียกขีมัน,ขนมขี้มัน/ขนมเปียกขี้มัน,"Kha-nom-ki-mun, Southern style",ของหวาน/เบเกอรี่,1 ชิ้น (50 ก.),113,source_household_portion
+DOH2018-12009,ขนมโค,ขนมโค,"Ka-nom-co, Southern style",ของหวาน/เบเกอรี่,4 ชิ้น (32 ก.),72,source_household_portion
+DOH2018-12010,ขนมชั้น,ขนมชั้น,Ka-nom chan,ของหวาน/เบเกอรี่,1 ชิ้น (40 ก.),99,source_household_portion
+DOH2018-12011,"ขนมถลยย,เบเตย","ขนมถ้วย, ใบเตย",Kha-nom Thuai,ของหวาน/เบเกอรี่,100 ก.,62,per_100_g_edible_portion
+DOH2018-12012,ขนมลา,ขนมลา,"Ka-nom-la, Southern style",ของหวาน/เบเกอรี่,100 ก.,430,per_100_g_edible_portion
+DOH2018-12013,"ขนมลา,กรอบ","ขนมลา, กรอบ","Ka-nom-la, crispy, Southern style",ของหวาน/เบเกอรี่,2 ชิ้น (30 ก.),116,source_household_portion
+DOH2018-12017,ข้าวต้มมัด/ข้าวต้มผัด,ข้าวต้มมัด/ข้าวต้มผัด,Kao-tom-mad (steamed glutinous rice with black bean and banana filling),ของหวาน/เบเกอรี่,1 ชิ้น (70 ก.),128,source_household_portion
+DOH2018-12018,"ข้าวเหนียวขาว,หน้าปลาแห้ง","ข้าวเหนียวขาว, หน้าปลาแห้ง",Khao-niao-na-pla (Sweet sticky rice with dried fish),ของหวาน/เบเกอรี่,1 ห่อ (80 ก.),208,source_household_portion
+DOH2018-12024,ทองหยอด,ทองหยอด,Thong yod (golden drop),ของหวาน/เบเกอรี่,100 ก.,305,per_100_g_edible_portion
+DOH2018-12028,เปียกปูน,เปียกปูน,Kha-nom-piak-poon (coconut sweet pudding with coconut),ของหวาน/เบเกอรี่,1 ชิ้น (50 ก.),80,source_household_portion
+DOH2018-12029,"เปียกปูน,สีดํา","เปียกปูน, สีดำ",Black coconut sweet pudding,ของหวาน/เบเกอรี่,100 ก.,135,per_100_g_edible_portion
+DOH2018-12031,เม็ดขนุน,เม็ดขนุน,Med khanun (bean paste),ของหวาน/เบเกอรี่,100 ก.,111,per_100_g_edible_portion
+DOH2018-12033,ลูกชุบฆโณ,ลูกชุบ,Look choup (mock miniature fruit),ของหวาน/เบเกอรี่,4 ชิ้น (32 ก.),88,source_household_portion
+DOH2018-12035,"สังขยา,ไข่","สังขยา, ไข่","Egg custard, steamed",ของหวาน/เบเกอรี่,100 ก.,169,per_100_g_edible_portion
+DOH2018-12041,"ขนมบงพซซํา,เส้กรอกหมู","ขนมปังพิซซ่า, ไส้กรอกหมู","Pizza with pork sausage, Bread",ของหวาน/เบเกอรี่,100 ก.,340,per_100_g_edible_portion
+DOH2018-12042,"ขนมปังพิซซ่า,ไส้กรอก","ขนมปังพิซซ่า, ไส้กรอก","Pizza with sausage, Bread",ของหวาน/เบเกอรี่,1 ชิ้น (55 ก.),176,source_household_portion
+DOH2018-12047,เค้ก,เค้ก,Cake,ของหวาน/เบเกอรี่,1 ชิ้น (55 ก.),244,source_household_portion
+DOH2018-14001,"กุ้ง,ชุบแป้งทอด","กุ้ง, ชุบแป้งทอด","Shrimp, crispy-fried",ของทอด & ของว่าง,100 ก.,221,per_100_g_edible_portion
+DOH2018-14002,"กุ้งฝอย,ชุบแป้งทอด","กุ้งฝอย, ชุบแป้งทอด","Shrimp, Lanchester's freshwater, crispy-fried",ของทอด & ของว่าง,100 ก.,617,per_100_g_edible_portion
+DOH2018-14003,"กุ้ง,แห้ง,ทอด","กุ้ง, แห้ง, ทอด","Shrimp, salted, dried, fried",ของทอด & ของว่าง,100 ก.,389,per_100_g_edible_portion
+DOH2018-14005,"ไก่น่อง,ทอด","ไก่น่อง, ทอด","Chicken, drumstick, fried",ของทอด & ของว่าง,100 ก.,248,per_100_g_edible_portion
+DOH2018-14006,"ไก่,ปีกทอด","ไก่, ปีกทอด","Chicken, wing, fried",ของทอด & ของว่าง,100 ก.,267,per_100_g_edible_portion
+DOH2018-14007,"ไก่,อก,ทอด","ไก่, อก, ทอด","Chicken, breast, fried",ของทอด & ของว่าง,100 ก.,213,per_100_g_edible_portion
+DOH2018-14008,"ไก่,เนือ,ชุบแป้งทอด","ไก่, เนื้อ, ชุบแป้งทอด","Chicken, meat, crispy-fried",ของทอด & ของว่าง,100 ก.,353,per_100_g_edible_portion
+DOH2018-14009,"ไก่ขอ,ชุบแป้งหอด","ไก่ขอ, ชุบแป้งหอด","Chicken, sausage, crispy-fried",ของทอด & ของว่าง,100 ก.,364,per_100_g_edible_portion
+DOH2018-14010,ไข่เจียว,ไข่เจียว,"Egg, hen, omelet",ของทอด & ของว่าง,100 ก.,340,per_100_g_edible_portion
+DOH2018-14011,ไข่ดาว,ไข่ดาว,"Egg, hen, sunny side up",ของทอด & ของว่าง,100 ก.,266,per_100_g_edible_portion
+DOH2018-14012,"ปลาแก้ว,ชุบแป้งทอด","ปลาแก้ว, ชุบแป้งทอด","Thai river sprat, crispy-fried",ของทอด & ของว่าง,100 ก.,494,per_100_g_edible_portion
+DOH2018-14013,"ปลาช่อน,ทอด","ปลาช่อน, ทอด","Striped snake-head fish, fried",ของทอด & ของว่าง,100 ก.,230,per_100_g_edible_portion
+DOH2018-14014,"ปลาตาเดียว,ทอด","ปลาตาเดียว, ทอด","Indian Hilabut, fried",ของทอด & ของว่าง,100 ก.,200,per_100_g_edible_portion
+DOH2018-14015,"ปลาทู,สด,ทอด","ปลาทู, สด, ทอด","Short bodied mackerel, fried",ของทอด & ของว่าง,100 ก.,232,per_100_g_edible_portion
+DOH2018-14016,ปลาบีกทอด,ปลาบีกทอด,"Mekong giant catfish, fried",ของทอด & ของว่าง,100 ก.,182,per_100_g_edible_portion
+DOH2018-14018,"ปลาหมึก,ชุบแป้งทอด","ปลาหมึก, ชุบแป้งทอด","Squid snake, crispy-fried",ของทอด & ของว่าง,100 ก.,328,per_100_g_edible_portion
+DOH2018-14019,"ปลาอินทรีย์,สด,ทอด","ปลาอินทรีย์, สด, ทอด","Mackerel, Spanish, fried",ของทอด & ของว่าง,100 ก.,198,per_100_g_edible_portion
+DOH2018-14020,"ลูกชิ้นกุ้ง,ทอด","ลูกชิ้นกุ้ง, ทอด","Meat ball, shrimp, fried",ของทอด & ของว่าง,100 ก.,157,per_100_g_edible_portion
+DOH2018-14021,"ลูกซิ้นไก่,ทอด","ลูกชิ้นไก่, ทอด","Meat ball, chicken, fried",ของทอด & ของว่าง,100 ก.,179,per_100_g_edible_portion
+DOH2018-14022,"ลูกชิ้นปลา,ทอด","ลูกชิ้นปลา, ทอด","Meat ball, fried",ของทอด & ของว่าง,100 ก.,277,per_100_g_edible_portion
+DOH2018-14023,"ลูกชิ้นหมู,ทอด","ลูกชิ้นหมู, ทอด","Meat ball, pork, fried",ของทอด & ของว่าง,100 ก.,190,per_100_g_edible_portion
+DOH2018-14024,"ไส้กรอก,ทอด","ไส้กรอก, ทอด","Sausage, fried",ของทอด & ของว่าง,100 ก.,359,per_100_g_edible_portion
+DOH2018-14025,หมูกรอบ,หมูกรอบ,Crispy pork,ของทอด & ของว่าง,100 ก.,385,per_100_g_edible_portion
+DOH2018-14027,ขนมโดนัท,ขนมโดนัท,"Donut, fried",ของทอด & ของว่าง,100 ก.,431,per_100_g_edible_portion
+DOH2018-14028,"ซาลาเปา,ทอด","ซาลาเปา, ทอด","Sa-la-pao (Chinese steamed buns), fried",ของทอด & ของว่าง,100 ก.,393,per_100_g_edible_portion
+DOH2018-14029,"เต้าหู้,ทอด","เต้าหู้, ทอด","Soybean curd (tofu), fried",ของทอด & ของว่าง,100 ก.,228,per_100_g_edible_portion
+DOH2018-14030,ปาท่องโก๋(ลูกเล็ก),ปาท่องโก๋(ลูกเล็ก),"Pa-tong-ko, (Deep-fried doughstick)",ของทอด & ของว่าง,100 ก.,427,per_100_g_edible_portion
+DOH2018-14031,ปาท่องใก้(ลูกใหญ่),ปาท่องโก๋(ลูกใหญ่),"Pa-tong-ko, (Deep-fried doughstick} |",ของทอด & ของว่าง,100 ก.,441,per_100_g_edible_portion
+DOH2018-14032,"ถัวลิสง,ทอด","ถั่วลิสง, ทอด","Peanut, fried",ของทอด & ของว่าง,100 ก.,616,per_100_g_edible_portion
+DOH2018-14033,"เผือก,ทอด","เผือก, ทอด","Taro, fried",ของทอด & ของว่าง,100 ก.,395,per_100_g_edible_portion
+DOH2018-14034,เผือกซุบแป้งทอด,เผือกชุบแป้งทอด,"Taro, crispy-fried",ของทอด & ของว่าง,100 ก.,311,per_100_g_edible_portion
+DOH2018-14035,"มันเทศ,ชุบแป้งทอด","มันเทศ, ชุบแป้งทอด","Sweet potato, crispy-fried",ของทอด & ของว่าง,100 ก.,297,per_100_g_edible_portion
+DOH2018-14036,"มันฝรั่ง,ทอด","มันฝรั่ง, ทอด","Potato chip, fried",ของทอด & ของว่าง,100 ก.,390,per_100_g_edible_portion
+DOH2018-14037,"เมล็ดมะม่วงหิมพานต์,ทอด","เมล็ดมะม่วงหิมพานต์, ทอด","Cashew nut, fried",ของทอด & ของว่าง,100 ก.,625,per_100_g_edible_portion
+DOH2018-14038,โรตี(ใส่นมขัน+นําตาล),โรตี(ใส่นมข้น+น้ำตาล),Roti,ของทอด & ของว่าง,100 ก.,479,per_100_g_edible_portion
+DOH2018-14039,"กระเทียม,ทอดไคร้,อ","กระเทียม, ทอด","Garlic, fried",ของทอด & ของว่าง,100 ก.,371,per_100_g_edible_portion
+DOH2018-14042,"ใบมะกรูด,ทอด","ใบมะกรูด, ทอด","Leech lime leaves, fried",ของทอด & ของว่าง,100 ก.,500,per_100_g_edible_portion
+DOH2018-14043,"พริกซีหนู,แห้ง,ทอด","พริกขี้หนู, แห้ง, ทอด","Chilli, dried, fried",ของทอด & ของว่าง,100 ก.,251,per_100_g_edible_portion
+DOH2018-14044,"หอมแดง,ทอด","หอมแดง, ทอด","Shallot, fried",ของทอด & ของว่าง,100 ก.,353,per_100_g_edible_portion
+DOH2018-14045,"หอมหัวใหญ่,ทอด","หอมหัวใหญ่, ทอด","Onion, fried",ของทอด & ของว่าง,100 ก.,540,per_100_g_edible_portion
+NISSIN-TH-001,นิสชิน รสหมูสับ,นิสชิน รสหมูสับ,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),290,manufacturer_label_serving
+NISSIN-TH-002,นิสชิน รสหมูมะนาว,นิสชิน รสหมูมะนาว,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-003,นิสชิน รสต้มยำกุ้งแซ่บ,นิสชิน รสต้มยำกุ้งแซ่บ,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-004,นิสชิน รสเล้งแซ่บ,นิสชิน รสเล้งแซ่บ,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-005,นิสชิน ไทย ซิกเนเจอร์รสต้มยำกุ้งน้ำข้น,นิสชิน ไทย ซิกเนเจอร์รสต้มยำกุ้งน้ำข้น,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (72 ก.),330,manufacturer_label_serving
+NISSIN-TH-006,นิสชิน ไทย ซิกเนเจอร์รสลาบหมูสับ (แบบแห้ง),นิสชิน ไทย ซิกเนเจอร์รสลาบหมูสับ (แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (70 ก.),330,manufacturer_label_serving
+NISSIN-TH-007,นิสชิน ไทย ซิกเนเจอร์รสซอสครีมต้มยำมันกุ้ง(แบบแห้ง),นิสชิน ไทย ซิกเนเจอร์รสซอสครีมต้มยำมันกุ้ง(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (71 ก.),330,manufacturer_label_serving
+NISSIN-TH-008,นิสชิน ไทย ซิกเนเจอร์รสปูผัดผงกะหรี่ (แบบแห้ง),นิสชิน ไทย ซิกเนเจอร์รสปูผัดผงกะหรี่ (แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (73 ก.),350,manufacturer_label_serving
+NISSIN-TH-009,นิสชิน พรีเมียมรสไก่เผ็ดเกาหลี (แบบแห้ง),นิสชิน พรีเมียมรสไก่เผ็ดเกาหลี (แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-010,นิสชิน พรีเมียมรสไก่เผ็ดเกาหลีชีส(แบบแห้ง),นิสชิน พรีเมียมรสไก่เผ็ดเกาหลีชีส(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-011,นิสชิน พรีเมียมรสไก่เผ็ดเกาหลีคาโบนาร่า(แบบแห้ง),นิสชิน พรีเมียมรสไก่เผ็ดเกาหลีคาโบนาร่า(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-012,นิสชิน พรีเมียมรสเอ็กซ์ตรีมไก่เผ็ด(แบบแห้ง),นิสชิน พรีเมียมรสเอ็กซ์ตรีมไก่เผ็ด(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-013,นิสชิน พรีเมียมรสฮอต ชิลลี ล็อบสเตอร์ (แบบแห้ง),นิสชิน พรีเมียมรสฮอต ชิลลี ล็อบสเตอร์ (แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ถุง (60 ก.),280,manufacturer_label_serving
+NISSIN-TH-014,นิสชิน พรีเมียม รสหม่าล่า (แบบแห้ง),นิสชิน พรีเมียม รสหม่าล่า (แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),260,manufacturer_label_serving
+NISSIN-TH-015,นิสชิน พรีเมียมรสทงคตสึราเมน,นิสชิน พรีเมียมรสทงคตสึราเมน,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),290,manufacturer_label_serving
+NISSIN-TH-016,นิสชิน พรีเมียมรสไก่เผ็ดไข่เค็ม (แบบแห้ง),นิสชิน พรีเมียมรสไก่เผ็ดไข่เค็ม (แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-017,นิสชิน พรีเมียม รสซุปเกาหลีฮอตแอนด์สไปซี,นิสชิน พรีเมียม รสซุปเกาหลีฮอตแอนด์สไปซี,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),250,manufacturer_label_serving
+NISSIN-TH-018,นิสชิน พรีเมียม ยากิโซบะรสซอสญี่ปุ่น (แบบแห้ง),นิสชิน พรีเมียม ยากิโซบะรสซอสญี่ปุ่น (แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (60 ก.),270,manufacturer_label_serving
+NISSIN-TH-019,นิสชิน บิ๊กแพครสไก่เผ็ดเกาหลี(แบบแห้ง),นิสชิน บิ๊กแพครสไก่เผ็ดเกาหลี(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (85 ก.),390,manufacturer_label_serving
+NISSIN-TH-020,นิสชิน บิ๊กแพครสไก่เผ็ดเกาหลีชีส(แบบแห้ง),นิสชิน บิ๊กแพครสไก่เผ็ดเกาหลีชีส(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (86 ก.),390,manufacturer_label_serving
+NISSIN-TH-021,นิสชิน บิ๊กแพค ฮาลาลรสไก่เผ็ดเกาหลี(แบบแห้ง),นิสชิน บิ๊กแพค ฮาลาลรสไก่เผ็ดเกาหลี(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ซอง (80 ก.),340,manufacturer_label_serving
+NISSIN-TH-022,นิสชิน บิ๊กแพค ฮาลาลรสซุปเกาหลีฮอตแอนด์สไปซี,นิสชิน บิ๊กแพค ฮาลาลรสซุปเกาหลีฮอตแอนด์สไปซี,,บะหมี่กึ่งสำเร็จรูป,1 ซอง (74 ก.),320,manufacturer_label_serving
+NISSIN-TH-023,นิสชิน คัพ นูดเดิลรสต้มยำกุ้งน้ำข้น,นิสชิน คัพ นูดเดิลรสต้มยำกุ้งน้ำข้น,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (77 ก.),360,manufacturer_label_serving
+NISSIN-TH-024,นิสชิน คัพ นูดเดิล รสหมูสับ,นิสชิน คัพ นูดเดิล รสหมูสับ,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (77 ก.),360,manufacturer_label_serving
+NISSIN-TH-025,นิสชิน คัพ นูดเดิล รสหม่าล่า,นิสชิน คัพ นูดเดิล รสหม่าล่า,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (72 ก.),330,manufacturer_label_serving
+NISSIN-TH-026,นิสชิน คัพ นูดเดิลรสหมูมะนาว,นิสชิน คัพ นูดเดิลรสหมูมะนาว,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (76 ก.),350,manufacturer_label_serving
+NISSIN-TH-027,นิสชิน ชิลลี นูดเดิลรสต้มยำน้ำข้นรวมมิตร,นิสชิน ชิลลี นูดเดิลรสต้มยำน้ำข้นรวมมิตร,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (76 ก.),360,manufacturer_label_serving
+NISSIN-TH-028,นิสชิน คัพ นูดเดิลรสซุปทะเลน้ำข้น,นิสชิน คัพ นูดเดิลรสซุปทะเลน้ำข้น,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (74 ก.),340,manufacturer_label_serving
+NISSIN-TH-029,นิสชิน คัพ นูดเดิลรสซอสครีมต้มยำมันกุ้ง(แบบแห้ง),นิสชิน คัพ นูดเดิลรสซอสครีมต้มยำมันกุ้ง(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (73 ก.),350,manufacturer_label_serving
+NISSIN-TH-030,นิสชิน คัพ นูดเดิลรสต้มยำกุ้งชีส(แบบแห้ง),นิสชิน คัพ นูดเดิลรสต้มยำกุ้งชีส(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (75 ก.),360,manufacturer_label_serving
+NISSIN-TH-031,นิสชิน พรีเมียม คัพรสไก่เผ็ดเกาหลี(แบบแห้ง),นิสชิน พรีเมียม คัพรสไก่เผ็ดเกาหลี(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (71 ก.),330,manufacturer_label_serving
+NISSIN-TH-032,นิสชิน พรีเมียม คัพรสไก่เผ็ดเกาหลีชีส(แบบแห้ง),นิสชิน พรีเมียม คัพรสไก่เผ็ดเกาหลีชีส(แบบแห้ง),,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (69 ก.),300,manufacturer_label_serving
+NISSIN-TH-033,นิสชิน พรีเมียม คัพรสซุปเกาหลีกลิ่นพริกภูเขาไฟ,นิสชิน พรีเมียม คัพรสซุปเกาหลีกลิ่นพริกภูเขาไฟ,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (68 ก.),290,manufacturer_label_serving
+NISSIN-TH-034,นิสชิน พรีเมียม คัพรสสไปซีทงคตสึ,นิสชิน พรีเมียม คัพรสสไปซีทงคตสึ,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (70 ก.),320,manufacturer_label_serving
+NISSIN-TH-035,นิสชิน รสอิปปุโดะ ชิโรมารุ ทงคตสึ ราเมน,นิสชิน รสอิปปุโดะ ชิโรมารุ ทงคตสึ ราเมน,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (77 ก.),370,manufacturer_label_serving
+NISSIN-TH-036,นิสชิน รสอิปปุโดะ อากะมารุ ทงคตสึ ราเมน,นิสชิน รสอิปปุโดะ อากะมารุ ทงคตสึ ราเมน,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (77 ก.),370,manufacturer_label_serving
+NISSIN-TH-037,นิสชิน มินิ คัพ โดราเอมอน รสไก่ผสมข้าวโพด,นิสชิน มินิ คัพ โดราเอมอน รสไก่ผสมข้าวโพด,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (40 ก.),180,manufacturer_label_serving
+NISSIN-TH-038,นิสชิน มินิ คัพ โดราเอมอน รสสาหร่าย,นิสชิน มินิ คัพ โดราเอมอน รสสาหร่าย,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (40 ก.),180,manufacturer_label_serving
+NISSIN-TH-039,นิสชิน มินิ คัพ โดราเอมอน รสปู,นิสชิน มินิ คัพ โดราเอมอน รสปู,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (40 ก.),180,manufacturer_label_serving
+NISSIN-TH-040,นิสชิน มินิ คัพ โดราเอมอน รสหมูแดง,นิสชิน มินิ คัพ โดราเอมอน รสหมูแดง,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (40 ก.),190,manufacturer_label_serving
+NISSIN-TH-041,นิสชิน มินิ คัพ โดราเอมอน รสครีมมีชีส,นิสชิน มินิ คัพ โดราเอมอน รสครีมมีชีส,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (44 ก.),200,manufacturer_label_serving
+NISSIN-TH-042,นิสชิน มินิ คัพ รสต้มยำกุ้ง,นิสชิน มินิ คัพ รสต้มยำกุ้ง,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (33 ก.),150,manufacturer_label_serving
+NISSIN-TH-043,นิสชิน มินิ คัพ รสหมูสับ,นิสชิน มินิ คัพ รสหมูสับ,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (33 ก.),160,manufacturer_label_serving
+NISSIN-TH-044,นิสชิน มินิ คัพ รสซีฟู้ด,นิสชิน มินิ คัพ รสซีฟู้ด,,บะหมี่กึ่งสำเร็จรูป,1 ถ้วย (33 ก.),160,manufacturer_label_serving
+DOH2018-14046,กาแฟเย็นคาปูชิโน,กาแฟเย็นคาปูชิโน,Iced cappuccino,เครื่องดื่ม,1 แก้ว (20 ออนซ์),274,source_bottle_portion_not_100g
+DOH2018-14047,กาแฟเย็นมอคค่า,กาแฟเย็นมอคค่า,Iced mocha,เครื่องดื่ม,1 แก้ว (20 ออนซ์),281,source_bottle_portion_not_100g
+DOH2018-14048,กาแฟเย็นมัจฉะลาเต้,กาแฟเย็นมัจฉะลาเต้,Iced matcha latte coffee,เครื่องดื่ม,1 แก้ว (16 ออนซ์),300,source_bottle_portion_not_100g
+DOH2018-14049,กาแฟเย็นมัจฉะเอสเพรสโซ่,กาแฟเย็นมัจฉะเอสเพรสโซ่,Iced matcha espresso coffee,เครื่องดื่ม,1 แก้ว (16 ออนซ์),281,source_bottle_portion_not_100g
+DOH2018-14050,กาแฟเย็นลาเต้,กาแฟเย็นลาเต้,Iced latte,เครื่องดื่ม,1 แก้ว (20 ออนซ์),251,source_bottle_portion_not_100g
+DOH2018-14051,กาแฟเย็นสูตรโบราณ,กาแฟเย็นสูตรโบราณ,Traditional iced coffee,เครื่องดื่ม,1 แก้ว (20 ออนซ์),311,source_bottle_portion_not_100g
+DOH2018-14052,กาแฟเย็นสูตรอื่นๆ,กาแฟเย็นสูตรอื่นๆ,Other iced coffee recipes,เครื่องดื่ม,1 แก้ว (20 ออนซ์),317,source_bottle_portion_not_100g
+DOH2018-14053,กาแฟเย็นอเมริกาโน,กาแฟเย็นอเมริกาโน,Iced Americano,เครื่องดื่ม,1 แก้ว (16 ออนซ์),9,source_bottle_portion_not_100g
+DOH2018-14054,กาแฟร้อนคาปูชิโน,กาแฟร้อนคาปูชิโน,Hot cappuccino,เครื่องดื่ม,1 แก้ว (6 ออนซ์),210,source_bottle_portion_not_100g
+DOH2018-14055,กาแฟร้อนอเมริกาโน,กาแฟร้อนอเมริกาโน,Hot Americano,เครื่องดื่ม,1 แก้ว (6 ออนซ์),10,source_bottle_portion_not_100g
+DOH2018-14056,ชาเขียวนมสด,ชาเขียวนมสด,Green tea with fresh milk,เครื่องดื่ม,1 แก้ว (20 ออนซ์),245,source_bottle_portion_not_100g
+DOH2018-14057,ชาเย็น,ชาเย็น,Thai iced tea,เครื่องดื่ม,1 แก้ว (20 ออนซ์),215,source_bottle_portion_not_100g
+DOH2018-14058,ชาเย็นนมสด,ชาเย็นนมสด,Thai iced tea with fresh milk,เครื่องดื่ม,1 แก้ว (20 ออนซ์),295,source_bottle_portion_not_100g
+DOH2018-05003,"กล้วยไข่พม่า,สุก","กล้วยไข่พม่า, สุก","Banana, Khai phama variety, ripe",ผลไม้,100 ก.,65,per_100_g_edible_portion
+DOH2018-05006,"กล้วยตีบมุกดาหาร,สุก","กล้วยตีบมุกดาหาร, สุก","Banana, Tib-mukdahan variety, ripe",ผลไม้,100 ก.,117,per_100_g_edible_portion
+DOH2018-05014,"กล้วยนําไทย,สุก","กล้วยน้ำไทย, สุก","Banana, Nam-tai variety, ripe",ผลไม้,100 ก.,124,per_100_g_edible_portion
+DOH2018-05015,"กล้วยน่าว้า,สุก","กล้วยน้ำว้า, สุก","Banana, Nam-wa variety, ripe",ผลไม้,100 ก.,143,per_100_g_edible_portion
+DOH2018-05016,"กล้วยน่าว้าเงิน,สุก","กล้วยน้ำว้าเงิน, สุก","Banana, Namwa-ngaen variety, ripe",ผลไม้,100 ก.,117,per_100_g_edible_portion
+DOH2018-05018,"กล้วยปิซังซูซู,สุก","กล้วยปิซังซูซู, สุก","Banana, Pisangsusu variety, ripe",ผลไม้,100 ก.,80,per_100_g_edible_portion
+DOH2018-05019,"กล้วยพม่าแหกคุก,สุก","กล้วยพม่าแหกคุก, สุก","Banana, Phama-heak-kuk variety, ripe",ผลไม้,100 ก.,102,per_100_g_edible_portion
+DOH2018-05022,"ถล้วยหอมจําปา,สุก","กล้วยหอมจำปา, สุก","Banana, Hom-jumpa variety, ripe",ผลไม้,100 ก.,109,per_100_g_edible_portion
+DOH2018-05023,"กล้วยหอมทิพย์,สุก","กล้วยหอมทิพย์, สุก","Banana, Hom-thip variety, ripe",ผลไม้,100 ก.,82,per_100_g_edible_portion
+DOH2018-05025,"กล้วยหักมุก,สุก","กล้วยหักมุก, สุก","Banana, Hak-mook variety, ripe",ผลไม้,100 ก.,113,per_100_g_edible_portion
+DOH2018-05026,"กล้วยหักมุกนวล,สุก","กล้วยหักมุกนวล, สุก","Banana, Hak-mook-nuon variety, ripe",ผลไม้,100 ก.,109,per_100_g_edible_portion
+DOH2018-05029,"แก้วมังกร,เนื้อสีขาว","แก้วมังกร, เนื้อสีขาว","Dragon fruit, white flesh",ผลไม้,100 ก.,59,per_100_g_edible_portion
+DOH2018-05030,"ขนุน,ละมุด","ขนุน, ละมุด","Jackfruit, La-mud variety",ผลไม้,100 ก.,117,per_100_g_edible_portion
+DOH2018-05033,"แคนตาลูป,เนือเขียว","แคนตาลูป, เนื้อสีเขียว","Cantaloupe, green flesh",ผลไม้,100 ก.,29,per_100_g_edible_portion
+DOH2018-05035,เงาะ,เงาะ,Rambutan,ผลไม้,100 ก.,67,per_100_g_edible_portion
+DOH2018-05037,"เงาะ,สีชมพู","เงาะ, สีชมพู","Rambutan, Pink variety",ผลไม้,100 ก.,78,per_100_g_edible_portion
+DOH2018-05038,"ชมพู่,แก้มแหม่ม","ชมพู่, แก้มแหม่ม",Java apple/Wax jambu,ผลไม้,100 ก.,16,per_100_g_edible_portion
+DOH2018-05039,"ชมพู่,แขกดํา","ชมพู่, แขกดำ","Rose apple, Khak-dum variety",ผลไม้,100 ก.,27,per_100_g_edible_portion
+DOH2018-05041,"ชมพู่,ทูลเกล้า","ชมพู่, ทูลเกล้า","Rose apple, Toon-klow variety",ผลไม้,100 ก.,37,per_100_g_edible_portion
+DOH2018-05042,"ชมพู่,นาคณซ","ชมพู่, นาค","Rose apple, Nak variety",ผลไม้,100 ก.,21,per_100_g_edible_portion
+DOH2018-05043,ชมพู่.มะเหมียว,"ชมพู่, มะเหมียว",Malay apple (Mameaw),ผลไม้,100 ก.,24,per_100_g_edible_portion
+DOH2018-05045,"ชมพู่,สาแหรก","ชมพู่, สาแหรก",Malay apple,ผลไม้,100 ก.,32,per_100_g_edible_portion
+DOH2018-05046,"ชมพู่,สีชาด","ชมพู่, สีชาด",Rose apple,ผลไม้,100 ก.,21,per_100_g_edible_portion
+DOH2018-05050,"แตงไทย,สุก","แตงไทย, สุก",Musk melon (Tang-tai),ผลไม้,100 ก.,13,per_100_g_edible_portion
+DOH2018-05052,"แตงโม,ตอปิโด","แตงโม, ตอปิโด",Watermelon Torpedo variety,ผลไม้,100 ก.,33,per_100_g_edible_portion
+DOH2018-05053,"แตงโม,เหยียบไม่แตก","แตงโม, เหยียบไม่แตก",Watermelon,ผลไม้,100 ก.,38,per_100_g_edible_portion
+DOH2018-05056,ทุเรียนกวน,ทุเรียนกวน,Durian paste,ผลไม้,100 ก.,340,per_100_g_edible_portion
+DOH2018-05058,"ทุเรียนกวน,ก้านยาว+ชะนี","ทุเรียนกวน, ก้านยาว+ชะนี",Durian paste,ผลไม้,100 ก.,352,per_100_g_edible_portion
+DOH2018-05059,"ทุเรียนกวน,ก้านยาว+หมอนทอง","ทุเรียนกวน, ก้านยาว+หมอนทอง",Durian paste,ผลไม้,100 ก.,344,per_100_g_edible_portion
+DOH2018-05060,"ทุเรียน,ก้านยาว","ทุเรียน, ก้านยาว","Durian, Kan-yow variety",ผลไม้,100 ก.,187,per_100_g_edible_portion
+DOH2018-05061,"ทุเรียน,ชะนี","ทุเรียน, ชะนี","Durian, Cha-nee variety",ผลไม้,100 ก.,148,per_100_g_edible_portion
+DOH2018-05062,ทุเรียนเทศ/หุเรียนน่า,ทุเรียนเทศ/ทุเรียนน้ำ,Soursop,ผลไม้,100 ก.,69,per_100_g_edible_portion
+DOH2018-05063,"ทุเรียน,หมอนทอง","ทุเรียน, หมอนทอง","Durian, Mon-thong variety",ผลไม้,100 ก.,163,per_100_g_edible_portion
+DOH2018-05069,"ฝรั่ง,แป้นสีทอง","ฝรั่ง, แป้นสีทอง","Guava, Pan-si-thong variety",ผลไม้,100 ก.,37,per_100_g_edible_portion
+DOH2018-05072,"พุทรา,ลูกยาว","พุทรา, ลูกยาว","Jujube, oval shape",ผลไม้,100 ก.,120,per_100_g_edible_portion
+DOH2018-05073,พุทราไทย,พุทราไทย,"Jujube, Thai variety",ผลไม้,100 ก.,89,per_100_g_edible_portion
+DOH2018-05076,"แพชชั่นฟรุท,น้าคั้น","แพชชั่นฟรุท, น้ำคั้น","Passion fruit, juice",ผลไม้,100 ก.,60,per_100_g_edible_portion
+DOH2018-05078,"แพซชั่นฟรุท,เมล็ด","แพชชั่นฟรุท, เมล็ด","Passion fruit, seeds",ผลไม้,100 ก.,248,per_100_g_edible_portion
+DOH2018-05082,มะขามหวาน,มะขามหวาน,"Tamarind, sweet variety",ผลไม้,100 ก.,333,per_100_g_edible_portion
+DOH2018-05085,มะไฟ,มะไฟ,Rambai,ผลไม้,100 ก.,48,per_100_g_edible_portion
+DOH2018-05088,"มะม่วง,เชียวสะอาด,ดิบ","มะม่วง, เขียวสะอาด, ดิบ","Mango, Kiew-sa-ard variety, unripe",ผลไม้,100 ก.,61,per_100_g_edible_portion
+DOH2018-05092,"มะม่วง,ทองดํา,ดิบ","มะม่วง, ทองดำ, ดิบ","Mango, Thong-dum variety, unripe",ผลไม้,100 ก.,105,per_100_g_edible_portion
+DOH2018-05094,"มะม่วง,พราหมณ์,สุก","มะม่วง, พราหมณ์, สุก","Mango, Prarm variety, ripe",ผลไม้,100 ก.,49,per_100_g_edible_portion
+DOH2018-05095,"มะม่วง,พิมเสน,สุก","มะม่วง, พิมเสน, สุก","Mango, Pimsen variety, ripe",ผลไม้,100 ก.,64,per_100_g_edible_portion
+DOH2018-05100,"มะม่วง,หนังกลางวัน,สุก","มะม่วง, หนังกลางวัน, สุก","Mango, Nung-klang-wan variety, ripe",ผลไม้,100 ก.,83,per_100_g_edible_portion
+DOH2018-05101,"มะม่วง,แห้วมัน,ดิบ","มะม่วง, แห้วมัน, ดิบ","Mango, Haew variety, unripe",ผลไม้,100 ก.,73,per_100_g_edible_portion
+DOH2018-05103,มะม่วงหาวมะนาวโห่,มะม่วงหาวมะนาวโห่,Karanda/Carunda,ผลไม้,100 ก.,57,per_100_g_edible_portion
+DOH2018-05106,"มะละกอ,ค่อนข้างสุก","มะละกอ, ค่อนข้างสุก","Papaya, half ripe",ผลไม้,100 ก.,13,per_100_g_edible_portion
+DOH2018-05111,ระกํา,ระกำ,Salak palm,ผลไม้,100 ก.,50,per_100_g_edible_portion
+DOH2018-05115,"ละมุดฝรั่ง,พันธุ์มะกอก","ละมุดฝรั่ง, พันธุ์มะกอก","Sapodilla, Ma-kok variety",ผลไม้,100 ก.,35,per_100_g_edible_portion
+DOH2018-05116,ลางสาด,ลางสาด,Langsat,ผลไม้,100 ก.,67,per_100_g_edible_portion
+DOH2018-05117,ลําใย,ลำไย,Longan,ผลไม้,100 ก.,111,per_100_g_edible_portion
+DOH2018-05118,"ล่าไย,กะโหลก","ลำไย, กะโหลก","Longan, Kaloke variety",ผลไม้,100 ก.,77,per_100_g_edible_portion
+DOH2018-05120,ลินจี,ลิ้นจี่,Litchi,ผลไม้,100 ก.,57,per_100_g_edible_portion
+DOH2018-05125,"ลินจี,ฮงฮวย","ลิ้นจี่, ฮงฮวย","Litchi, Hong-houy variety",ผลไม้,100 ก.,68,per_100_g_edible_portion
+DOH2018-05126,ลูกจันทน์/จันทน์เทศ,ลูกจันทน์/จันทน์เทศ,Nutmeg,ผลไม้,100 ก.,325,per_100_g_edible_portion
+DOH2018-05130,ลูกไหน/ลูกพลัมฆฆ,ลูกไหน/ลูกพลัม,Wild cherry,ผลไม้,100 ก.,53,per_100_g_edible_portion
+DOH2018-05148,"สัปปะรด,ศรีราชา","สับปะรด, ศรีราชา","Pineapple, Sri-ra-cha variety",ผลไม้,100 ก.,50,per_100_g_edible_portion
+DOH2018-05150,"สาสี่,นั้าผึ้ง","สาลี่, น้ำผึ้ง","Chinese pear, namphung variety",ผลไม้,100 ก.,44,per_100_g_edible_portion
+DOH2018-05151,"สาลี่,หอม","สาลี่, หอม","Chinese pear, ham variety",ผลไม้,100 ก.,57,per_100_g_edible_portion
+DOH2018-05152,"สาลี่,หิมะ","สาลี่, หิมะ","Chinese pear, hima variety",ผลไม้,100 ก.,56,per_100_g_edible_portion
+DOH2018-05153,องุ่นเขียว,องุ่นเขียว,"Grapes, green",ผลไม้,100 ก.,51,per_100_g_edible_portion
+DOH2018-05154,องุ่นดํา,องุ่นดำ,"Grapes, black",ผลไม้,100 ก.,46,per_100_g_edible_portion
+DOH2018-05156,"องุ่นแดงนอก,ลูกเล็ก","องุ่นแดงนอก, ลูกเล็ก","Grapes, red, small size",ผลไม้,100 ก.,61,per_100_g_edible_portion
+DOH2018-09012,"นมเปรี้ยวพร้อมดื่ม,ไชมันต่า,ยูเอชที,รสธรรมชาติ","นมเปรี้ยวพร้อมดื่ม, ไขมันต่ำ, ยูเอชที, รสธรรมชาติ","Drinking yoghurt, low fat, UHT, plain",นม & โยเกิร์ต,100 ก.,54,per_100_g_edible_portion
+DOH2018-09013,"นมเปรี้ยวพร้อมดื่ม,ไขมันต่า,ยูเอชที,รสผดไม้รวม","นมเปรี้ยวพร้อมดื่ม, ไขมันต่ำ, ยูเอชที, รสผลไม้รวม","Drinking yoghurt, low fat, UHT, fruits flavour",นม & โยเกิร์ต,100 ก.,53,per_100_g_edible_portion
+DOH2018-09014,"นมเปรี้ยวพร้อมดื่ม,พาสเจอร์ไรส์,รสธรรมชาติ","นมเปรี้ยวพร้อมดื่ม, พาสเจอร์ไรส์, รสธรรมชาติ","Drinking Yoghurt, pasteurised, plain",นม & โยเกิร์ต,100 ก.,63,per_100_g_edible_portion
+DOH2018-09015,"นมเปรี้ยวพร้อมดื่ม,พาสเจอร์ไรส์,สูตรนมสด,รสผลไม้รวม","นมเปรี้ยวพร้อมดื่ม, พาสเจอร์ไรส์, สูตรนมสด, รสผลไม้รวม","Drinking yoghurt, pasteurised, fruits flavour",นม & โยเกิร์ต,100 ก.,72,per_100_g_edible_portion
+DOH2018-09016,"นมเปรี้ยวพร้อมดื่ม,พาสเจอร์ไรส์,สูตรโยเกิร์ต35%,รสผลไม้รวมสอั่มรียร้ด,ร์ไรส์","นมเปรี้ยวพร้อมดื่ม, พาสเจอร์ไรส์, สูตรโยเกิร์ต 35%, รสผลไม้รวม","Drinking yoghurt pasteurised, fruits flavour",นม & โยเกิร์ต,100 ก.,67,per_100_g_edible_portion
+DOH2018-09018,"นมเปรี้ยวพร้อมดื่ม,ยูเอชที,้","นมเปรี้ยวพร้อมดื่ม, ยูเอชที","Drinking yoghurt pasteurised, fruits flavour Drinking yoghurt, UHT, 50% milk,",นม & โยเกิร์ต,100 ก.,70,per_100_g_edible_portion
+DOH2018-09021,นมผง,นมผง,"Milk, powder, full cream",นม & โยเกิร์ต,100 ก.,499,per_100_g_edible_portion
+DOH2018-09022,"นมผง,ขาดมันเนย","นมผง, ขาดมันเนย","Milk, powder, non fat",นม & โยเกิร์ต,100 ก.,358,per_100_g_edible_portion
+DOH2018-09023,นมชนิดเม็ด,นมชนิดเม็ด,"Milk, pressed",นม & โยเกิร์ต,100 ก.,477,per_100_g_edible_portion
+DOH2018-09024,"นมพร่องมันเนย,พาสเจอร์ไรส์,รสธรรมชาติ","นมพร่องมันเนย, พาสเจอร์ไรส์, รสธรรมชาติ","Milk, low fat, pasteurised, plain",นม & โยเกิร์ต,100 ก.,44,per_100_g_edible_portion
+DOH2018-09025,"นมพร่องมันเนย,ยูเอชที,รสธรรมชาติ","นมพร่องมันเนย, ยูเอชที, รสธรรมชาติ","Milk, low fat, UHT, plain",นม & โยเกิร์ต,100 ก.,42,per_100_g_edible_portion
+DOH2018-09027,"นมพร่องมันเนย,ยูเอชที,สูตรนมสดผสม่ม(อ่","นมพร่องมันเนย, ยูเอชที, สูตรนมสดผสม","Milk, low fat, UHT, milk mixed with fat milk",นม & โยเกิร์ต,100 ก.,46,per_100_g_edible_portion
+DOH2018-01002,"ก๋วยเตี๋ยว,เส้นเล็ก,เส้นสด","ก๋วยเตี๋ยว, เส้นเล็ก, เส้นสด","Noodle, rice, small size strip, fresh",ข้าว & ธัญพืช,100 ก.,220,per_100_g_edible_portion
+DOH2018-01004,"ขนมจีน,แป้งสด","ขนมจีน, แป้งสด","Noodle, rice, round, cooked",ข้าว & ธัญพืช,100 ก.,90,per_100_g_edible_portion
+DOH2018-01005,"ขนมจีน,แป้งหมัก","ขนมจีน, แป้งหมัก","Noodle, rice, round, fermented",ข้าว & ธัญพืช,100 ก.,77,per_100_g_edible_portion
+DOH2018-01006,ขนมปังปอนด์,ขนมปังปอนด์,Bread,ข้าว & ธัญพืช,100 ก.,329,per_100_g_edible_portion
+DOH2018-01008,"ข้าวกล้อง,ดอย,ดิบ","ข้าวกล้อง, ดอย, ดิบ","Hightland, brown rice, raw",ข้าว & ธัญพืช,100 ก.,357,per_100_g_edible_portion
+DOH2018-01011,"ข้าวกล้อง,หอมมะลิ,ดิบ","ข้าวกล้อง, หอมมะลิ, ดิบ","Rice, brown, Jusmine variety, raw",ข้าว & ธัญพืช,100 ก.,357,per_100_g_edible_portion
+DOH2018-01012,"ข้าวเจ้า,5%,ดิบ","ข้าวเจ้า, 5%, ดิบ","Rice, polished, 5%, raw",ข้าว & ธัญพืช,100 ก.,352,per_100_g_edible_portion
+DOH2018-01013,"ข้าวเจ้า,10%,ดิบ","ข้าวเจ้า, 10%, ดิบ","Rice, polished, 10%, raw",ข้าว & ธัญพืช,100 ก.,352,per_100_g_edible_portion
+DOH2018-01014,"ข้าวเจ้า,100%,ดิบ","ข้าวเจ้า, 100%, ดิบ","Rice, polished, 100%, raw",ข้าว & ธัญพืช,100 ก.,353,per_100_g_edible_portion
+DOH2018-01017,"ข้าวเจ้า,นึง","ข้าวเจ้า, นึ่ง","Rice, polished, steamed",ข้าว & ธัญพืช,100 ก.,141,per_100_g_edible_portion
+DOH2018-01021,"ช่าวเจ้า,มันปู,ดิบ","ข้าวเจ้า, มันปู, ดิบ","Rice, polished, Munpu variety, raw",ข้าว & ธัญพืช,100 ก.,356,per_100_g_edible_portion
+DOH2018-01024,"ข้าวเจ้า,เสาไห้,ดิบ","ข้าวเจ้า, เสาไห้, ดิบ","Rice, polished, Sauhai variety, raw",ข้าว & ธัญพืช,100 ก.,354,per_100_g_edible_portion
+DOH2018-01025,"ข้าวเจ้า,หอมนิล,ดิบ","ข้าวเจ้า, หอมนิล, ดิบ","Rice, polished, Homnil variety, raw",ข้าว & ธัญพืช,100 ก.,354,per_100_g_edible_portion
+DOH2018-01027,"ข้าวบัสมาตี,ดิบ","ข้าวบัสมาตี, ดิบ","Rice, polished, Basmati variety, raw",ข้าว & ธัญพืช,100 ก.,344,per_100_g_edible_portion
+DOH2018-01029,"ข้าวโพด,เหลือง,ต้ม","ข้าวโพด, เหลือง, ต้ม","Corn, yellow, boiled",ข้าว & ธัญพืช,100 ก.,117,per_100_g_edible_portion
+DOH2018-01030,"ข้าวโพด,เหลือง,ดิบ","ข้าวโพด, เหลือง, ดิบ","Corn, yellow, raw",ข้าว & ธัญพืช,100 ก.,111,per_100_g_edible_portion
+DOH2018-01031,"ข้าวโพดข้าวเหนียว,ขาวสลับม่วง,ดิบ","ข้าวโพดข้าวเหนียว, ขาวสลับม่วง, ดิบ","Corn, Waxy or sticky variety, raw",ข้าว & ธัญพืช,100 ก.,182,per_100_g_edible_portion
+DOH2018-01032,"ข้าวฟ่าง,ดิบ","ข้าวฟ่าง, ดิบ","Sorghum, raw",ข้าว & ธัญพืช,100 ก.,351,per_100_g_edible_portion
+DOH2018-01033,"ข้าวสาลี,ดิบ","ข้าวสาลี, ดิบ","Wheat, raw",ข้าว & ธัญพืช,100 ก.,339,per_100_g_edible_portion
+DOH2018-01034,"ข้าวสาลี,จมูกข้าว,อบ","ข้าวสาลี, จมูกข้าว, อบ","Wheat, germ, dried",ข้าว & ธัญพืช,100 ก.,392,per_100_g_edible_portion
+DOH2018-01035,"ข้าวสาลี,รําข้าว","ข้าวสาลี, รำข้าว","Wheat, bran, raw",ข้าว & ธัญพืช,100 ก.,284,per_100_g_edible_portion
+DOH2018-01039,"ข้าวเหนียว,นึง","ข้าวเหนียว, นึ่ง","Rice, glutinous,steamed",ข้าว & ธัญพืช,100 ก.,230,per_100_g_edible_portion
+DOH2018-01040,"ข้าวเหนียวกล้อง,ดิบ","ข้าวเหนียวกล้อง, ดิบ","Rice, brown, glutinous, raw",ข้าว & ธัญพืช,100 ก.,356,per_100_g_edible_portion
+DOH2018-01042,น่าข้าวกล้องงอก,น้ำข้าวกล้องงอก,"Brown rice, germinated, beverage",ข้าว & ธัญพืช,100 ก.,14,per_100_g_edible_portion
+DOH2018-01045,"น่านมข้าวยาคู,ผง","น้ำนมข้าวยาคู, ผง","Young rice milk, powder",ข้าว & ธัญพืช,100 ก.,379,per_100_g_edible_portion
+DOH2018-01046,"บะหมี,สด","บะหมี่, สด","Noodles, wheat, fresh",ข้าว & ธัญพืช,100 ก.,310,per_100_g_edible_portion
+DOH2018-01047,บะหมีกึงสําเร็จรูปพร้อมเครื่องปรุงรสหมู,บะหมี่กึ่งสำเร็จรูปพร้อมเครื่องปรุงรสหมู,"Noodles, wheat, instant, with seasoning, pork flavour",ข้าว & ธัญพืช,100 ก.,454,per_100_g_edible_portion
+DOH2018-01048,แป้งข้าวเจ้า,แป้งข้าวเจ้า,Rice fiour,ข้าว & ธัญพืช,100 ก.,375,per_100_g_edible_portion
+DOH2018-08002,"ไข่ไก่,ไข่แดง","ไข่ไก่, ไข่แดง","Egg, hen, yolk",เนื้อสัตว์ & ไข่,100 ก.,292,per_100_g_edible_portion
+DOH2018-08005,"ไข่จระเชข้,ไข่แดง","ไข่จระเข้, ไข่แดง","Egg, crocodile, yolk",เนื้อสัตว์ & ไข่,100 ก.,228,per_100_g_edible_portion
+DOH2018-08010,"ไข่เป็ด,ไข่ขาว","ไข่เป็ด, ไข่ขาว","Egg, duck, white",เนื้อสัตว์ & ไข่,100 ก.,49,per_100_g_edible_portion
+DOH2018-08011,"ไข่เป็ด,ไข่แดง","ไข่เป็ด, ไข่แดง","Egg, duck, yolk",เนื้อสัตว์ & ไข่,100 ก.,319,per_100_g_edible_portion
+DOH2018-08012,"ไข่เป็ด,ทั้งฟอง","ไข่เป็ด, ทั้งฟอง","Egg, duck, whole",เนื้อสัตว์ & ไข่,100 ก.,178,per_100_g_edible_portion
+DOH2018-08013,"ไข่เปรี้ยว,ไข่ไก่,ไข่ขาว","ไข่เปรี้ยว, ไข่ไก่, ไข่ขาว","Sour egg, hen, white",เนื้อสัตว์ & ไข่,100 ก.,39,per_100_g_edible_portion
+DOH2018-06001,"กบ,ดิบ","กบ, ดิบ","Frog, raw",เนื้อสัตว์ & ไข่,100 ก.,102,per_100_g_edible_portion
+DOH2018-06003,"กระรอก,ดิบ","กระรอก, ดิบ","Squirrel, raw",เนื้อสัตว์ & ไข่,100 ก.,113,per_100_g_edible_portion
+DOH2018-06004,"ไก่,ตับ,ดิบ","ไก่, ตับ, ดิบ","Chicken, liver, raw",เนื้อสัตว์ & ไข่,100 ก.,115,per_100_g_edible_portion
+DOH2018-06005,"ไก่,เนื้อ,ดิบ","ไก่, เนื้อ, ดิบ","Chicken, meat, raw",เนื้อสัตว์ & ไข่,100 ก.,165,per_100_g_edible_portion
+DOH2018-06006,"ไก่,เลือด,สุก","ไก่, เลือด, สุก","Chicken, blood, cooked",เนื้อสัตว์ & ไข่,100 ก.,50,per_100_g_edible_portion
+DOH2018-06007,"ไก่ดํา,กิ้น,ดิบ","ไก่ดำ, กึ๋น, ดิบ","Black chicken, gizzard, raw",เนื้อสัตว์ & ไข่,100 ก.,97,per_100_g_edible_portion
+DOH2018-06008,"ไก่ดํา,น่อง,เนื้อและหนัง,ดิบ","ไก่ดำ, น่อง, เนื้อและหนัง, ดิบ","Black chicken, drumstic, meat and skin, raw",เนื้อสัตว์ & ไข่,100 ก.,122,per_100_g_edible_portion
+DOH2018-06009,"ไก่ดํา,ปีก,เนื้อและหนัง,ดิบ","ไก่ดำ, ปีก, เนื้อและหนัง, ดิบ","Black chicken, wing, meat and skin, raw",เนื้อสัตว์ & ไข่,100 ก.,147,per_100_g_edible_portion
+DOH2018-06010,"ไก่ดํา,สะโพก,เนื้อและหนัง,ดิบ","ไก่ดำ, สะโพก, เนื้อและหนัง, ดิบ","Black chicken, thigh, meat and skin, raw",เนื้อสัตว์ & ไข่,100 ก.,127,per_100_g_edible_portion
+DOH2018-06012,"ไก่บ้าน,กิ้น,ดิบ","ไก่บ้าน, กึ๋น, ดิบ","Native chicken, gizzard, raw",เนื้อสัตว์ & ไข่,100 ก.,111,per_100_g_edible_portion
+DOH2018-06013,"ไก่บ้าน,น่อง,เนื้อและหนัง,ดิบ","ไก่บ้าน, น่อง, เนื้อและหนัง, ดิบ","Native chicken, drumstick, meat and skin,",เนื้อสัตว์ & ไข่,100 ก.,119,per_100_g_edible_portion
+DOH2018-06028,"แพะ,เนื่อ,ดิบ","แพะ, เนื้อ, ดิบ","Goat, meat, raw",เนื้อสัตว์ & ไข่,100 ก.,93,per_100_g_edible_portion
+DOH2018-06029,"แย้,แห้ง","แย้, แห้ง","Ground lizzard, dried",เนื้อสัตว์ & ไข่,100 ก.,254,per_100_g_edible_portion
+DOH2018-06030,"ลูกอ้อด/ลูกฮวก,ดิบ","ลูกอ๊อด/ลูกฮวก, ดิบ","Tadpole, raw",เนื้อสัตว์ & ไข่,100 ก.,65,per_100_g_edible_portion
+DOH2018-06031,"วัว,กระเพาะ,สุก","วัว, กระเพาะ, สุก","Beef, abomasum, cooked",เนื้อสัตว์ & ไข่,100 ก.,174,per_100_g_edible_portion
+DOH2018-06032,"จัว,เนื่อ,ดิบ","วัว, เนื้อ, ดิบ","Beef, meat, raw",เนื้อสัตว์ & ไข่,100 ก.,134,per_100_g_edible_portion
+DOH2018-06033,"วัว,เนื่อคอโหนกไหล่,ดิบ","วัว, เนื้อคอโหนกไหล่, ดิบ","Beef, hump, raw",เนื้อสัตว์ & ไข่,100 ก.,193,per_100_g_edible_portion
+DOH2018-06034,"กัว,เนือแดดเดียว,ดิบ","วัว, เนื้อแดดเดียว, ดิบ","Beef, meat, sundried , raw",เนื้อสัตว์ & ไข่,100 ก.,139,per_100_g_edible_portion
+DOH2018-06035,"วัว,เนือติดมัน,ทอด","วัว, เนื้อติดมัน, ทอด","Beef, medium fat, fried",เนื้อสัตว์ & ไข่,100 ก.,412,per_100_g_edible_portion
+DOH2018-06037,"วัว,ปอด,ดิบ","วัว, ปอด, ดิบ","Beef, lung, raw",เนื้อสัตว์ & ไข่,100 ก.,83,per_100_g_edible_portion
+DOH2018-06038,"จัว,ผ้าชีริว,ดิบ","วัว, ผ้าขี้ริ้ว, ดิบ","Beef, rumen, raw",เนื้อสัตว์ & ไข่,100 ก.,63,per_100_g_edible_portion
+DOH2018-06040,"วัว,ลําไส้,สุก","วัว, ลำไส้, สุก","Beef, intestine, cooked",เนื้อสัตว์ & ไข่,100 ก.,353,per_100_g_edible_portion
+DOH2018-06043,"ไส้กรอกคอกเทล,ไก่","ไส้กรอกค็อกเทล, ไก่","Cocktail, sausage, chicken",เนื้อสัตว์ & ไข่,100 ก.,220,per_100_g_edible_portion
+DOH2018-06044,"ไส้กรอกคอกเทล,หมู","ไส้กรอกค็อกเทล, หมู","Cocktail, sausage, pork",เนื้อสัตว์ & ไข่,100 ก.,242,per_100_g_edible_portion
+DOH2018-06045,"ไส้กรอกเวียนนา,ไก่","ไส้กรอกเวียนนา, ไก่","Vienna, sausage, chicken",เนื้อสัตว์ & ไข่,100 ก.,335,per_100_g_edible_portion
+DOH2018-06046,"ไส้กรอกเวียนนา,หมู","ไส้กรอกเวียนนา, หมู","Vienna, sausage, pork",เนื้อสัตว์ & ไข่,100 ก.,263,per_100_g_edible_portion
+DOH2018-06047,"ไส้กรอกหมู,ทอด","ไส้กรอกหมู, ทอด","Pork, sausage, fried",เนื้อสัตว์ & ไข่,100 ก.,409,per_100_g_edible_portion
+DOH2018-06048,"ไส้อัว,ดิบ","ไส้อั่ว, ดิบ","Pork, sausage, northern style, raw",เนื้อสัตว์ & ไข่,100 ก.,420,per_100_g_edible_portion
+DOH2018-06049,"หนูนา,เนือ,ดิบ","หนูนา, เนื้อ, ดิบ","Rat, meat, raw",เนื้อสัตว์ & ไข่,100 ก.,219,per_100_g_edible_portion
+DOH2018-06050,"หมู,เนื่อ,ดิบ","หมู, เนื้อ, ดิบ","Pork, meat, raw",เนื้อสัตว์ & ไข่,100 ก.,110,per_100_g_edible_portion
+DOH2018-06051,"หมู,ปอด,ดิบ","หมู, ปอด, ดิบ","Pork, lung, raw",เนื้อสัตว์ & ไข่,100 ก.,87,per_100_g_edible_portion
+DOH2018-06052,"หมู,เลือด,สุก","หมู, เลือด, สุก","Pork, blood, cooked",เนื้อสัตว์ & ไข่,100 ก.,44,per_100_g_edible_portion
+DOH2018-06158,"แอปเปิ้ลแดง,พูจิ","แอปเปิ้ลแดง, พูจิ","Apple, red variety, Fuji",เนื้อสัตว์ & ไข่,100 ก.,36,per_100_g_edible_portion
+DOH2018-07001,"กระเพาะปลา,ทอด","กระเพาะปลา, ทอด","Fish, maw, fried",ปลา & อาหารทะเล,100 ก.,682,per_100_g_edible_portion
+DOH2018-07002,"กุ้งกุลาดํา,เนือ,สด","กุ้งกุลาดำ, เนื้อ, สด","Giant tiger prawn, body, raw",ปลา & อาหารทะเล,100 ก.,92,per_100_g_edible_portion
+DOH2018-07003,"กุ้งกุลาดํา,หัว,สด","กุ้งกุลาดำ, หัว, สด","Giant tiger prawn, head, raw",ปลา & อาหารทะเล,100 ก.,120,per_100_g_edible_portion
+DOH2018-07004,"กุ้งเคย,สด","กุ้งเคย, สด","Krill/ small shrimp, raw",ปลา & อาหารทะเล,100 ก.,61,per_100_g_edible_portion
+DOH2018-07005,"กุ้งจ่อม,กุ้งหมักข้าวคัว","กุ้งจ่อม, กุ้งหมักข้าวคั่ว","Small shrimp, fermented",ปลา & อาหารทะเล,100 ก.,135,per_100_g_edible_portion
+DOH2018-07006,"กุ้งฝอย,สด","กุ้งฝอย, สด","Lanchester's fresh water, prawn, raw",ปลา & อาหารทะเล,100 ก.,88,per_100_g_edible_portion
+DOH2018-07007,"กุ้งสัม,กุ้งหมัก","กุ้งส้ม, กุ้งหมัก","Shrimp, fermented",ปลา & อาหารทะเล,100 ก.,58,per_100_g_edible_portion
+DOH2018-07008,"กุ้งตัวเล็ก,แห้ง","กุ้งตัวเล็ก, แห้ง","Shrimp, dried",ปลา & อาหารทะเล,100 ก.,263,per_100_g_edible_portion
+DOH2018-07009,ไตปลากระบอก,ไตปลากระบอก,"Bluespot gray mullet, viscera, fermented",ปลา & อาหารทะเล,100 ก.,90,per_100_g_edible_portion
+DOH2018-07010,นําปู/น่าปู่,น้ำปู,Crab paste,ปลา & อาหารทะเล,100 ก.,210,per_100_g_edible_portion
+DOH2018-07011,"ปลากาเนือ,สด","ปลากา, เนื้อ, สด","Sharkminnow, raw",ปลา & อาหารทะเล,100 ก.,98,per_100_g_edible_portion
+DOH2018-07012,"ปลากดทะเล,แห้ง","ปลากดทะเล, แห้ง","Catfish, sea, dried",ปลา & อาหารทะเล,100 ก.,219,per_100_g_edible_portion
+DOH2018-07013,"ปลากระบอก,สด","ปลากระบอก, สด","Bluespot gray mullet, raw",ปลา & อาหารทะเล,100 ก.,98,per_100_g_edible_portion
+DOH2018-07027,"ปลาดุก,สด","ปลาดุก, สด","Fresh-water catfish, raw",ปลา & อาหารทะเล,100 ก.,114,per_100_g_edible_portion
+DOH2018-07028,"ปลาแดง,สด","ปลาแดง, สด","Orante threadfin bream, raw",ปลา & อาหารทะเล,100 ก.,120,per_100_g_edible_portion
+DOH2018-07029,"ปลาดอกหมาก,ขูดเนื่อ,สด","ปลาดอกหมาก, ขูดเนื้อ, สด","Whipfin silver-biddy, raw",ปลา & อาหารทะเล,100 ก.,90,per_100_g_edible_portion
+DOH2018-07030,"ปลาตะโกก,สด","ปลาตะโกก, สด","Soldier river barb, raw",ปลา & อาหารทะเล,100 ก.,92,per_100_g_edible_portion
+DOH2018-07032,"ปลาตาเดียว/ปลาซีกเดียว,สด","ปลาตาเดียว/ปลาซีกเดียว, สด","Indian Hilabut, raw",ปลา & อาหารทะเล,100 ก.,89,per_100_g_edible_portion
+DOH2018-07034,"ปลาทู,นึง","ปลาทู, นึ่ง","Short-body, mackerel, steamed",ปลา & อาหารทะเล,100 ก.,136,per_100_g_edible_portion
+DOH2018-07035,"ปลาทู,สด","ปลาทู, สด","Short-body, mackerel, raw",ปลา & อาหารทะเล,100 ก.,140,per_100_g_edible_portion
+DOH2018-07036,"ปลาทูน่า,สด","ปลาทูน่า, สด","Tuna, raw",ปลา & อาหารทะเล,100 ก.,110,per_100_g_edible_portion
+DOH2018-07037,"ปลาทูน่า,ในน่ามัน","ปลาทูน่า, ในน้ำมัน","Tuna, in oil",ปลา & อาหารทะเล,100 ก.,218,per_100_g_edible_portion
+DOH2018-07039,"ปลาทับทิม,สด","ปลาทับทิม, สด","Nile tilapia, raw",ปลา & อาหารทะเล,100 ก.,113,per_100_g_edible_portion
+DOH2018-07041,"ปลานิล,สด","ปลานิล, สด","Nile tilapia, raw",ปลา & อาหารทะเล,100 ก.,93,per_100_g_edible_portion
+DOH2018-07042,"ปลาเนื้ออ่อน,สด","ปลาเนื้ออ่อน, สด","Whisker sheatfish, raw",ปลา & อาหารทะเล,100 ก.,80,per_100_g_edible_portion
+DOH2018-07044,ปลาปีกไก่สด,ปลาปีกไก่สด,"Blue sheatfhish, raw",ปลา & อาหารทะเล,100 ก.,142,per_100_g_edible_portion
+DOH2018-07045,"ปลาแป้งแดง,ปลาหมัก","ปลาแป้งแดง, ปลาหมัก","Fish, fermented",ปลา & อาหารทะเล,100 ก.,114,per_100_g_edible_portion
+DOH2018-07046,"ปลาแป้น,สด","ปลาแป้น, สด","Common ponyfish, raw",ปลา & อาหารทะเล,100 ก.,120,per_100_g_edible_portion
+DOH2018-07047,"ปลาแปบ,สด","ปลาแปบ, สด","Abramine, raw",ปลา & อาหารทะเล,100 ก.,102,per_100_g_edible_portion
+DOH2018-07048,"ปลาม้า,สด","ปลาม้า, สด","Boeseman croaker, raw",ปลา & อาหารทะเล,100 ก.,115,per_100_g_edible_portion
+DOH2018-07049,"ปลายอน,สด","ปลายอน, สด","Macronema cat fish, raw",ปลา & อาหารทะเล,100 ก.,115,per_100_g_edible_portion
+DOH2018-07050,ปลาร้า,ปลาร้า,"Fish, fermented (Pla-ra)",ปลา & อาหารทะเล,100 ก.,149,per_100_g_edible_portion
+DOH2018-07052,"ปลาร้าปลาชิว,ดิบ","ปลาร้าปลาชิว, ดิบ","Rasbora fish, fermented, raw",ปลา & อาหารทะเล,100 ก.,119,per_100_g_edible_portion
+DOH2018-07054,"ปลาแรด,สด","ปลาแรด, สด","Giant gourami, raw",ปลา & อาหารทะเล,100 ก.,179,per_100_g_edible_portion
+DOH2018-07055,"ปลาลิ้นหมา,แห้ง","ปลาลิ้นหมา, แห้ง","Tongue-sole, dried",ปลา & อาหารทะเล,100 ก.,280,per_100_g_edible_portion
+DOH2018-07056,"ปลาสูบ/ปลาสูด,สด","ปลาสูบ/ปลาสูด, สด","Spotted hampala barb, raw",ปลา & อาหารทะเล,100 ก.,83,per_100_g_edible_portion
+DOH2018-07057,"ปลาสัม,ตัวเล็ก,ปลาหมัก","ปลาส้ม, ตัวเล็ก, ปลาหมัก","Fish, small, fermented",ปลา & อาหารทะเล,100 ก.,127,per_100_g_edible_portion
+DOH2018-07059,"ปลาสลิด,สด","ปลาสลิด, สด","Snake skin gourami, raw",ปลา & อาหารทะเล,100 ก.,76,per_100_g_edible_portion
+DOH2018-07060,"ปลาสลาด,ย่าง","ปลาสลาด, ย่าง","Grey feather back, roasted",ปลา & อาหารทะเล,100 ก.,395,per_100_g_edible_portion
+DOH2018-07061,ปลาเส้น,ปลาเส้น,"Fish, minced strip",ปลา & อาหารทะเล,100 ก.,65,per_100_g_edible_portion
+DOH2018-07062,"ปลาสวาย,สด","ปลาสวาย, สด","Striped catfish, raw",ปลา & อาหารทะเล,100 ก.,256,per_100_g_edible_portion
+DOH2018-07063,"ปลาสีเสียด,แห้ง","ปลาสีเสียด, แห้ง","Yellow queenfish, dried",ปลา & อาหารทะเล,100 ก.,176,per_100_g_edible_portion
+DOH2018-07064,"ปลาสําลี,สด","ปลาสำลี, สด","Black-banded travally, raw",ปลา & อาหารทะเล,100 ก.,164,per_100_g_edible_portion
+DOH2018-07092,"หอยโข่ง,สด","หอยโข่ง, สด","Apple snail, raw",ปลา & อาหารทะเล,100 ก.,85,per_100_g_edible_portion
+DOH2018-07093,"หอยโข่งทะเล/หอยเป้าฮือ,สด","หอยโข่งทะเล/หอยเป้าฮือ, สด","Abalone, raw",ปลา & อาหารทะเล,100 ก.,72,per_100_g_edible_portion
+DOH2018-07094,"หอยแครง,สด","หอยแครง, สด","Blood cockle, raw",ปลา & อาหารทะเล,100 ก.,81,per_100_g_edible_portion
+DOH2018-07096,"หอยทราย,สด","หอยทราย, สด","River snail, raw",ปลา & อาหารทะเล,100 ก.,70,per_100_g_edible_portion
+DOH2018-07097,"หอยปากเป็ด,สด","หอยปากเป็ด, สด","Lamp shell, raw",ปลา & อาหารทะเล,100 ก.,66,per_100_g_edible_portion
+DOH2018-07098,"หอยแมลงภู่,สด","หอยแมลงภู่, สด","Green mussel, raw",ปลา & อาหารทะเล,100 ก.,53,per_100_g_edible_portion
+DOH2018-07099,"หอยหวาน,สด","หอยหวาน, สด","Spotted babylon, raw",ปลา & อาหารทะเล,100 ก.,84,per_100_g_edible_portion
+DOH2018-07100,"หูฉลาม,แห้ง","หูฉลาม, แห้ง","Shark fin, dried",ปลา & อาหารทะเล,100 ก.,351,per_100_g_edible_portion
+DOH2018-04027,"ข้าวสาร,ดอก","ข้าวสาร, ดอก","Khao san, flower",ผัก,100 ก.,39,per_100_g_edible_portion
+DOH2018-04028,"ข่าอ่อน,หน่อ","ข่าอ่อน, หน่อ","Galangal, shoot",ผัก,100 ก.,43,per_100_g_edible_portion
+DOH2018-04029,"ข่าอ่อน,หัว","ข่าอ่อน, หัว","Galangal, tuber",ผัก,100 ก.,26,per_100_g_edible_portion
+DOH2018-04030,"ซิง,แก่","ขิง, แก่","Ginger, mature rhizome",ผัก,100 ก.,28,per_100_g_edible_portion
+DOH2018-04035,คูนฆ,คูน,Green Taro,ผัก,100 ก.,12,per_100_g_edible_portion
+DOH2018-04037,"แค,ยอด","แค, ยอด","Sesbania, tender tips",ผัก,100 ก.,98,per_100_g_edible_portion
+DOH2018-04038,แครอท,แครอท,Carrot,ผัก,100 ก.,42,per_100_g_edible_portion
+DOH2018-04039,"งิวแดง,ดอก,แห้ง","งิ้วแดง, ดอก, แห้ง","Red cotton tree, flowers, dried",ผัก,100 ก.,317,per_100_g_edible_portion
+DOH2018-04040,จวง/เทพธาโร,จวง/เทพธาโร,Juang,ผัก,100 ก.,115,per_100_g_edible_portion
+DOH2018-04043,"จิญจิกน่า/จิกนา,ยอด","จิกน้ำ/จิกนา, ยอด","Indian oak, tender tips",ผัก,100 ก.,56,per_100_g_edible_portion
+DOH2018-04044,"จิกนอนวัน/จิกหาวนอน,ยอด","จิกนอนวัน/จิกหาวนอน, ยอด","Jik, tender tips",ผัก,100 ก.,192,per_100_g_edible_portion
+DOH2018-04046,"เจียงดา/เชียงดา,ใบ","เจียงดา/เชียงดา, ใบ","Chiang-da, leaves",ผัก,100 ก.,70,per_100_g_edible_portion
+DOH2018-04050,"เดือยดิน/มะเดือดิน,ยอดและใบอ่อน","เดือยดิน/มะเดือดิน, ยอดและใบอ่อน","Ma-deua-din, tender tips and leaves",ผัก,100 ก.,95,per_100_g_edible_portion
+DOH2018-04055,"ตะลิงปลิง,ผล","ตะลิงปลิง, ผล","Bitimbi, fruits",ผัก,100 ก.,11,per_100_g_edible_portion
+DOH2018-04057,"ต้างป่า/ต้างหลวง,ดอก","ต้างป่า/ต้างหลวง, ดอก",Snow flake,ผัก,100 ก.,60,per_100_g_edible_portion
+DOH2018-04058,ตาลปัตรถาษี,ตาลปัตรฤๅษี,Talapatreusi,ผัก,100 ก.,17,per_100_g_edible_portion
+DOH2018-04060,"เตียน/กระท้อนป่า,ผล","เตียน/กระท้อนป่า, ผล","Tein/wild santol, fruit",ผัก,100 ก.,64,per_100_g_edible_portion
+DOH2018-04063,แตงไทยอ่อน,แตงไทยอ่อน,"Maskmelon, young",ผัก,100 ก.,13,per_100_g_edible_portion
+DOH2018-04064,แตงโมอ่อน,แตงโมอ่อน,"Watermelon, young",ผัก,100 ก.,12,per_100_g_edible_portion
+DOH2018-04065,แตงร้าน,แตงร้าน,Long cucumber,ผัก,100 ก.,10,per_100_g_edible_portion
+DOH2018-04067,ถ้วงอก,ถั่วงอก,Mung bean sprout,ผัก,100 ก.,39,per_100_g_edible_portion
+DOH2018-04068,"ถ้วงอก,หัวโต","ถั่วงอก, หัวโต",Soy bean sprout,ผัก,100 ก.,79,per_100_g_edible_portion
+DOH2018-04069,ถัวปี,ถั่วปี,Asparagus peas,ผัก,100 ก.,39,per_100_g_edible_portion
+DOH2018-04070,ถัวฝักยาว.,ถั่วฝักยาว,"Yard long bean, green",ผัก,100 ก.,35,per_100_g_edible_portion
+DOH2018-04073,ถัวไร่,ถั่วไร่,Catjung,ผัก,100 ก.,29,per_100_g_edible_portion
+DOH2018-04074,ถัวลันเตา,ถั่วลันเตา,Garden peas,ผัก,100 ก.,58,per_100_g_edible_portion
+DOH2018-04075,"เถาคัน/ส้มเขาคัน,ผล","เถาคัน/ส้มเขาคัน, ผล","Treebine, fruit",ผัก,100 ก.,27,per_100_g_edible_portion
+DOH2018-04076,"ทองหลาง,ใบ","ทองหลาง, ใบ","Coral, leaves",ผัก,100 ก.,72,per_100_g_edible_portion
+DOH2018-04080,"นําเต้า,ผล","น้ำเต้า, ผล","Bottle gourd, fruit",ผัก,100 ก.,17,per_100_g_edible_portion
+DOH2018-04081,"นําเต้า,ไส้","น้ำเต้า, ไส้","Bottle gourd, inner portion",ผัก,100 ก.,10,per_100_g_edible_portion
+DOH2018-04085,บวบเหลียม,บวบเหลี่ยม,Angled gourd,ผัก,100 ก.,18,per_100_g_edible_portion
+DOH2018-04088,"บุกเกียง,ยอดอ่อน","บุกเกียง, ยอดอ่อน","Stanley's water-tub, tenders tips",ผัก,100 ก.,21,per_100_g_edible_portion
+DOH2018-04091,"ใบเตย,น่าค้น","ใบเตย, น้ำค้น","Pandanus, leaves, juice",ผัก,100 ก.,4,per_100_g_edible_portion
+DOH2018-04093,"ใบสะทอน,น่าคัน","ใบสะทอน, น้ำคัน","Sa-ton, leaves, juice",ผัก,100 ก.,133,per_100_g_edible_portion
+DOH2018-04095,ปวยเล้ง,ปวยเล้ง,Spinach,ผัก,100 ก.,25,per_100_g_edible_portion
+DOH2018-04096,"เปราะ,ใบ","เปราะ, ใบ","Sand ginger, leaves",ผัก,100 ก.,18,per_100_g_edible_portion
+DOH2018-04098,ผักกะสัง,ผักกะสัง,"Peperomia, shiny",ผัก,100 ก.,13,per_100_g_edible_portion
+DOH2018-04099,ผักกาดขาว,ผักกาดขาว,Chinese white cabbage,ผัก,100 ก.,11,per_100_g_edible_portion
+DOH2018-04100,ผักกาดเขียว,ผักกาดเขียว,Mustard greens,ผัก,100 ก.,22,per_100_g_edible_portion
+DOH2018-04101,ผักกาดนกเขา,ผักกาดนกเขา,Pak-kad-nok-kao,ผัก,100 ก.,24,per_100_g_edible_portion
+DOH2018-04102,ผักกาดหอม,ผักกาดหอม,Lettuce,ผัก,100 ก.,27,per_100_g_edible_portion
+DOH2018-04106,ผักกดฆ,ผักกูด,Paco/Oak fern,ผัก,100 ก.,25,per_100_g_edible_portion
+DOH2018-04108,ผักชีขวง,ผักชีขวง,Pak-kee-kweung,ผัก,100 ก.,34,per_100_g_edible_portion
+DOH2018-04109,ผักขีหูด,ผักขี้หูด,Pak-kee-hood,ผัก,100 ก.,15,per_100_g_edible_portion
+DOH2018-04110,ผักโขม/ผักโหม/ผักหม,ผักโขม/ผักโหม/ผักหม,Chineses spinach,ผัก,100 ก.,17,per_100_g_edible_portion
+DOH2018-04112,ผักชี,ผักชี,Coriander,ผัก,100 ก.,24,per_100_g_edible_portion
+DOH2018-04114,ผักคะน้า,ผักคะน้ำ,Chinese kale,ผัก,100 ก.,31,per_100_g_edible_portion
+DOH2018-04115,ผักซีลาว,ผักชีลาว,Dill,ผัก,100 ก.,32,per_100_g_edible_portion
+DOH2018-04122,"ผักบุ้งไทย,ต้นแดง","ผักบุ้งไทย, ต้นแดง","Water spinach, red",ผัก,100 ก.,16,per_100_g_edible_portion
+DOH2018-04123,ผักปลัง/ผักปั๊ง,ผักปลัง/ผักปั๊ง,Malabar spinach,ผัก,100 ก.,24,per_100_g_edible_portion
+DOH2018-04124,ผักผ้า/ไข่นํา,ผักผ้า/ไข่น้ำ,Swamp algae,ผัก,100 ก.,9,per_100_g_edible_portion
+DOH2018-04127,ผักเม็ก,ผักเม็ก,Pak-meg,ผัก,100 ก.,84,per_100_g_edible_portion
+DOH2018-04128,ผักแมะ,ผักแมะ,Pak-mae,ผัก,100 ก.,48,per_100_g_edible_portion
+DOH2018-04129,ผักแว่น,ผักแว่น,Water fern,ผัก,100 ก.,44,per_100_g_edible_portion
+DOH2018-04130,"ผักเสี้ยว(ชงโค),ยอด","ผักเสี้ยว(ชงโค), ยอด","Thomas's tree, tender tips",ผัก,100 ก.,60,per_100_g_edible_portion
+DOH2018-04132,ผักหนาม,ผักหนาม,Lasia,ผัก,100 ก.,21,per_100_g_edible_portion
+DOH2018-04133,"ผักหวาน,บ้าน","ผักหวาน, บ้าน",Pak-waan-baan,ผัก,100 ก.,36,per_100_g_edible_portion
+DOH2018-04135,"ผักฮ้วน/ฮ้วนหมู,ดอก","ผักฮ้วน/ฮ้วนหมู, ดอก","Pak-hawn, flowers",ผัก,100 ก.,50,per_100_g_edible_portion
+DOH2018-04136,"ผักส้วน/ช้วนหมู,ยอด","ผักฮ้วน/ฮ้วนหมู, ยอด","Pak-hawn, tender tips",ผัก,100 ก.,68,per_100_g_edible_portion
+DOH2018-04137,"ผักฮี/ผักเฮียด,ยอด","ผักฮี/ผักเฮียด, ยอด","Pak-hi, tender tips",ผัก,100 ก.,53,per_100_g_edible_portion
+DOH2018-04139,"พริกขีหนู,ยอด","พริกขี้หนู, ยอด","Chili pepper, tender tips",ผัก,100 ก.,50,per_100_g_edible_portion
+DOH2018-04140,"พริกจินดา/พริกซุปเปอร์ฮอท,เขียว","พริกจินดา/พริกซุปเปอร์ฮอท, เขียว","Chili pepper, green, hot",ผัก,100 ก.,44,per_100_g_edible_portion
+DOH2018-04142,"พริกซี้ฟ้า,แดง","พริกชี้ฟ้า, แดง","Pepper, red, long",ผัก,100 ก.,64,per_100_g_edible_portion
+DOH2018-04143,"พริกชี้ฟ้า,เขียว","พริกชี้ฟ้า, เขียว","Pepper, green, long",ผัก,100 ก.,53,per_100_g_edible_portion
+DOH2018-04144,"พริกจินดา/พริกซุปเปอร์ฮอท,แดง","พริกจินดา/พริกซุปเปอร์ฮอท, แดง","Chili pepper, red, hot",ผัก,100 ก.,79,per_100_g_edible_portion
+DOH2018-04147,พริกหวาน/พริกยักษ์,พริกหวาน/พริกยักษ์,Bell pepper/Sweet pepper,ผัก,100 ก.,82,per_100_g_edible_portion
+DOH2018-04148,พริกเหลือง,พริกเหลือง,"Pepper, yellow, long",ผัก,100 ก.,106,per_100_g_edible_portion
+DOH2018-04150,แพงพวยนา/ผักปอดน่า,แพงพวยนา/ผักปอดน้ำ,Creeping water primrose,ผัก,100 ก.,39,per_100_g_edible_portion
+DOH2018-04151,"ฟักข้าว,ผล","ฟักข้าว, ผล","Spring bitter cucumber, fruit",ผัก,100 ก.,31,per_100_g_edible_portion
+DOH2018-04152,"ฟักข้าว,ยอด","ฟักข้าว, ยอด","Spring bitter cucumber, tips",ผัก,100 ก.,48,per_100_g_edible_portion
+DOH2018-04153,ฟักเขียว,ฟักเขียว,Winter melon,ผัก,100 ก.,13,per_100_g_edible_portion
+DOH2018-04156,"ฟักทอง,ยอดอ่อน","ฟักทอง, ยอดอ่อน","Pumpkin, tender tips",ผัก,100 ก.,19,per_100_g_edible_portion
+DOH2018-04159,"มะกอก,ยอดอ่อน","มะกอก, ยอดอ่อน","Hog plum, tender tips",ผัก,100 ก.,69,per_100_g_edible_portion
+DOH2018-04160,"มะกอกไทย,ผล","มะกอกไทย, ผล","Hog plum, fruit",ผัก,100 ก.,88,per_100_g_edible_portion
+DOH2018-04162,"มะขาม,ฝักอ่อน","มะขาม, ฝักอ่อน","Tamarind, young pods",ผัก,100 ก.,95,per_100_g_edible_portion
+DOH2018-04164,มะขามเปียก,มะขามเปียก,"Tamarind, pods",ผัก,100 ก.,318,per_100_g_edible_portion
+DOH2018-04165,มะเขือกรอบ/มะเขือเปราะ,มะเขือกรอบ/มะเขือเปราะ,Eggplant,ผัก,100 ก.,50,per_100_g_edible_portion
+DOH2018-04167,มะเขือขึน,มะเขือขื่น,Cock roach berry,ผัก,100 ก.,68,per_100_g_edible_portion
+DOH2018-04169,"มะเขือไข่เต่า,สีเขียว","มะเขือไข่เต่า, สีเขียว","Eggplant, green",ผัก,100 ก.,29,per_100_g_edible_portion
+DOH2018-04184,"มะระ,ยอดอ่อน","มะระ, ยอดอ่อน","Bitter cucumber, tender tips",ผัก,100 ก.,87,per_100_g_edible_portion
+DOH2018-04188,"มะละกอดิบ,ผลป้อม","มะละกอดิบ, ผลป้อม","Papaya, raw, short shape",ผัก,100 ก.,37,per_100_g_edible_portion
+DOH2018-04189,"มะละกอดิบ,ผลยาว","มะละกอดิบ, ผลยาว","Papaya, raw, long shape",ผัก,100 ก.,25,per_100_g_edible_portion
+DOH2018-04190,มะแว้ง,มะแว้ง,Sparrow brinjal,ผัก,100 ก.,72,per_100_g_edible_portion
+DOH2018-04191,มะอีก,มะอีก,Ma-eok,ผัก,100 ก.,66,per_100_g_edible_portion
+DOH2018-04192,"มันเทศ,ใบอ่อน","มันเทศ, ใบอ่อน","Sweet potao, young leaves",ผัก,100 ก.,58,per_100_g_edible_portion
+DOH2018-04193,"มันปู,ใบอ่อน","มันปู, ใบอ่อน","Mon-pu, young leaves",ผัก,100 ก.,78,per_100_g_edible_portion
+DOH2018-04194,"เม่านา/ส้มเม่า/เม่าไข่ปลา,ยอดอ่อน","เม่านา/ส้มเม่า/เม่าไข่ปลา, ยอดอ่อน","Mau-na, tender tips",ผัก,100 ก.,60,per_100_g_edible_portion
+DOH2018-04195,"แมงลัก,ใบ","แมงลัก, ใบ","Lemon basil, leaves",ผัก,100 ก.,41,per_100_g_edible_portion
+DOH2018-04196,"ยอ,ใบ","ยอ, ใบ","Indian mulberry, leaves",ผัก,100 ก.,89,per_100_g_edible_portion
+DOH2018-04198,ยอดมะพร้าวอ่อน,ยอดมะพร้าวอ่อน,"Coconut, heart",ผัก,100 ก.,41,per_100_g_edible_portion
+DOH2018-04199,"ย่านาง,ใบ","ย่านาง, ใบ","Ya-nang, young leaves",ผัก,100 ก.,127,per_100_g_edible_portion
+DOH2018-04201,"ลินฟ้า/เพกา,ใบ","ลิ้นฟ้า/เพกา, ใบ","Broken bone tree, leaves",ผัก,100 ก.,135,per_100_g_edible_portion
+DOH2018-04202,"ลินฟ้า/เพกา,ยอด","ลิ้นฟ้า/เพกา, ยอด","Broken bone tree, trips",ผัก,100 ก.,101,per_100_g_edible_portion
+DOH2018-04203,ลูกเนียง/ซะเนียง,ลูกเนียง/ซะเนียง,"Djenkol beans, fruit",ผัก,100 ก.,162,per_100_g_edible_portion
+DOH2018-04204,ลูกเนียงนก,ลูกเนียงนก,"Djenkol beans, fruit",ผัก,100 ก.,153,per_100_g_edible_portion
+DOH2018-04209,สมอไทย,สมอไทย,Chebulic Marobalans,ผัก,100 ก.,63,per_100_g_edible_portion
+DOH2018-04210,"สะเดา,ดอก","สะเดา, ดอก","Neem tree, flowers",ผัก,100 ก.,84,per_100_g_edible_portion
+DOH2018-04211,"สะเดา,ยอด","สะเดา, ยอด","Neem tree, tender tips",ผัก,100 ก.,85,per_100_g_edible_portion
+DOH2018-04212,สะตอ,สะตอ,Bitter bean,ผัก,100 ก.,132,per_100_g_edible_portion
+DOH2018-04213,"สะแล,ดอก","สะแล, ดอก","Sa- lare, flower",ผัก,100 ก.,86,per_100_g_edible_portion
+DOH2018-04214,สันตะวาใบพาย,สันตะวาใบพาย,Santawa-bai-phai,ผัก,100 ก.,10,per_100_g_edible_portion
+DOH2018-04215,สายบัว,สายบัว,"Water lily, stem",ผัก,100 ก.,8,per_100_g_edible_portion
+DOH2018-04217,เสม็ด,เสม็ด,"Eugenia, trips, milk wood",ผัก,100 ก.,57,per_100_g_edible_portion
+DOH2018-04221,หน่อไม้ไผ่ตง,หน่อไม้ไผ่ตง,"Bamboo shoot, cultivaled",ผัก,100 ก.,30,per_100_g_edible_portion
+DOH2018-04225,"หน่อไม้หวาน,หน่อเล็ก","หน่อไม้หวาน, หน่อเล็ก","Bamboo shoot, hairy, sweet",ผัก,100 ก.,11,per_100_g_edible_portion
+DOH2018-04227,"หน่อหวาย,คัว","หน่อหวาย, คั่ว","Rattan palm, roasted",ผัก,100 ก.,400,per_100_g_edible_portion
+DOH2018-04229,หน่อเหรียง,หน่อเหรียง,"Nitta tree, sprout",ผัก,100 ก.,94,per_100_g_edible_portion
+DOH2018-04230,หมรุย/สมุย/หัสคุณ,หมรุย/สมุย/หัสคุณ,Hatsa khun,ผัก,100 ก.,75,per_100_g_edible_portion
+DOH2018-04232,"หยวกกล้วย,อ่อน","หยวกกล้วย, อ่อน","Banana, young stem",ผัก,100 ก.,15,per_100_g_edible_portion
+DOH2018-04233,"หยวกกล้วยน่าว้า,อ่อน","หยวกกล้วยน้ำว้า, อ่อน","Banana, young stem",ผัก,100 ก.,8,per_100_g_edible_portion
+DOH2018-04236,เห็ดขมืน,เห็ดขมิ้น,"Mushroom, hed-kamin",ผัก,100 ก.,29,per_100_g_edible_portion
+DOH2018-04238,เห็ดซาง,เห็ดซาง,"Mushroom, hed-saang",ผัก,100 ก.,197,per_100_g_edible_portion
+DOH2018-04239,เห็ดตับเต่า,เห็ดตับเต่า,"Mushroom, bolete",ผัก,100 ก.,29,per_100_g_edible_portion
+DOH2018-04242,เห็ดนางรม,เห็ดนางรม,"Mushroom, oyster",ผัก,100 ก.,30,per_100_g_edible_portion
+DOH2018-04244,เห็ดเป้าฮือ,เห็ดเป้าฮือ,"Mushroom, abalone",ผัก,100 ก.,34,per_100_g_edible_portion
+DOH2018-04245,เห็ดเผาะ,เห็ดเผาะ,"Mushroom, barometer earthstars",ผัก,100 ก.,47,per_100_g_edible_portion
+DOH2018-04246,เห็ดลม/เห็ดกระตด้าง,เห็ดลม/เห็ดกระด้าง,"Mushroom, hed-lom",ผัก,100 ก.,110,per_100_g_edible_portion
+DOH2018-04250,"ออบแอบ,ใบ","ออบแอบ, ใบ","Op-aep, leaves",ผัก,100 ก.,49,per_100_g_edible_portion
+DOH2018-04251,"อีหล่า/มะกล่า,ใบอ่อน","อีหล่า/มะกล่า, ใบอ่อน","Red sanda wood tree, young leaves",ผัก,100 ก.,86,per_100_g_edible_portion
+DOH2018-03015,เต้าหู้เหลือง,เต้าหู้เหลือง,"Soybean curd, yellow",ถั่ว & เมล็ดพืช,100 ก.,150,per_100_g_edible_portion
+DOH2018-03016,"ถัวขาว,ดิบ","ถั่วขาว, ดิบ","Nevy bean/White kidney beans, raw",ถั่ว & เมล็ดพืช,100 ก.,359,per_100_g_edible_portion
+DOH2018-03018,"ถัวเขียว,แป้ง","ถั่วเขียว, แป้ง","Mungbean, flour",ถั่ว & เมล็ดพืช,100 ก.,284,per_100_g_edible_portion
+DOH2018-03019,"ถัวดํา,คัว","ถั่วดำ, คั่ว","Cowpea, seeds, roasted",ถั่ว & เมล็ดพืช,100 ก.,383,per_100_g_edible_portion
+DOH2018-03020,"ถัวดํา,ดิบ","ถั่วดำ, ดิบ","Black gram, seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,318,per_100_g_edible_portion
+DOH2018-03021,"ถัวแดง,คัว","ถั่วแดง, คั่ว","Rice bean, seeds, roasted",ถั่ว & เมล็ดพืช,100 ก.,385,per_100_g_edible_portion
+DOH2018-03023,"ถัวแดงหลวง,ดิบ","ถั่วแดงหลวง, ดิบ","Red kidney bean, seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,298,per_100_g_edible_portion
+DOH2018-03024,"ถัวนางหอม,ทั้งเปลือก,ดิบ","ถั่วนางหอม, ทั้งเปลือก, ดิบ","Sweet pea, whole seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,354,per_100_g_edible_portion
+DOH2018-03025,"ถัวนางหอม,แยกเปลือก,ดิบ","ถั่วนางหอม, แยกเปลือก, ดิบ","Sweet pea, hulled, raw",ถั่ว & เมล็ดพืช,100 ก.,352,per_100_g_edible_portion
+DOH2018-03026,"ถัวเน่า,เปียก","ถั่วเน้ำ, เปียก","Soy bean, fermented, fresh",ถั่ว & เมล็ดพืช,100 ก.,167,per_100_g_edible_portion
+DOH2018-03028,"ถัวแปะขี,คัว","ถั่วแปะยี, คั่ว","Lablab bean, seeds, roasted",ถั่ว & เมล็ดพืช,100 ก.,370,per_100_g_edible_portion
+DOH2018-03029,"ถัวแปะยี,ดิบ","ถั่วแปะยี, ดิบ","Lablab bean, seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,350,per_100_g_edible_portion
+DOH2018-03031,"ถัวพุ่ม,ทั้งเปลือก,ดิบ","ถั่วพุ่ม, ทั้งเปลือก, ดิบ","Cowpea, whole seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,355,per_100_g_edible_portion
+DOH2018-03032,"ถัวพุ่ม,แยกเปลือก,ดิบ","ถั่วพุ่ม, แยกเปลือก, ดิบ","Cowpea, hulled, raw",ถั่ว & เมล็ดพืช,100 ก.,360,per_100_g_edible_portion
+DOH2018-03033,"ถัวแระ,ดิบ","ถั่วแระ, ดิบ","Soybean, young seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,148,per_100_g_edible_portion
+DOH2018-03034,"ถัวแระ,ต้ม","ถั่วแระ, ต้ม","Soybean, young seeds, boiled",ถั่ว & เมล็ดพืช,100 ก.,184,per_100_g_edible_portion
+DOH2018-03035,"ถัวลาย,ทั้งเปลือก,ดิบ","ถั่วลาย, ทั้งเปลือก, ดิบ","Butterfly pea, whole seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,358,per_100_g_edible_portion
+DOH2018-03036,"ถัวลาย,แยกเปลือก,ดิบ","ถั่วลาย, แยกเปลือก, ดิบ","Butterfly pea, hulled, raw",ถั่ว & เมล็ดพืช,100 ก.,353,per_100_g_edible_portion
+DOH2018-03038,"ถัวลิสง,ทอด,ไม่รวมเยือหุ้มเมล็ด","ถั่วลิสง, ทอด, ไม่รวมเยื่อหุ้มเมล็ด","Peanut without seed coat, fried",ถั่ว & เมล็ดพืช,100 ก.,626,per_100_g_edible_portion
+DOH2018-03039,"ถัวลิสง,อบเกลือ,รวมเยือหุ้มเมลิด","ถั่วลิสง, อบเกลือ, รวมเยื่อหุ้มเมล็ด","Peanut with seed coat, baked with salt",ถั่ว & เมล็ดพืช,100 ก.,602,per_100_g_edible_portion
+DOH2018-03041,"ถัวเล็บมือนาง,ดิบ","ถั่วเล็บมือนาง, ดิบ","Rice bean, raw",ถั่ว & เมล็ดพืช,100 ก.,355,per_100_g_edible_portion
+DOH2018-03043,"ถัวหรัง,ต้ม","ถั่วหรั่ง, ต้ม","Bambara groundnut, boiled",ถั่ว & เมล็ดพืช,100 ก.,160,per_100_g_edible_portion
+DOH2018-03044,"ถัวเหลือง,คัว","ถั่วเหลือง, คั่ว","Soybean, seeds, roasted",ถั่ว & เมล็ดพืช,100 ก.,435,per_100_g_edible_portion
+DOH2018-03045,"ถัวเหลือง,ดิบ","ถั่วเหลือง, ดิบ","Soybean, seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,430,per_100_g_edible_portion
+DOH2018-03048,"มะพร้าว,ขูด,กาก","มะพร้าว, ขูด, กาก","Coconut, grated meat, pressed",ถั่ว & เมล็ดพืช,100 ก.,154,per_100_g_edible_portion
+DOH2018-03049,"มะพร้าว,ขูด,เนือ","มะพร้าว, ขูด, เนื้อ","Coconut, grated meat",ถั่ว & เมล็ดพืช,100 ก.,326,per_100_g_edible_portion
+DOH2018-03050,"มะพร้าว,นําตาล","มะพร้าว, น้ำตาล",Sugar from coconut,ถั่ว & เมล็ดพืช,100 ก.,352,per_100_g_edible_portion
+DOH2018-03051,"มะพร้าวกะทิ,เนือ","มะพร้าวกะทิ, เนื้อ",Milk coconut/Fluffy coconut,ถั่ว & เมล็ดพืช,100 ก.,228,per_100_g_edible_portion
+DOH2018-03052,"มะพร้าวอ่อน,เนือ","มะพร้าวอ่อน, เนื้อ","Coconut, meat, immature",ถั่ว & เมล็ดพืช,100 ก.,73,per_100_g_edible_portion
+DOH2018-03055,"เมล็ดเงาะ,ดิบ","เมล็ดเงาะ, ดิบ","Rambutan, seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,374,per_100_g_edible_portion
+DOH2018-03056,"เมล็ดถัวแขก,ดิบ","เมล็ดถั่วแขก, ดิบ","French bean, seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,380,per_100_g_edible_portion
+DOH2018-03057,"เมล็ดถัวพู,ปอกเปลือก,ลวก","เมล็ดถั่วพู, ปอกเปลือก, ลวก","Winged bean, hulled, blanched",ถั่ว & เมล็ดพืช,100 ก.,309,per_100_g_edible_portion
+DOH2018-03059,"เมล็ดบัว,สด","เมล็ดบัว, สด","Lotus, seeds, raw",ถั่ว & เมล็ดพืช,100 ก.,65,per_100_g_edible_portion
+DOH2018-03060,"เมล็ดบัว,แห้ง,ดิบ","เมล็ดบัว, แห้ง, ดิบ","Lotus, seeds, dried, raw",ถั่ว & เมล็ดพืช,100 ก.,332,per_100_g_edible_portion
+DOH2018-03061,"เมล็ดมะขาม,คัว","เมล็ดมะขาม, คั่ว","Tamarind, seeds, roasted",ถั่ว & เมล็ดพืช,100 ก.,393,per_100_g_edible_portion
+DOH2018-03064,"เมล็ดมะม่วงหิมพานต์,อบเนย","เมล็ดมะม่วงหิมพานต์, อบเนย","Cashew nut, baked with butter",ถั่ว & เมล็ดพืช,100 ก.,609,per_100_g_edible_portion
+DOH2018-03065,วุ้นเส้น,วุ้นเส้น,"Noodles, mungbean, dried",ถั่ว & เมล็ดพืช,100 ก.,337,per_100_g_edible_portion
+DOH2018-02015,"มันสําปะหลัง,ดิบ","มันสำปะหลัง, ดิบ","Cassava, raw",ผัก,100 ก.,135,per_100_g_edible_portion
+DOH2018-02018,"สาคู/สาคูไทย,หัวสีขาว,ดิบ","สาคู/สาคูไทย, หัวสีขาว, ดิบ","Arrow roots, white, raw",ผัก,100 ก.,84,per_100_g_edible_portion
+DOH2018-02019,"สาคู/สาคูจีน,หัวสีแดง,ดิบ","สาคู/สาคูจีน, หัวสีแดง, ดิบ","Arrow roots, red, raw",ผัก,100 ก.,98,per_100_g_edible_portion
+DOH2018-02020,"สาคูเม็ดเล็ก,ดิบ","สาคูเม็ดเล็ก, ดิบ","Sago palm, grain, raw",ผัก,100 ก.,348,per_100_g_edible_portion
+DOH2018-02021,"หัวผักกาด,หัวไชเท้า,ดิบ","หัวผักกาด, หัวไชเท้า, ดิบ","Radish, raw",ผัก,100 ก.,22,per_100_g_edible_portion
+DOH2018-02022,"หัวผักกาดแห้ง,เค็ม","หัวผักกาดแห้ง, เค็ม","Radish, salted",ผัก,100 ก.,47,per_100_g_edible_portion
+DOH2018-02023,"หัวผักกาดแห้ง,หวาน","หัวผักกาดแห้ง, หวาน","Radish, sweetened",ผัก,100 ก.,131,per_100_g_edible_portion
+DOH2018-10002,"กะปิ,คุณภาพดี","กะปิ, คุณภาพดี","Shrimp paste, fermented (Ka-pi), first class quality",เครื่องปรุง,100 ก.,142,per_100_g_edible_portion
+DOH2018-10004,ขมินขาว,ขมิ้นขาว,"Turmeric, white",เครื่องปรุง,100 ก.,48,per_100_g_edible_portion
+DOH2018-10005,ขมินชัน,ขมิ้นชัน,Turmeric/curcuma,เครื่องปรุง,100 ก.,68,per_100_g_edible_portion
+DOH2018-10006,ข่า,ข่า,Galanga,เครื่องปรุง,100 ก.,95,per_100_g_edible_portion
+DOH2018-10007,เครื่องแกงเผ็ด,เครื่องแกงเผ็ด,Chilli paste,เครื่องปรุง,100 ก.,121,per_100_g_edible_portion
+DOH2018-10008,เครื่องแกงมัสมัน,เครื่องแกงมัสมั่น,"Chilli paste, matsaman",เครื่องปรุง,100 ก.,282,per_100_g_edible_portion
+DOH2018-10009,ดอกจันทน์เทศ,ดอกจันทน์เทศ,Mace,เครื่องปรุง,100 ก.,388,per_100_g_edible_portion
+DOH2018-10010,ตะไคร้,ตะไคร้,Lemon grass,เครื่องปรุง,100 ก.,143,per_100_g_edible_portion
+DOH2018-10013,"ใบกระวาน,แห้ง","ใบกระวาน, แห้ง","Bay leaves, dried",เครื่องปรุง,100 ก.,372,per_100_g_edible_portion
+DOH2018-10014,ผงกะหรื,ผงกะหรี่,"Curry, powder",เครื่องปรุง,100 ก.,299,per_100_g_edible_portion
+DOH2018-10016,"ผักชี,ลูกฆ","ผักชี, ลูก","Coriander, seeds, dried",เครื่องปรุง,100 ก.,325,per_100_g_edible_portion
+DOH2018-10017,"พริกขีหนู,แห้ง","พริกขี้หนู, แห้ง","Chilli pepper, dried",เครื่องปรุง,100 ก.,347,per_100_g_edible_portion
+DOH2018-10018,"พริกชี้ฟ้า,แห้ง","พริกชี้ฟ้า, แห้ง","Pepper, hot, dried",เครื่องปรุง,100 ก.,364,per_100_g_edible_portion
+DOH2018-10019,"พริกไทย,ขาว","พริกไทย, ขาว","Pepper, white",เครื่องปรุง,100 ก.,380,per_100_g_edible_portion
+DOH2018-10022,"«มะกรด,น่า","มะกรูด, น้ำ","Leech lime, juice",เครื่องปรุง,100 ก.,46,per_100_g_edible_portion
+DOH2018-10023,"มะกฐด,ใบ","มะกรูด, ใบ","Leech lime, leaves",เครื่องปรุง,100 ก.,171,per_100_g_edible_portion
+DOH2018-10024,"มะกรูด,ผิว","มะกรูด, ผิว","Leech lime, peels",เครื่องปรุง,100 ก.,118,per_100_g_edible_portion
+DOH2018-13007,"ตักแต่น,ปาทังกา,ทอด","ตั๊กแตน, ปาทังกา, ทอด","Bombay locust, fried",ของทอด & ของว่าง,100 ก.,476,per_100_g_edible_portion
+DOH2018-13008,"แมงกระซอน,คัวพริก","แมงกระซอน, คั่วพริก","Mole cricket, fried with chilli",ของทอด & ของว่าง,100 ก.,235,per_100_g_edible_portion
+DOH2018-13010,"แมงตับเต่า,คัวพริก","แมงตับเต่า, คั่วพริก","True water beetle, fried with chilli",ของทอด & ของว่าง,100 ก.,222,per_100_g_edible_portion
+DOH2018-13012,"แมงมัน,คัว","แมงมัน, คั่ว","Subterranean ants, roast",ของทอด & ของว่าง,100 ก.,330,per_100_g_edible_portion
