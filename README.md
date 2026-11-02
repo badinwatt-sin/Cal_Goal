@@ -11,7 +11,14 @@
 ## ใช้งาน
 เปิด `index.html` ในเบราว์เซอร์ได้เลย ไม่ต้อง build
 
+## ตั้งค่า AI ประเมินแคลจากรูป (Vercel + Gemini)
+1. สร้าง API key ที่ https://aistudio.google.com/apikey
+2. Vercel → Project → Settings → Environment Variables เพิ่ม `GEMINI_API_KEY` (ไม่บังคับ: `GEMINI_MODEL` ค่าเริ่มต้น `gemini-2.5-flash-lite`, `DAILY_LIMIT` ค่าเริ่มต้น 10 รูป/IP/วัน)
+3. Redeploy
+
+ฟังก์ชันอยู่ที่ `api/estimate.js` ตัวนับต่อ IP เก็บในหน่วยความจำ เป็นเพียงด่านกันใช้เกินแบบหยาบ ถ้าเปิดสาธารณะจริงควรเพิ่มที่เก็บภายนอก (เช่น Upstash Redis) และตั้งเพดานงบในบัญชี Google
+
 ## หมายเหตุ
-- ฟีเจอร์ถ่ายรูปให้ AI ประเมินแคลต้องเปิดผ่าน Claude (ใช้ capability `sample`) เมื่อเปิดเดี่ยวๆ จะซ่อนปุ่ม AI และใช้การค้นหาเมนูแทน
+- ถ่ายรูปให้ AI: เมื่อเปิดใน Claude ใช้ Claude ของผู้ดู เมื่อเปิดบนเว็บทั่วไปจะเรียก `/api/estimate` (Gemini)
 - เว็บแอปอ่านข้อมูล Apple Health / Health Connect โดยตรงไม่ได้ ต้องพิมพ์ก้าวเดินเอง
 - ข้อมูลโภชนาการเป็นค่าประมาณ ไม่ใช่คำแนะนำทางการแพทย์

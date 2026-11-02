@@ -577,6 +577,7 @@ try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw){const d=defa
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('พื้นที่เก็บข้อมูลเต็ม ลองลบรูปเก่าออกก่อนนะ')}}
 let ui={tab:'today',date:todayKey(),sh:null};
 let SAMPLE=null,HAS_DL=null;
+const USE_API=!(window.claude&&window.claude.use);
 if(window.claude&&window.claude.use){
   window.claude.use('sample').then(s=>{SAMPLE=s;if(ui.sh&&ui.sh.tab==='ai')renderSheet()}).catch(()=>{});
   window.claude.use('downloads').then(d=>{HAS_DL=d}).catch(()=>{});
@@ -1178,8 +1179,9 @@ function renderSheet(){
     h+=`<div class="photo">${a.img?`<img src="${a.img}" alt="รูปอาหารที่เลือก">`:`<div>${IC.cam}<p class="small" style="margin-top:6px">ถ่ายรูปหรือเลือกรูปอาหาร<br>AI จะช่วยประเมินเมนูและแคลอรี่</p></div>`}</div>
     <div class="grid2"><button class="btn alt" data-act="photoCam">ถ่ายรูป</button><button class="btn alt" data-act="photoPick">เลือกจากอัลบั้ม</button></div>
     <label class="f">รายละเอียดเพิ่มเติม (ไม่บังคับ)<textarea id="aiText" data-model="sh.ai.text" placeholder="เช่น กะเพราหมูสับไข่ดาว ข้าว 1.5 จาน ไม่ใส่น้ำมันเพิ่ม">${esc(a.text)}</textarea></label>`;
-    if(!SAMPLE)h+=`<div class="warn">ฟีเจอร์ AI ใช้ได้เมื่อเปิดหน้านี้ผ่าน Claude เท่านั้น ตอนนี้ใช้แท็บ “ค้นหาเมนู” หรือ “กำหนดเอง” แทนได้</div>`;
-    h+=`<button class="btn" data-act="runAI" ${(a.loading||!SAMPLE)?'disabled':''}>${a.loading?'<span class="spin"></span> กำลังประเมิน...':'ให้ AI ประเมินแคลอรี่'}</button>`;
+    if(!SAMPLE&&!USE_API)h+=`<div class="warn">ฟีเจอร์ AI ใช้ได้เมื่อเปิดหน้านี้ผ่าน Claude เท่านั้น ตอนนี้ใช้แท็บ “ค้นหาเมนู” หรือ “กำหนดเอง” แทนได้</div>`;
+    if(USE_API)h+=`<p class="tiny mute">รูปจะถูกส่งไปประมวลผลที่ Google Gemini (แพ็กเกจฟรี Google อาจนำข้อมูลไปปรับปรุงผลิตภัณฑ์) อย่าถ่ายติดใบหน้าหรือข้อมูลส่วนตัว</p>`;
+    h+=`<button class="btn" data-act="runAI" ${(a.loading||(!SAMPLE&&!USE_API))?'disabled':''}>${a.loading?'<span class="spin"></span> กำลังประเมิน...':'ให้ AI ประเมินแคลอรี่'}</button>`;
     if(a.err)h+=`<div class="warn">${esc(a.err)}</div>`;
     if(a.items){
       h+=`<div class="card stack"><div class="row between"><h3>ผลประเมิน (แก้ไขได้)</h3><span class="kc" id="aiTot">${fmt(aiTotal())} kcal</span></div><div class="eq" id="aiMac">${aiMacHTML()}</div>`;
@@ -1219,7 +1221,7 @@ async function onPhoto(file){
   try{
     const big=await shrink(file,1024,0.82),small=await shrink(file,260,0.7);
     ui.sh.tab='ai';ui.sh.ai.blob=big.blob;ui.sh.ai.img=small.url;ui.sh.ai.items=null;ui.sh.ai.err='';
-    renderSheet();if(SAMPLE)runAI();
+    renderSheet();if(SAMPLE||USE_API)runAI();
   }catch(e){toast('เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ')}
 }
 async function runAI(){
@@ -1233,16 +1235,30 @@ async function runAI(){
 {"items":[{"name":"ชื่อเมนูภาษาไทย","portion":"ปริมาณที่ประเมิน เช่น 1 จาน (~350 ก.)","kcal":จำนวนเต็ม,"protein":กรัม,"carbs":กรัม,"fat":กรัม}],"note":"ข้อสังเกตสั้นๆ เช่น ความไม่แน่นอนหรือสิ่งที่ซ่อนอยู่ในอาหาร"}
 ถ้าไม่ใช่อาหาร ให้ items เป็น [] และบอกใน note`;
   try{
-    const opts=a.blob?{images:[a.blob]}:{};
-    const r=await SAMPLE.json(prompt,opts);
+    let r;
+    if(SAMPLE){r=await SAMPLE.json(prompt,a.blob?{images:[a.blob]}:{})}
+    else{r=await callApi(a)}
     const items=(r&&r.items||[]).map(x=>({name:String(x.name||'อาหาร'),portion:String(x.portion||''),kcal:Math.round(+x.kcal||0),k0:Math.round(+x.kcal||0),p:+x.protein||0,c:+x.carbs||0,f:+x.fat||0}));
     if(!items.length)a.err=(r&&r.note)||'AI ไม่พบอาหารในข้อมูลนี้ ลองรูปที่ชัดขึ้นหรือพิมพ์รายละเอียด';
     else{a.items=items;a.note=r.note||''}
   }catch(e){
     const c=e&&e.code;
+    if(USE_API){a.err=({daily_limit:'วันนี้ใช้ AI ครบโควตาแล้ว พรุ่งนี้ลองใหม่ หรือใช้แท็บค้นหาเมนูแทนนะ',quota:'ตอนนี้มีคนใช้ AI เยอะ ลองใหม่อีกสักครู่ หรือใช้แท็บค้นหาเมนูแทน',too_large:'รูปใหญ่เกินไป ลองรูปอื่น',not_configured:'ฟีเจอร์ AI ยังไม่เปิดใช้งาน ใช้แท็บค้นหาเมนูแทนได้เลย'})[c]||'ประเมินไม่สำเร็จ ลองใหม่หรือใช้แท็บค้นหาเมนูแทน';a.loading=false;if(ui.sh)renderSheet();return}
     a.err=c==='not_granted'?'ต้องอนุญาตให้ใช้ Claude ก่อนจึงจะประเมินได้ ลองกดใหม่อีกครั้ง':c==='rate_limited'?'ใช้ถี่เกินไป รอสักครู่แล้วลองใหม่':c==='images_unavailable'?'หน้านี้ยังส่งรูปให้ AI ไม่ได้ ลองพิมพ์รายละเอียดอาหารแทน':'ประเมินไม่สำเร็จ ลองใหม่หรือใช้แท็บค้นหาเมนูแทน';
   }
   a.loading=false;if(ui.sh)renderSheet();
+}
+
+async function callApi(a){
+  let image='',mime='image/jpeg';
+  if(a.blob){
+    image=await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result).split(',')[1]||'');fr.onerror=rej;fr.readAsDataURL(a.blob)});
+    mime=a.blob.type||'image/jpeg';
+  }
+  const resp=await fetch('/api/estimate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:image,mime:mime,text:a.text.trim()})});
+  let j={};try{j=await resp.json()}catch(x){}
+  if(!resp.ok){const err=new Error('api');err.code=j.error||('http_'+resp.status);throw err}
+  return j;
 }
 
 /* ---------- events ---------- */
