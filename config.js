@@ -3,5 +3,5 @@
 window.KAELPODI_CONFIG = {
   supabaseUrl: 'https://ytkdlehpdhtymakyioxc.supabase.co',
   supabaseAnonKey: 'sb_publishable_Y7hvkFjOte___fwe9IeWEg_i_C1uEtG',
-  google: false  // ตั้งเป็น true เมื่อเปิด Google provider ใน Supabase แล้ว
+  google: true   // ปุ่มเข้าสู่ระบบด้วย Google (ต้องเปิด Google provider ใน Supabase)
 };
