@@ -1181,7 +1181,7 @@ function renderSheet(){
     <label class="f">รายละเอียดเพิ่มเติม (ไม่บังคับ)<textarea id="aiText" data-model="sh.ai.text" placeholder="เช่น กะเพราหมูสับไข่ดาว ข้าว 1.5 จาน ไม่ใส่น้ำมันเพิ่ม">${esc(a.text)}</textarea></label>`;
     if(!SAMPLE&&!USE_API)h+=`<div class="warn">ฟีเจอร์ AI ใช้ได้เมื่อเปิดหน้านี้ผ่าน Claude เท่านั้น ตอนนี้ใช้แท็บ “ค้นหาเมนู” หรือ “กำหนดเอง” แทนได้</div>`;
     if(USE_API)h+=`<p class="tiny mute">รูปจะถูกส่งไปประมวลผลที่ Google Gemini (แพ็กเกจฟรี Google อาจนำข้อมูลไปปรับปรุงผลิตภัณฑ์) อย่าถ่ายติดใบหน้าหรือข้อมูลส่วนตัว</p>`;
-    h+=`<button class="btn" data-act="runAI" ${(a.loading||(!SAMPLE&&!USE_API))?'disabled':''}>${a.loading?'<span class="spin"></span> กำลังประเมิน...':'ให้ AI ประเมินแคลอรี่'}</button>`;
+    h+=`<button class="btn" data-act="runAI" ${(a.loading||(!SAMPLE&&!USE_API))?'disabled':''}>${a.loading?'<span class="spin"></span> กำลังประเมิน... (ราว 5–15 วินาที)':'ให้ AI ประเมินแคลอรี่'}</button>`;
     if(a.err)h+=`<div class="warn">${esc(a.err)}</div>`;
     if(a.items){
       h+=`<div class="card stack"><div class="row between"><h3>ผลประเมิน (แก้ไขได้)</h3><span class="kc" id="aiTot">${fmt(aiTotal())} kcal</span></div><div class="eq" id="aiMac">${aiMacHTML()}</div>`;
@@ -1219,7 +1219,7 @@ async function shrink(file,max,q){
 async function onPhoto(file){
   if(!file||!ui.sh)return;
   try{
-    const big=await shrink(file,1024,0.82),small=await shrink(file,260,0.7);
+    const big=await shrink(file,USE_API?768:1024,USE_API?0.75:0.82),small=await shrink(file,260,0.7);
     ui.sh.tab='ai';ui.sh.ai.blob=big.blob;ui.sh.ai.img=small.url;ui.sh.ai.items=null;ui.sh.ai.err='';
     renderSheet();if(SAMPLE||USE_API)runAI();
   }catch(e){toast('เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ')}

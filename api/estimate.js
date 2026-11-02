@@ -74,15 +74,19 @@ module.exports = async (req, res) => {
   const parts = [{ text: PROMPT(text) }];
   if (image) parts.push({ inline_data: { mime_type: mime, data: image } });
 
+  const t0 = Date.now();
+  const callGemini = (extra) => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+    body: JSON.stringify({
+      contents: [{ role: 'user', parts }],
+      generationConfig: { temperature: 0.2, maxOutputTokens: 900, responseMimeType: 'application/json', ...extra },
+    }),
+  });
   try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts }],
-        generationConfig: { temperature: 0.2, responseMimeType: 'application/json' },
-      }),
-    });
+    // ปิดการ "คิดนาน" เพื่อให้ตอบเร็ว ถ้าโมเดลไม่รองรับพารามิเตอร์นี้ (400) ให้ลองใหม่แบบไม่ส่ง
+    let r = await callGemini({ thinkingConfig: { thinkingBudget: 0 } });
+    if (r.status === 400) r = await callGemini({});
     if (r.status === 429) return send(res, 429, { error: 'quota' });
     if (!r.ok) {
       let detail = '';
@@ -102,7 +106,7 @@ module.exports = async (req, res) => {
       carbs: Math.max(0, +x.carbs || 0),
       fat: Math.max(0, +x.fat || 0),
     }));
-    return send(res, 200, { items, note: String(parsed.note || '').slice(0, 300) });
+    return send(res, 200, { items, note: String(parsed.note || '').slice(0, 300), ms: Date.now() - t0 });
   } catch (e) {
     return send(res, 502, { error: 'upstream', detail: String(e && e.message || e).slice(0, 120) });
   }
