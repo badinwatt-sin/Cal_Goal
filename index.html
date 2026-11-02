@@ -477,6 +477,8 @@ mark.hit{background:color-mix(in srgb,var(--lime) 35%,transparent);color:inherit
 #sheetWrap.full:not(.split) #sheet{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 .pickrow .btn{padding:14px 8px;font-size:16px}
 .photo{max-height:240px}
+.photo.has{aspect-ratio:auto;max-height:none;padding:0;border-style:solid;background:#000;display:flex;justify-content:center}
+.photo.has img{width:auto;max-width:100%;height:auto;max-height:44dvh;object-fit:contain;display:block}
 </style>
 
 </head>
@@ -1788,7 +1790,7 @@ function renderSheet(){
     }
   }else if(sh.tab==='ai'){
     const a=sh.ai;
-    h+=`<div class="photo">${a.img?`<img src="${a.img}" alt="รูปอาหารที่เลือก">`:`<div>${IC.cam}<p class="small" style="margin-top:6px">ถ่ายรูปหรือเลือกรูปอาหาร<br>AI จะช่วยประเมินเมนูและแคลอรี่</p></div>`}</div>
+    h+=`<div class="photo ${a.img?'has':''}">${a.img?`<img src="${a.prev||a.img}" alt="รูปอาหารที่เลือก">`:`<div>${IC.cam}<p class="small" style="margin-top:6px">ถ่ายรูปหรือเลือกรูปอาหาร<br>AI จะช่วยประเมินเมนูและแคลอรี่</p></div>`}</div>
     <div class="grid2 pickrow"><button class="btn" data-act="photoCam">📷 ถ่ายรูป</button><button class="btn alt" data-act="photoPick">🖼️ เลือกจากเครื่อง</button></div>
     <label class="f">รายละเอียดเพิ่มเติม (ไม่บังคับ)<textarea id="aiText" data-model="sh.ai.text" placeholder="เช่น กะเพราหมูสับไข่ดาว ข้าว 1.5 จาน ไม่ใส่น้ำมันเพิ่ม">${esc(a.text)}</textarea></label>`;
     if(!SAMPLE&&!USE_API)h+=`<div class="warn">ฟีเจอร์ AI ใช้ได้เมื่อเปิดหน้านี้ผ่าน Claude เท่านั้น ตอนนี้ใช้แท็บ “ค้นหาเมนู” หรือ “กำหนดเอง” แทนได้</div>`;
@@ -1835,7 +1837,7 @@ async function onPhoto(file){
   if(!file||!ui.sh)return;
   try{
     const big=await shrink(file,USE_API?768:1024,USE_API?0.75:0.82),small=await shrink(file,260,0.7);
-    ui.sh.tab='ai';ui.sh.ai.blob=big.blob;ui.sh.ai.img=small.url;ui.sh.ai.items=null;ui.sh.ai.err='';
+    ui.sh.tab='ai';ui.sh.ai.blob=big.blob;ui.sh.ai.img=small.url;ui.sh.ai.prev=big.url;ui.sh.ai.items=null;ui.sh.ai.err='';
     renderSheet();const shEl=$('#sheet');if(shEl)shEl.scrollTop=0;if(SAMPLE||USE_API)runAI();
   }catch(e){toast('เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ')}
 }
