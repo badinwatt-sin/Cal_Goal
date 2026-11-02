@@ -59,7 +59,7 @@ button{cursor:pointer}
 .chips::-webkit-scrollbar{display:none}
 
 label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute);min-width:0}
-input[type=text],input[type=number],select,textarea{width:100%;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);min-width:0}
+input[type=text],input[type=number],input[type=email],select,textarea{width:100%;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);min-width:0}
 textarea{resize:vertical;min-height:70px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -292,6 +292,7 @@ input[type=range]{width:100%;accent-color:var(--lime);padding:0;background:none;
 <input type="file" id="avatarIn" accept="image/*" hidden>
 <input type="file" id="importIn" accept="application/json,.json" hidden>
 
+<script src="config.js"></script>
 <script>
 (function(){
 'use strict';
@@ -576,15 +577,20 @@ const ACT_LV=[[1.2,'แทบไม่ขยับ','นั่งทำงาน
 /* ---------- state ---------- */
 const KEY='kaelpodi.v1';
 function defaults(){return{
-  onboarded:false,
+  onboarded:false,rev:0,
   profile:{name:'',avatar:'',sex:'f',age:25,height:165,weight:60,act:1.2,set:false},
   goal:{target:55,period:'week',amount:0.5,stepGoal:8000},
   logs:{},weights:[],custom:[],recent:[]}}
 let S=defaults();
 try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw){const d=defaults();S={...d,...raw,profile:{...d.profile,...raw.profile},goal:{...d.goal,...raw.goal}}}}catch(e){}
 if(!S.onboarded&&S.profile.set)S.onboarded=true;
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('พื้นที่เก็บข้อมูลเต็ม ลองลบรูปเก่าออกก่อนนะ')}}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('พื้นที่เก็บข้อมูลเต็ม ลองลบรูปเก่าออกก่อนนะ')}}
+function save(){S.rev=Date.now();saveLocal();queueCloud()}
 let ui={tab:'today',date:todayKey(),sh:null};
+const CFG=window.KAELPODI_CONFIG||{};
+const AUTH_ON=!!(CFG.supabaseUrl&&CFG.supabaseAnonKey);
+let SB=null,USER=null,AUTHREADY=!AUTH_ON,AUTH_FAIL=false,GUEST=false;
+try{GUEST=localStorage.getItem('kaelpodi.guest')==='1'}catch(e){}
 let SAMPLE=null,HAS_DL=null;
 const USE_API=!(window.claude&&window.claude.use);
 if(window.claude&&window.claude.use){
@@ -802,7 +808,7 @@ function viewMe(){
    <label class="f">ระดับกิจกรรมในชีวิตประจำวัน<select data-bind="profile.act" data-num>${ACT_LV.map(a=>`<option value="${a[0]}" ${p.act===a[0]?'selected':''}>${a[1]} · ${a[2]}</option>`).join('')}</select></label>
    <div id="stats">${statsBox()}</div>
    <p class="tiny mute">ไม่ต้องนับการออกกำลังกายในระดับกิจกรรม เพราะแอปบวกจากที่คุณบันทึกให้แยกต่างหาก</p></div>
-  <div class="card stack"><h2>💾 ข้อมูลของฉัน</h2><p class="small mute">ไม่มีการล็อกอิน ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ถ้าล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย แนะนำให้สำรองไฟล์ไว้</p>
+  ${accountCard()}<div class="card stack"><h2>💾 ข้อมูลของฉัน</h2><p class="small mute">${USER?'ข้อมูลสำรองอยู่ในบัญชีของคุณและซิงก์อัตโนมัติ ปุ่มด้านล่างเป็นการสำรองเป็นไฟล์เพิ่มเติม':'ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ถ้าล้างเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย แนะนำให้สำรองไฟล์ไว้'}</p>
    <div class="row wrap"><button class="btn alt" data-act="export">สำรองข้อมูล</button><button class="btn alt" data-act="import">นำเข้าข้อมูล</button></div>
    <button class="btn alt" data-act="obRestart">🔁 ตั้งค่าเริ่มต้นใหม่ (ไม่ลบข้อมูลอาหาร)</button>
    <button class="btn pink" data-act="reset">${ui.confirmReset?'กดอีกครั้งเพื่อยืนยันลบทั้งหมด':'ลบข้อมูลทั้งหมด'}</button></div>`;
@@ -1193,12 +1199,91 @@ function obCheck(st){
   }
   return true;
 }
+/* ---------- login + cloud sync (Supabase) ---------- */
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+function cloudCopy(){
+  const c=JSON.parse(JSON.stringify(S));
+  Object.keys(c.logs||{}).forEach(k=>{(c.logs[k].meals||[]).forEach(m=>{delete m.img})});
+  return c;
+}
+let pushT=null;
+function queueCloud(){if(!SB||!USER)return;ui.sync='pending';setSyncLbl();clearTimeout(pushT);pushT=setTimeout(pushCloud,1500)}
+async function pushCloud(){
+  if(!SB||!USER||!S.onboarded)return;
+  clearTimeout(pushT);
+  try{
+    const {error}=await SB.from('user_data').upsert({user_id:USER.id,data:cloudCopy(),updated_at:new Date().toISOString()});
+    if(error)throw error;
+    ui.sync='ok';ui.syncAt=Date.now();
+  }catch(e){ui.sync='error'}
+  setSyncLbl();
+}
+async function pullCloud(){
+  try{
+    const {data,error}=await SB.from('user_data').select('data,updated_at').eq('user_id',USER.id).maybeSingle();
+    if(error)throw error;
+    if(data&&data.data){
+      const c=data.data;
+      if((c.rev||0)>(S.rev||0)||(!S.onboarded&&c.onboarded)){
+        const d=defaults();
+        S={...d,...c,profile:{...d.profile,...c.profile},goal:{...d.goal,...c.goal}};
+        saveLocal();ui.tab='today';ui.ob=null;ui.body=null;toast('ซิงก์ข้อมูลจากบัญชีแล้ว');
+      }else if((S.rev||0)>(c.rev||0)&&S.onboarded){await pushCloud()}
+    }else if(S.onboarded){await pushCloud()}
+    ui.sync='ok';ui.syncAt=Date.now();
+  }catch(e){ui.sync='error'}
+}
+async function afterLogin(){await pullCloud();render()}
+async function authInit(){
+  try{
+    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js');
+    SB=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    const r=await SB.auth.getSession();
+    USER=(r.data&&r.data.session&&r.data.session.user)||null;
+    SB.auth.onAuthStateChange((ev,sess)=>{
+      if(ev==='SIGNED_IN'&&sess&&sess.user&&(!USER||USER.id!==sess.user.id)){USER=sess.user;GUEST=false;setTimeout(afterLogin,0)}
+    });
+    if(USER)await pullCloud();
+  }catch(e){AUTH_FAIL=true}
+  AUTHREADY=true;render();
+}
+function authLoading(){return `<div class="card stack" style="text-align:center;margin-top:60px"><div class="ob-av">${mascot('happy',{id:'l'})}</div><p class="small mute"><span class="spin"></span> กำลังเตรียมแอป...</p></div>`}
+function loginView(){
+  const a=ui.auth||(ui.auth={email:'',code:'',sent:false,busy:false,err:''});
+  let h=`<div class="card stack" style="text-align:center;margin-top:24px"><div class="ob-av">${mascot('happy',{id:'l'})}</div>
+  <h1 style="font-size:24px">แคลพอดี</h1><p class="small mute">เข้าสู่ระบบเพื่อเก็บข้อมูลไว้ในบัญชี เปิดใช้ได้ทุกเครื่อง ข้อมูลไม่หาย</p>`;
+  if(CFG.google!==false)h+=`<button class="btn" data-act="gLogin" ${a.busy?'disabled':''}>เข้าสู่ระบบด้วย Google</button><div class="small mute">หรือ</div>`;
+  if(!a.sent){
+    h+=`<label class="f" style="text-align:left">อีเมล<input type="email" id="authEmail" data-model="auth.email" inputmode="email" autocomplete="email" placeholder="you@example.com" value="${esc(a.email)}"></label>
+    <button class="btn alt" data-act="mailSend" ${a.busy?'disabled':''}>ส่งลิงก์เข้าสู่ระบบทางอีเมล</button>`;
+  }else{
+    h+=`<div class="ok" style="text-align:left">ส่งลิงก์ไปที่ <b>${esc(a.email)}</b> แล้ว เปิดอีเมลแล้วกดลิงก์ได้เลย (เช็คในจดหมายขยะด้วย) ถ้าอีเมลมีรหัส 6 หลัก กรอกด้านล่างได้</div>
+    <label class="f" style="text-align:left">รหัส 6 หลัก (ถ้ามี)<input type="text" id="authCode" data-model="auth.code" inputmode="numeric" maxlength="8" autocomplete="one-time-code" value="${esc(a.code)}"></label>
+    <div class="row"><button class="btn alt" data-act="mailBack">‹ เปลี่ยนอีเมล</button><button class="btn grow" data-act="mailVerify" ${a.busy?'disabled':''}>ยืนยันรหัส</button></div>`;
+  }
+  if(a.err)h+=`<div class="warn" style="text-align:left">${esc(a.err)}</div>`;
+  h+=`<button class="chip" data-act="guest" style="align-self:center">ใช้งานโดยไม่ล็อกอิน</button>
+  <p class="tiny mute">ไม่ล็อกอิน ข้อมูลเก็บในเครื่องนี้เท่านั้น ล้างเบราว์เซอร์แล้วจะหาย</p></div>`;
+  return h;
+}
+function syncText(){return ui.sync==='pending'?'รอซิงก์...':ui.sync==='error'?'ซิงก์ไม่สำเร็จ จะลองใหม่เมื่อมีการบันทึกครั้งถัดไป':ui.sync==='ok'?'ซิงก์แล้ว '+new Date(ui.syncAt||Date.now()).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}
+function setSyncLbl(){const e=$('#syncLbl');if(e)e.textContent=syncText()}
+function accountCard(){
+  if(!AUTH_ON||AUTH_FAIL)return '';
+  if(!USER)return `<div class="card stack"><h2>☁️ บัญชี</h2><p class="small mute">ตอนนี้ใช้งานแบบไม่ล็อกอิน ข้อมูลอยู่ในเครื่องนี้เท่านั้น เข้าสู่ระบบเพื่อซิงก์ข้ามเครื่องและกู้ข้อมูลได้</p><button class="btn" data-act="toLogin">เข้าสู่ระบบ</button></div>`;
+  return `<div class="card stack"><h2>☁️ บัญชี</h2><div class="small"><b>${esc(USER.email||'ผู้ใช้')}</b><br><span class="mute" id="syncLbl">${esc(syncText())}</span></div>
+  <div class="row wrap"><button class="btn alt" data-act="syncNow">ซิงก์ตอนนี้</button><button class="btn alt" data-act="logout">ออกจากระบบ</button></div>
+  <button class="btn pink" data-act="delCloud">${ui.confirmCloud?'กดอีกครั้งเพื่อลบข้อมูลบนคลาวด์':'ลบข้อมูลของฉันบนคลาวด์'}</button>
+  <p class="tiny mute">บนคลาวด์เก็บเฉพาะโปรไฟล์ เป้าหมาย บันทึกอาหารและออกกำลังกาย (ไม่เก็บรูปอาหาร) ผู้ดูแลระบบเห็นข้อมูลนี้ได้ตามสิทธิ์ของฐานข้อมูล</p></div>`;
+}
 const VIEWS={today:viewToday,work:viewWork,goal:viewGoal,me:viewMe};
 function tabbar(){
   const T=(id,ic,label)=>`<button class="tab" data-act="tab" data-v="${id}" ${ui.tab===id?'aria-current="page"':''}><span class="dot">${ic}</span>${label}</button>`;
   return `<nav class="tabbar" aria-label="เมนูหลัก"><div class="in">${T('today',IC.today,'วันนี้')}${T('work',IC.work,'ออกกำลัง')}<button class="fab" data-act="add" data-meal="${defaultMeal()}" aria-label="เพิ่มอาหาร">${IC.plus}</button>${T('goal',IC.goal,'เป้าหมาย')}${T('me',IC.me,'โปรไฟล์')}</div></nav>`;
 }
 function render(){
+  if(AUTH_ON&&!AUTHREADY){stopAv();$('#app').innerHTML=authLoading();return}
+  if(AUTH_ON&&!USER&&!GUEST&&!AUTH_FAIL){stopAv();$('#app').innerHTML=loginView();window.scrollTo(0,0);return}
   if(!S.onboarded){stopAv();$('#app').innerHTML=obView();window.scrollTo(0,0);return}
   if(ui.tab==='work'&&!ui.w)ui.w={i:1,min:30,kcal:actKcal(ACTS[1][1],30)};
   const sy=window.scrollY;
@@ -1373,7 +1458,7 @@ document.addEventListener('change',e=>{
     save();
     const gb=$('#goalBox');if(gb)gb.innerHTML=goalBox();
     const sb=$('#stats');if(sb)sb.innerHTML=statsBox();
-    if(el.dataset.bind==='profile.name'||el.dataset.bind==='goal.stepGoal'||el.dataset.bind==='goal.period')render();
+    if(S.onboarded&&(el.dataset.bind==='profile.name'||el.dataset.bind==='goal.stepGoal'||el.dataset.bind==='goal.period'))render();
   }
 });
 function upsertWeight(w){const d=todayKey(),x=S.weights.find(r=>r.d===d);if(x)x.w=w;else S.weights.push({d:d,w:w})}
@@ -1432,6 +1517,22 @@ document.addEventListener('click',e=>{
     case 'obMode':ui.ob.mode=v;if(v==='keep')S.goal.target=S.profile.weight;else if(S.goal.target>=S.profile.weight)S.goal.target=Math.max(minTarget(),Math.round(S.profile.weight-5));render();break;
     case 'obPreset':S.goal.period='week';S.goal.amount=+v;save();render();break;
     case 'obDone':{S.onboarded=true;S.profile.set=true;upsertWeight(S.profile.weight);ui.tab='today';ui.ob=null;ui.body=null;save();render();window.scrollTo(0,0);break}
+    case 'gLogin':{ui.auth.err='';SB.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}}).then(r=>{if(r.error){ui.auth.err='เข้าสู่ระบบด้วย Google ไม่สำเร็จ: '+r.error.message;render()}});break}
+    case 'mailSend':{const a=ui.auth;const em=(a.email||'').trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){a.err='ใส่อีเมลให้ถูกต้องนะ';render();break}
+      a.email=em;a.busy=true;a.err='';render();
+      SB.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}}).then(r=>{a.busy=false;if(r.error)a.err='ส่งอีเมลไม่สำเร็จ: '+r.error.message;else a.sent=true;render()});break}
+    case 'mailBack':ui.auth.sent=false;ui.auth.err='';render();break;
+    case 'mailVerify':{const a=ui.auth;const tk=(a.code||'').replace(/\s/g,'');if(tk.length<6){a.err='กรอกรหัสจากอีเมลให้ครบ';render();break}
+      a.busy=true;a.err='';render();
+      SB.auth.verifyOtp({email:a.email,token:tk,type:'email'}).then(r=>{a.busy=false;if(r.error){a.err='รหัสไม่ถูกต้องหรือหมดอายุ';render()}});break}
+    case 'guest':GUEST=true;try{localStorage.setItem('kaelpodi.guest','1')}catch(x){}render();break;
+    case 'toLogin':GUEST=false;try{localStorage.removeItem('kaelpodi.guest')}catch(x){}ui.auth=null;render();break;
+    case 'syncNow':ui.sync='pending';setSyncLbl();pushCloud().then(()=>{toast(ui.sync==='ok'?'ซิงก์แล้ว':'ซิงก์ไม่สำเร็จ')});break;
+    case 'logout':{(async()=>{await pushCloud();try{await SB.auth.signOut()}catch(x){}try{localStorage.removeItem(KEY);localStorage.removeItem('kaelpodi.guest')}catch(x){}S=defaults();USER=null;GUEST=false;ui={tab:'today',date:todayKey(),sh:null};render();toast('ออกจากระบบแล้ว')})();break}
+    case 'delCloud':
+      if(!ui.confirmCloud){ui.confirmCloud=true;render();setTimeout(()=>{if(ui.confirmCloud){ui.confirmCloud=false;if(ui.tab==='me')render()}},4000)}
+      else{ui.confirmCloud=false;SB.from('user_data').delete().eq('user_id',USER.id).then(r=>{toast(r.error?'ลบไม่สำเร็จ':'ลบข้อมูลบนคลาวด์แล้ว');render()})}
+      break;
     case 'obRestart':S.onboarded=false;ui.ob={step:0};render();break;
     case 'outfit':S.profile.of=+v;save();render();break;
     case 'hs':S.profile.hs=+v;save();render();break;
@@ -1446,7 +1547,7 @@ document.addEventListener('click',e=>{
     case 'import':$('#importIn').click();break;
     case 'reset':
       if(!ui.confirmReset){ui.confirmReset=true;render();setTimeout(()=>{if(ui.confirmReset){ui.confirmReset=false;if(ui.tab==='me')render()}},4000)}
-      else{try{localStorage.removeItem(KEY)}catch(x){}S=defaults();ui.confirmReset=false;ui.tab='today';render();toast('ลบข้อมูลทั้งหมดแล้ว')}
+      else{if(SB&&USER)SB.from('user_data').delete().eq('user_id',USER.id).then(()=>{});try{localStorage.removeItem(KEY)}catch(x){}S=defaults();ui.confirmReset=false;ui.tab='today';render();toast('ลบข้อมูลทั้งหมดแล้ว')}
       break;
   }
 });
@@ -1471,6 +1572,9 @@ $('#importIn').addEventListener('change',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.sh)closeSheet()});
 render();
+if(AUTH_ON)authInit();
+window.addEventListener('pagehide',()=>{if(SB&&USER&&ui.sync==='pending')pushCloud()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&SB&&USER&&ui.sync==='pending')pushCloud()});
 })();
 </script>
 
