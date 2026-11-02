@@ -1,7 +1,7 @@
 // Vercel Serverless Function: ประเมินแคลอรี่อาหารจากรูป/ข้อความ ด้วย Gemini API
 // ต้องตั้ง Environment Variable: GEMINI_API_KEY  (ไม่บังคับ: GEMINI_MODEL, DAILY_LIMIT)
 
-const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+const MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 const DAILY_LIMIT = parseInt(process.env.DAILY_LIMIT || '10', 10);
 const MAX_IMAGE_B64 = 1_500_000; // ~1.1 MB หลังถอดรหัส (แอปย่อรูปเหลือ ~100-300 KB อยู่แล้ว)
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];

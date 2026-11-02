@@ -13,7 +13,7 @@
 
 ## ตั้งค่า AI ประเมินแคลจากรูป (Vercel + Gemini)
 1. สร้าง API key ที่ https://aistudio.google.com/apikey
-2. Vercel → Project → Settings → Environment Variables เพิ่ม `GEMINI_API_KEY` (ไม่บังคับ: `GEMINI_MODEL` ค่าเริ่มต้น `gemini-2.5-flash-lite`, `DAILY_LIMIT` ค่าเริ่มต้น 10 รูป/IP/วัน)
+2. Vercel → Project → Settings → Environment Variables เพิ่ม `GEMINI_API_KEY` (ไม่บังคับ: `GEMINI_MODEL` ค่าเริ่มต้น `gemini-3.5-flash-lite`, `DAILY_LIMIT` ค่าเริ่มต้น 10 รูป/IP/วัน)
 3. Redeploy
 
 ฟังก์ชันอยู่ที่ `api/estimate.js` ตัวนับต่อ IP เก็บในหน่วยความจำ เป็นเพียงด่านกันใช้เกินแบบหยาบ ถ้าเปิดสาธารณะจริงควรเพิ่มที่เก็บภายนอก (เช่น Upstash Redis) และตั้งเพดานงบในบัญชี Google
