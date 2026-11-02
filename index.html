@@ -1236,7 +1236,7 @@ async function pullCloud(){
 async function afterLogin(){await pullCloud();render()}
 async function authInit(){
   try{
-    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js');
     SB=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
     const r=await SB.auth.getSession();
     USER=(r.data&&r.data.session&&r.data.session.user)||null;
