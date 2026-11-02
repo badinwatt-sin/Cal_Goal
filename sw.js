@@ -1,5 +1,5 @@
 // Service worker: เปิดแอปได้เร็วและใช้ออฟไลน์ได้ (เฉพาะหน้าแอป) ไม่แคช API / Supabase
-const VER = 'chompy-v2';
+const VER = 'chompy-v3';
 const SHELL = ['./', 'index.html', 'config.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', 'terms.html'];
 
 self.addEventListener('install', (e) => {
