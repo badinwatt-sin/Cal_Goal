@@ -1243,7 +1243,7 @@ async function runAI(){
     else{a.items=items;a.note=r.note||''}
   }catch(e){
     const c=e&&e.code;
-    if(USE_API){a.err=({daily_limit:'วันนี้ใช้ AI ครบโควตาแล้ว พรุ่งนี้ลองใหม่ หรือใช้แท็บค้นหาเมนูแทนนะ',quota:'ตอนนี้มีคนใช้ AI เยอะ ลองใหม่อีกสักครู่ หรือใช้แท็บค้นหาเมนูแทน',too_large:'รูปใหญ่เกินไป ลองรูปอื่น',not_configured:'ฟีเจอร์ AI ยังไม่เปิดใช้งาน ใช้แท็บค้นหาเมนูแทนได้เลย'})[c]||'ประเมินไม่สำเร็จ ลองใหม่หรือใช้แท็บค้นหาเมนูแทน';a.loading=false;if(ui.sh)renderSheet();return}
+    if(USE_API){a.err=({daily_limit:'วันนี้ใช้ AI ครบโควตาแล้ว พรุ่งนี้ลองใหม่ หรือใช้แท็บค้นหาเมนูแทนนะ',quota:'ตอนนี้มีคนใช้ AI เยอะ ลองใหม่อีกสักครู่ หรือใช้แท็บค้นหาเมนูแทน',too_large:'รูปใหญ่เกินไป ลองรูปอื่น',not_configured:'ฟีเจอร์ AI ยังไม่เปิดใช้งาน ใช้แท็บค้นหาเมนูแทนได้เลย'})[c]||('ประเมินไม่สำเร็จ ลองใหม่หรือใช้แท็บค้นหาเมนูแทน (รหัส: '+(c||'network')+(e&&e.info?' · '+e.info:'')+')');a.loading=false;if(ui.sh)renderSheet();return}
     a.err=c==='not_granted'?'ต้องอนุญาตให้ใช้ Claude ก่อนจึงจะประเมินได้ ลองกดใหม่อีกครั้ง':c==='rate_limited'?'ใช้ถี่เกินไป รอสักครู่แล้วลองใหม่':c==='images_unavailable'?'หน้านี้ยังส่งรูปให้ AI ไม่ได้ ลองพิมพ์รายละเอียดอาหารแทน':'ประเมินไม่สำเร็จ ลองใหม่หรือใช้แท็บค้นหาเมนูแทน';
   }
   a.loading=false;if(ui.sh)renderSheet();
@@ -1257,7 +1257,7 @@ async function callApi(a){
   }
   const resp=await fetch('/api/estimate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:image,mime:mime,text:a.text.trim()})});
   let j={};try{j=await resp.json()}catch(x){}
-  if(!resp.ok){const err=new Error('api');err.code=j.error||('http_'+resp.status);throw err}
+  if(!resp.ok){const err=new Error('api');err.code=j.error||('http_'+resp.status);err.info=[j.status,j.reason,j.detail].filter(Boolean).join(' · ');throw err}
   return j;
 }
 

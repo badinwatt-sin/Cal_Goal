@@ -30,6 +30,7 @@ function send(res, code, body) {
 }
 
 module.exports = async (req, res) => {
+  if (req.method === 'GET') return send(res, 200, { ok: true, configured: !!process.env.GEMINI_API_KEY, model: MODEL, dailyLimit: DAILY_LIMIT });
   if (req.method !== 'POST') return send(res, 405, { error: 'method_not_allowed' });
 
   // รับเฉพาะคำขอที่มาจากหน้าเว็บของเราเอง
@@ -66,12 +67,16 @@ module.exports = async (req, res) => {
       }),
     });
     if (r.status === 429) return send(res, 429, { error: 'quota' });
-    if (!r.ok) return send(res, 502, { error: 'upstream' });
+    if (!r.ok) {
+      let detail = '';
+      try { const j = await r.json(); detail = String(j?.error?.message || '').slice(0, 160); } catch {}
+      return send(res, 502, { error: 'upstream', status: r.status, detail });
+    }
     const data = await r.json();
     const raw = data?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join('') || '';
     let parsed;
     try { parsed = JSON.parse(raw.replace(/^```json\s*|```$/g, '')); }
-    catch { return send(res, 502, { error: 'bad_json' }); }
+    catch { return send(res, 502, { error: 'bad_json', reason: String(data?.promptFeedback?.blockReason || data?.candidates?.[0]?.finishReason || '').slice(0, 40) }); }
     const items = (Array.isArray(parsed.items) ? parsed.items : []).slice(0, 12).map((x) => ({
       name: String(x.name || 'อาหาร').slice(0, 80),
       portion: String(x.portion || '').slice(0, 80),
@@ -81,7 +86,7 @@ module.exports = async (req, res) => {
       fat: Math.max(0, +x.fat || 0),
     }));
     return send(res, 200, { items, note: String(parsed.note || '').slice(0, 300) });
-  } catch {
-    return send(res, 502, { error: 'upstream' });
+  } catch (e) {
+    return send(res, 502, { error: 'upstream', detail: String(e && e.message || e).slice(0, 120) });
   }
 };
