@@ -413,6 +413,39 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 #chatChips{flex:none;padding-bottom:2px}
 .bp-in{display:flex;gap:8px;flex:none}
 .bp-note{margin:0;text-align:center;flex:none}
+
+/* ===== Beep 3D character ===== */
+.beep-btn{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important;display:block!important;position:relative;touch-action:none;cursor:grab;-webkit-tap-highlight-color:transparent}
+.bchar{position:relative;display:block;width:86px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.45))}
+.bchar *{pointer-events:none}
+.bbody{position:relative;display:block;transform-origin:50% 96%;animation:bBreath 2.4s ease-in-out infinite}
+.bbody>img:first-child{display:block;width:100%}
+.bhand{position:absolute;transform-origin:32% 98%;animation:bHandIdle 3s ease-in-out infinite}
+.blid{position:absolute;border-radius:50%;transform-origin:50% 0;border-bottom:2px solid #22325A;transform:scaleY(0);animation:bBlink 4.3s infinite}
+.blid+.blid{animation-delay:.02s}
+.bshd{position:absolute;left:18%;width:64%;bottom:-3px;height:9px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.45),transparent);animation:bShadow 2.4s ease-in-out infinite}
+.bchat{position:absolute;right:-6px;bottom:18px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:linear-gradient(135deg,#00E0B8,#00B8D9);box-shadow:0 4px 10px rgba(0,0,0,.4);border:2px solid var(--bg)}
+.beep-dock[data-side="l"] .bchat{right:auto;left:-6px}
+.beep-dock.waving .bhand{animation:bWave .42s ease-in-out infinite}
+.beep-dock.waving .bbody{animation:bHop .48s ease-in-out 3,bBreath 2.4s ease-in-out 1.44s infinite}
+.beep-btn.wiggle{animation:none}
+.beep-btn:active .bbody{transform:scale(1.08,.9)}
+.beep-dock.dragging .bbody{animation:none;transform:rotate(-8deg) scale(1.05)}
+.beep-btn.unread::after{top:4px;right:6px}
+@keyframes bBreath{0%,100%{transform:scale(1,1) rotate(-1.5deg)}50%{transform:scale(1.025,.975) rotate(1.5deg)}}
+@keyframes bHop{0%,100%{transform:translateY(0) scale(1.04,.95)}45%{transform:translateY(-14px) scale(.97,1.04)}}
+@keyframes bShadow{0%,100%{opacity:.9}50%{opacity:.7}}
+@keyframes bHandIdle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(4deg)}}
+@keyframes bWave{0%,100%{transform:rotate(-16deg)}50%{transform:rotate(16deg)}}
+@keyframes bBlink{0%,93%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
+.beep-av{background:linear-gradient(135deg,#123029,#0F2A24)!important;overflow:hidden}
+.beep-av img{width:118%;margin-top:6%}
+.brow{display:flex;align-items:flex-end;gap:8px;align-self:flex-start;max-width:92%}
+.brow .cmsg{max-width:100%}
+.bav{width:32px;height:32px;flex:none;border-radius:50%;object-fit:cover;object-position:50% 20%;background:#12302A;border:1px solid var(--line)}
+body.beep-open .beep-dock{opacity:0;pointer-events:none;transform:scale(.6)}
+.beep-dock{transition:top .25s ease,opacity .2s,transform .2s}
+@media (prefers-reduced-motion:reduce){.bbody,.bhand,.blid,.bshd{animation:none!important}}
 </style>
 
 </head>
@@ -1433,9 +1466,10 @@ const BEEP_SYS=`คุณคือ Beep ผู้ช่วยดูแลสุ�
 function mdLite(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^\s*[-*] /gm,'• ').replace(/\n/g,'<br>')}
 function chatList(){
   const c=ui.chat;let h='';
-  if(!c.msgs.length)h+=`<div class="cmsg bot">${mdLite('สวัสดี! Beep เองนะ 🤖 ถามได้เลยว่าวันนี้ควรออกกำลังกายหรือดูแลตัวเองยังไง เดี๋ยว Beep ดูข้อมูลของวันนี้ให้')}</div>`;
-  c.msgs.forEach(m=>{h+=`<div class="cmsg ${m.role==='user'?'me':'bot'}">${mdLite(m.text)}</div>`});
-  if(c.busy)h+=`<div class="cmsg bot typing" aria-label="Beep กำลังพิมพ์"><i></i><i></i><i></i></div>`;
+  const row=(inner,cls)=>`<div class="brow"><img class="bav" src="assets/beep_head.png" alt=""><div class="cmsg bot ${cls||''}">${inner}</div></div>`;
+  if(!c.msgs.length)h+=row(mdLite('สวัสดี! Beep เองนะ 🤖 ถามได้เลยว่าวันนี้ควรออกกำลังกายหรือดูแลตัวเองยังไง เดี๋ยว Beep ดูข้อมูลของวันนี้ให้'));
+  c.msgs.forEach(m=>{h+=m.role==='user'?`<div class="cmsg me">${mdLite(m.text)}</div>`:row(mdLite(m.text))});
+  if(c.busy)h+=`<div class="brow"><img class="bav" src="assets/beep_head.png" alt=""><div class="cmsg bot typing" aria-label="Beep กำลังพิมพ์"><i></i><i></i><i></i></div></div>`;
   return h;
 }
 function scrollChat(){const l=$('#chatList');if(l)l.scrollTop=l.scrollHeight}
@@ -1473,7 +1507,7 @@ function renderBeepDock(){
   const show=!!(S.onboarded&&AUTHREADY&&(!AUTH_ON||USER||GUEST||AUTH_FAIL));
   root.hidden=!show;if(!show)return;
   if(!$('#beepDock')){
-    root.innerHTML=`<div id="beepDock" class="beep-dock" data-side="${beepPos.side}" style="top:${beepY()}px"><div id="beepTip" class="beep-tip" hidden></div><button id="beepBtn" class="beep-btn" data-act="beepToggle" aria-label="คุยกับ Beep">${BEEP_ICON}<span>Beep</span></button></div><div id="beepPanelMount"></div>`;
+    root.innerHTML=`<div id="beepDock" class="beep-dock" data-side="${beepPos.side}" style="top:${beepY()}px"><div id="beepTip" class="beep-tip" hidden></div><button id="beepBtn" class="beep-btn" data-act="beepToggle" aria-label="คุยกับ Beep">${beepCharHTML()}<span class="bchat">💬</span></button></div><div id="beepPanelMount"></div>`;
     initBeepDrag();
   }
   if(!beepStarted){
@@ -1508,13 +1542,20 @@ function initBeepDrag(){
   btn.addEventListener('pointerup',end);btn.addEventListener('pointercancel',end);
   window.addEventListener('resize',()=>{const d=$('#beepDock');if(d)d.style.top=beepY()+'px'});
 }
-function hideTip(){const t=$('#beepTip');if(t)t.hidden=true;clearTimeout(tipT)}
+function beepCharHTML(){
+  // Beep 3D: ตัวหลัก + มือโบกแยกชิ้น + เปลือกตากะพริบ (สัดส่วนอิงภาพต้นฉบับ 509x652)
+  const W=509,H=652,pc=(v,d)=>(v/d*100).toFixed(3)+'%';
+  const lid=(x0,y0,x1,y1,c)=>`<i class="blid" style="left:${pc(x0-1,W)};top:${pc(y0-1,H)};width:${pc(x1-x0+2,W)};height:${pc(y1-y0+2,H)};background:radial-gradient(circle at 50% 25%,#F2F0F5,${c} 75%)"></i>`;
+  return `<span class="bchar"><span class="bshd"></span><span class="bbody"><img src="assets/beep_wave_base.png" alt="" draggable="false"><img class="bhand" src="assets/beep_wave_hand.png" alt="" draggable="false" style="left:${pc(392,W)};top:${pc(128,H)};width:${pc(117,W)}">${lid(153,172,236,242,'#E8E5EC')}${lid(285,140,347,208,'#F1EFF4')}</span></span>`;
+}
+function hideTip(){const t=$('#beepTip');if(t)t.hidden=true;clearTimeout(tipT);const d=$('#beepDock');if(d)d.classList.remove('waving')}
 function beepTip(text,q,ms,force){
   const now=Date.now();
   if(ui.beepOpen||ui.sh||(!force&&(tipCount>=6||now-lastTipAt<150000)))return;
   const t=$('#beepTip');if(!t)return;
   t.innerHTML=`<button class="bt-go" data-act="beepTipGo" data-q="${esc(q||'')}">${esc(text)}</button><button class="bt-x" data-act="beepTipX" aria-label="ปิด">×</button>`;
   t.hidden=false;if(!force){tipCount++;lastTipAt=now}
+  const dk=$('#beepDock');if(dk)dk.classList.add('waving');
   clearTimeout(tipT);tipT=setTimeout(hideTip,ms||10000);
   const b=$('#beepBtn');if(b){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle')}
 }
@@ -1532,10 +1573,10 @@ function eveningNudge(){
   if(h>=16&&h<21&&!L.workouts.length&&(L.steps||0)<S.goal.stepGoal*0.6)beepTip('ยังไม่ได้ขยับตัวเลยวันนี้ 🏃 ให้ Beep แนะนำท่าง่ายๆ ไหม?','แนะนำการออกกำลังกายง่ายๆ ช่วงเย็นนี้ที');
 }
 function openBeepPanel(){
-  ui.beepOpen=true;hideTip();
+  ui.beepOpen=true;hideTip();document.body.classList.add('beep-open');
   const m=$('#beepPanelMount');if(!m)return;
   m.innerHTML=`<div class="beep-panel" role="dialog" aria-label="แชตกับ Beep">
-    <div class="bp-head"><span class="beep-av">${BEEP_ICON}</span><div class="grow"><b>Beep</b><div class="tiny mute">ออนไลน์ · รู้ข้อมูลวันนี้ของคุณ</div></div><button class="icon-btn" data-act="beepClear" aria-label="ล้างแชต">🗑</button><button class="icon-btn" data-act="beepToggle" aria-label="ย่อแชต">${IC.x}</button></div>
+    <div class="bp-head"><span class="beep-av"><img src="assets/beep_head.png" alt=""></span><div class="grow"><b>Beep</b><div class="tiny mute">ออนไลน์ · รู้ข้อมูลวันนี้ของคุณ</div></div><button class="icon-btn" data-act="beepClear" aria-label="ล้างแชต">🗑</button><button class="icon-btn" data-act="beepToggle" aria-label="ย่อแชต">${IC.x}</button></div>
     <div id="chatList" class="chat-list">${chatList()}</div>
     <div id="chatChips" class="chips"></div>
     <div class="bp-in"><input type="text" id="chatIn" maxlength="300" placeholder="ถาม Beep ได้เลย..." autocomplete="off"><button class="btn" data-act="beepSend">ส่ง</button></div>
@@ -1544,7 +1585,7 @@ function openBeepPanel(){
   updateBeepChips();refreshChat();
   setTimeout(()=>{const i=$('#chatIn');if(i&&!ui.chat.busy)i.focus({preventScroll:true})},120);
 }
-function closeBeepPanel(){ui.beepOpen=false;const m=$('#beepPanelMount');if(m)m.innerHTML=''}
+function closeBeepPanel(){ui.beepOpen=false;document.body.classList.remove('beep-open');const m=$('#beepPanelMount');if(m)m.innerHTML=''}
 function updateBeepChips(){
   const c=$('#chatChips');if(!c)return;
   c.innerHTML=(BEEP_CHIPS[ui.tab]||BEEP_CHIPS.today).map(x=>`<button class="chip" data-act="beepSug" data-q="${esc(x)}">${esc(x)}</button>`).join('');
@@ -1558,8 +1599,9 @@ function typeReply(text){
   return new Promise(res=>{
     const l=$('#chatList');
     if(!ui.beepOpen||!l){res();return}
-    const ty=l.querySelector('.typing');if(ty)ty.remove();
-    const d=document.createElement('div');d.className='cmsg bot';l.appendChild(d);
+    const ty=l.querySelector('.typing');if(ty)(ty.closest('.brow')||ty).remove();
+    const rw=document.createElement('div');rw.className='brow';rw.innerHTML='<img class="bav" src="assets/beep_head.png" alt=""><div class="cmsg bot"></div>';l.appendChild(rw);
+    const d=rw.querySelector('.cmsg');
     let n=0;const step=Math.max(2,Math.ceil(text.length/70));
     const t=setInterval(()=>{
       n+=step;d.innerHTML=mdLite(text.slice(0,n));scrollChat();
