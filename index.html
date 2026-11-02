@@ -273,6 +273,13 @@ input[type=range]{width:100%;accent-color:var(--lime);padding:0;background:none;
 @keyframes mYawn{0%,100%{opacity:0;transform:scale(.4)}30%,65%{opacity:1;transform:scale(1)}}
 .x-look .pupl{animation:mLook 2.6s ease-in-out 1}
 @keyframes mLook{0%,100%{transform:translate(0,0)}20%{transform:translate(-3.5px,0)}50%{transform:translate(3.5px,-1px)}75%{transform:translate(0,2.5px)}}
+.ob-dots{display:flex;gap:6px;justify-content:center;padding-top:6px}
+.od{width:30px;height:6px;border-radius:99px;background:var(--soft);border:1.5px solid var(--line)}
+.od.on{background:var(--lime);border-color:var(--line)}
+.ob-av{width:150px;margin:0 auto}
+.obopt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.obopt[aria-pressed="true"]{background:var(--lime);color:var(--on-accent);box-shadow:2px 2px 0 var(--shadow)}
+.seg button[disabled]{opacity:.4}
 </style>
 
 </head>
@@ -569,11 +576,13 @@ const ACT_LV=[[1.2,'แทบไม่ขยับ','นั่งทำงาน
 /* ---------- state ---------- */
 const KEY='kaelpodi.v1';
 function defaults(){return{
+  onboarded:false,
   profile:{name:'',avatar:'',sex:'f',age:25,height:165,weight:60,act:1.2,set:false},
   goal:{target:55,period:'week',amount:0.5,stepGoal:8000},
   logs:{},weights:[],custom:[],recent:[]}}
 let S=defaults();
 try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw){const d=defaults();S={...d,...raw,profile:{...d.profile,...raw.profile},goal:{...d.goal,...raw.goal}}}}catch(e){}
+if(!S.onboarded&&S.profile.set)S.onboarded=true;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('พื้นที่เก็บข้อมูลเต็ม ลองลบรูปเก่าออกก่อนนะ')}}
 let ui={tab:'today',date:todayKey(),sh:null};
 let SAMPLE=null,HAS_DL=null;
@@ -795,6 +804,7 @@ function viewMe(){
    <p class="tiny mute">ไม่ต้องนับการออกกำลังกายในระดับกิจกรรม เพราะแอปบวกจากที่คุณบันทึกให้แยกต่างหาก</p></div>
   <div class="card stack"><h2>💾 ข้อมูลของฉัน</h2><p class="small mute">ไม่มีการล็อกอิน ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ถ้าล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย แนะนำให้สำรองไฟล์ไว้</p>
    <div class="row wrap"><button class="btn alt" data-act="export">สำรองข้อมูล</button><button class="btn alt" data-act="import">นำเข้าข้อมูล</button></div>
+   <button class="btn alt" data-act="obRestart">🔁 ตั้งค่าเริ่มต้นใหม่ (ไม่ลบข้อมูลอาหาร)</button>
    <button class="btn pink" data-act="reset">${ui.confirmReset?'กดอีกครั้งเพื่อยืนยันลบทั้งหมด':'ลบข้อมูลทั้งหมด'}</button></div>`;
 }
 
@@ -1112,12 +1122,84 @@ document.addEventListener('pointermove',e=>{
   const dx=(e.clientX-(r.left+r.width/2))/(window.innerWidth*0.5),dy=(e.clientY-(r.top+r.height*0.35))/(window.innerHeight*0.5);
   m.style.setProperty('--px',(cl(dx)*2.6).toFixed(2)+'px');m.style.setProperty('--py',(cl(dy)*2.6).toFixed(2)+'px');
 });
+/* ---------- onboarding ---------- */
+function minTarget(){const h=S.profile.height/100;return Math.ceil(18.5*h*h)}
+function applyBinds(){document.querySelectorAll('#app [data-bind]').forEach(el=>{let v=el.value;if(el.dataset.num!==undefined){v=parseFloat(v);if(isNaN(v))return}setPath(S,el.dataset.bind,v)})}
+function obView(){
+  const o=ui.ob||(ui.ob={step:0}),st=o.step,p=S.profile,g=S.goal;
+  if(!o.mode)o.mode=(p.age<18||g.target>=p.weight)?'keep':'lose';
+  const dots=[0,1,2,3,4].map(i=>`<i class="od ${i<=st?'on':''}"></i>`).join('');
+  const av=`<div class="ob-av">${mascot(st===4?'cheer':'happy',{id:'o'})}</div>`;
+  const back=st>0?`<button class="btn alt" data-act="obBack">‹ ย้อนกลับ</button>`:'';
+  let h=`<div class="ob-dots" role="img" aria-label="ขั้นที่ ${st+1} จาก 5">${dots}</div>`;
+  if(st===0){
+    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:24px">สวัสดี! ยินดีต้อนรับสู่ แคลพอดี 👋</h1>
+    <p class="small mute">ตอบไม่กี่ข้อ แอปจะคำนวณพลังงานและเป้าหมายที่เหมาะกับคุณ ใช้เวลาไม่ถึง 1 นาที ไม่ต้องล็อกอิน</p>
+    <label class="f" style="text-align:left">เรียกคุณว่าอะไรดี<input type="text" data-bind="profile.name" maxlength="24" value="${esc(p.name)}" placeholder="เช่น มิ้นท์"></label>
+    <div style="text-align:left"><div class="small mute" style="margin-bottom:6px">เพศ (ใช้ในสมการคำนวณพลังงาน)</div><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div>
+    <button class="btn" data-act="obNext">ต่อไป ›</button></div>`;
+  }else if(st===1){
+    h+=`<div class="card stack">${av}<h2>📏 ข้อมูลร่างกายของคุณ</h2>
+    <div class="grid3"><label class="f">อายุ (ปี)<input type="number" inputmode="numeric" data-bind="profile.age" data-num value="${p.age}"></label><label class="f">ส่วนสูง (ซม.)<input type="number" inputmode="decimal" data-bind="profile.height" data-num value="${p.height}"></label><label class="f">น้ำหนัก (กก.)<input type="number" step="0.1" inputmode="decimal" data-bind="profile.weight" data-num value="${p.weight}"></label></div>
+    <p class="tiny mute">ใช้คำนวณ BMR และ TDEE เท่านั้น ข้อมูลเก็บในเครื่องของคุณ</p>
+    <div class="row">${back}<button class="btn grow" data-act="obNext">ต่อไป ›</button></div></div>`;
+  }else if(st===2){
+    h+=`<div class="card stack"><h2>🏃 ปกติคุณขยับตัวมากแค่ไหน</h2><p class="small mute">นับเฉพาะกิจวัตรประจำวัน ไม่ต้องนับการออกกำลังกาย เพราะแอปบวกให้ตอนคุณบันทึก</p>
+    ${ACT_LV.map(a=>`<button class="obopt" data-act="obAct" data-v="${a[0]}" aria-pressed="${p.act===a[0]}"><b>${a[1]}</b><br><span class="small">${a[2]}</span></button>`).join('')}
+    <div class="row">${back}<button class="btn grow" data-act="obNext">ต่อไป ›</button></div></div>`;
+  }else if(st===3){
+    const kid=p.age<18;
+    h+=`<div class="card stack"><h2>🎯 เป้าหมายของคุณ</h2>
+    <div class="seg"><button data-act="obMode" data-v="lose" aria-pressed="${o.mode==='lose'}" ${kid?'disabled':''}>ลดน้ำหนัก</button><button data-act="obMode" data-v="keep" aria-pressed="${o.mode==='keep'}">รักษาน้ำหนัก</button></div>`;
+    if(kid)h+=`<div class="warn">อายุต่ำกว่า 18 ปี ร่างกายยังเติบโต แอปจึงตั้งเป็นโหมดรักษาน้ำหนัก หากต้องการลดน้ำหนัก ควรปรึกษาแพทย์หรือนักกำหนดอาหาร</div>`;
+    if(o.mode==='lose'){
+      h+=`<label class="f">น้ำหนักที่อยากได้ (กก.) · ต่ำสุดที่แอปรับได้ ${minTarget()} กก.<input type="number" step="0.1" inputmode="decimal" data-bind="goal.target" data-num value="${g.target}"></label>
+      <div class="small mute">อยากลดเร็วแค่ไหน</div>
+      <div class="chips" style="flex-wrap:wrap;overflow:visible">${[['🐢 เบาๆ',0.25],['⚡ กำลังดี',0.5],['🔥 จัดเต็ม',0.75]].map(x=>`<button class="chip" data-act="obPreset" data-v="${x[1]}" aria-pressed="${g.period==='week'&&g.amount===x[1]}">${x[0]} ${x[1]} กก./สัปดาห์</button>`).join('')}</div>
+      <div class="small mute">หรือกำหนดเอง</div>
+      <div class="seg">${['week','month','year'].map(x=>`<button data-act="period" data-v="${x}" aria-pressed="${g.period===x}">ราย${PL[x]}</button>`).join('')}</div>
+      <label class="f">ลดกี่กิโลต่อ${PL[g.period]}<input type="number" step="0.1" min="0" inputmode="decimal" data-bind="goal.amount" data-num value="${g.amount}"></label>
+      <div id="goalBox" class="stack">${goalBox()}</div>`;
+    }else{
+      h+=`<div class="ok">โหมดรักษาน้ำหนัก กินได้ประมาณ ${fmt(tdee(p))} kcal ต่อวัน (บวกเพิ่มเมื่อออกกำลังกาย)</div>`;
+    }
+    h+=`<label class="f">เป้าหมายก้าวเดินต่อวัน<input type="number" step="500" min="1000" inputmode="numeric" data-bind="goal.stepGoal" data-num value="${g.stepGoal}"></label>
+    <div class="row">${back}<button class="btn grow" data-act="obNext">ต่อไป ›</button></div></div>`;
+  }else{
+    const G=goalCalc(),b=bmi(p);
+    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:22px">พร้อมแล้ว${p.name?' '+esc(p.name):''}! 🎉</h1>
+    <div class="eq"><div><span class="tiny mute">TDEE</span><b>${fmt(G.tdee)}</b></div><div><span class="tiny mute">กินได้/วัน</span><b>${fmt(G.budget)}</b></div><div><span class="tiny mute">BMI</span><b>${r1(b)}</b></div></div>
+    <p class="small mute">${o.mode==='lose'?`เป้าหมาย ${g.target} กก. ลด ${r1(G.kgDay*7)} กก./สัปดาห์${G.eta?' · ถึงประมาณ '+fromKey(G.eta).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'}):''}`:'รักษาน้ำหนักปัจจุบัน'} · ก้าวเดิน ${fmt(g.stepGoal)} ก้าว/วัน</p>
+    <p class="tiny mute" style="text-align:left">แอปนี้ให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการแพทย์ ค่าแคลอรี่อาหารเป็นค่าประมาณ ผู้มีโรคประจำตัว ตั้งครรภ์ หรือมีประวัติความผิดปกติทางการกิน ควรปรึกษาแพทย์ก่อนใช้ ข้อมูลทั้งหมดเก็บในเครื่องนี้ ปรับแก้ได้ทุกเมื่อในแท็บโปรไฟล์และเป้าหมาย</p>
+    <div class="row">${back}<button class="btn grow" data-act="obDone">รับทราบ เริ่มเลย 🚀</button></div></div>`;
+  }
+  return h;
+}
+function obCheck(st){
+  const p=S.profile,g=S.goal,o=ui.ob;
+  if(st===1){
+    if(!(p.age>=10&&p.age<=100)){toast('อายุต้องอยู่ระหว่าง 10–100 ปี');return false}
+    if(!(p.height>=100&&p.height<=230)){toast('ส่วนสูงต้องอยู่ระหว่าง 100–230 ซม.');return false}
+    if(!(p.weight>=25&&p.weight<=300)){toast('น้ำหนักต้องอยู่ระหว่าง 25–300 กก.');return false}
+  }
+  if(st===3){
+    if(p.age<18)o.mode='keep';
+    if(o.mode==='lose'){
+      if(!(g.target<p.weight)){toast('น้ำหนักเป้าหมายต้องน้อยกว่าน้ำหนักปัจจุบัน');return false}
+      if(g.target<minTarget()){toast('น้ำหนักเป้าหมายต่ำเกินไป ต่ำสุด '+minTarget()+' กก. (BMI 18.5)');return false}
+      if(!(g.amount>0)){toast('ใส่จำนวนกิโลที่อยากลดต่อรอบ');return false}
+    }else g.target=p.weight;
+    if(!(g.stepGoal>=1000)){toast('เป้าก้าวเดินอย่างน้อย 1,000 ก้าว');return false}
+  }
+  return true;
+}
 const VIEWS={today:viewToday,work:viewWork,goal:viewGoal,me:viewMe};
 function tabbar(){
   const T=(id,ic,label)=>`<button class="tab" data-act="tab" data-v="${id}" ${ui.tab===id?'aria-current="page"':''}><span class="dot">${ic}</span>${label}</button>`;
   return `<nav class="tabbar" aria-label="เมนูหลัก"><div class="in">${T('today',IC.today,'วันนี้')}${T('work',IC.work,'ออกกำลัง')}<button class="fab" data-act="add" data-meal="${defaultMeal()}" aria-label="เพิ่มอาหาร">${IC.plus}</button>${T('goal',IC.goal,'เป้าหมาย')}${T('me',IC.me,'โปรไฟล์')}</div></nav>`;
 }
 function render(){
+  if(!S.onboarded){stopAv();$('#app').innerHTML=obView();window.scrollTo(0,0);return}
   if(ui.tab==='work'&&!ui.w)ui.w={i:1,min:30,kcal:actKcal(ACTS[1][1],30)};
   const sy=window.scrollY;
   $('#app').innerHTML=VIEWS[ui.tab]()+tabbar();
@@ -1285,7 +1367,7 @@ document.addEventListener('change',e=>{
     let v=el.value;
     if(el.dataset.num!==undefined){v=parseFloat(v);if(isNaN(v)||v<0){render();return}}
     setPath(S,el.dataset.bind,v);
-    if(el.dataset.bind.indexOf('profile.')===0)S.profile.set=true;
+    if(el.dataset.bind.indexOf('profile.')===0&&S.onboarded)S.profile.set=true;
     if(el.dataset.bind==='profile.weight')upsertWeight(S.profile.weight);
     ui.body=null;
     save();
@@ -1343,7 +1425,14 @@ document.addEventListener('click',e=>{
     case 'stepAdd':{const L=ensureLog(ui.date);L.steps=(L.steps||0)+(+v);save();render();break}
     case 'period':S.goal.period=v;save();render();break;
     case 'logWeight':{const w=parseFloat($('#wtIn').value);if(!(w>20&&w<300)){toast('ใส่น้ำหนักเป็นกิโลกรัมนะ');break}S.profile.weight=w;S.profile.set=true;upsertWeight(w);save();render();toast('บันทึกน้ำหนักแล้ว');break}
-    case 'sex':S.profile.sex=v;S.profile.set=true;save();render();break;
+    case 'sex':S.profile.sex=v;if(S.onboarded)S.profile.set=true;save();render();break;
+    case 'obNext':{applyBinds();const o=ui.ob;if(!obCheck(o.step))break;o.step++;save();render();break}
+    case 'obBack':applyBinds();ui.ob.step=Math.max(0,ui.ob.step-1);render();break;
+    case 'obAct':S.profile.act=+v;save();render();break;
+    case 'obMode':ui.ob.mode=v;if(v==='keep')S.goal.target=S.profile.weight;else if(S.goal.target>=S.profile.weight)S.goal.target=Math.max(minTarget(),Math.round(S.profile.weight-5));render();break;
+    case 'obPreset':S.goal.period='week';S.goal.amount=+v;save();render();break;
+    case 'obDone':{S.onboarded=true;S.profile.set=true;upsertWeight(S.profile.weight);ui.tab='today';ui.ob=null;ui.body=null;save();render();window.scrollTo(0,0);break}
+    case 'obRestart':S.onboarded=false;ui.ob={step:0};render();break;
     case 'outfit':S.profile.of=+v;save();render();break;
     case 'hs':S.profile.hs=+v;save();render();break;
     case 'setc':S.profile[el.dataset.k]=v;save();render();break;
