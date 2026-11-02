@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Chompy</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4F6BFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Chompy">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,19 +19,19 @@
 <style>
 /* Layout: single-column phone app, sticker-style cards (thick ink outline + hard shadow), bottom tab bar with a raised "+" button */
 :root{
-  --bg:#E8EEFA; --bgtop:#CBD9FF; --card:#FFFFFF; --soft:#EFF3FB; --ink:#0B1230; --mute:#55608A;
-  --line:#0B1230; --shadow:#0B1230;
-  --lime:#FF5B1F; --volt:#C6FF00; --pink:#FF5C8A; --sky:#4D8DFF; --sun:#FFD21F; --over:#E5173F;
-  --on-accent:#0B1230;
+  --bg:#F4F6FF; --bgtop:#E3E9FF; --card:#FFFFFF; --soft:#EEF1FB; --tint:#E8EDFF; --ink:#141A33; --mute:#6B7391;
+  --line:#E4E8F5; --shadow:rgba(60,80,200,.10);
+  --lime:#4F6BFF; --lime2:#7C5CFF; --volt:#19C98B; --pink:#FF8FB1; --sky:#6FA8FF; --sun:#FFC857; --over:#FF5C6C;
+  --m1:#4F6BFF; --m2:#8FA3FF; --m3:#CDD6FF; --on-accent:#FFFFFF;
   --f-display:'Kanit','Anuphan',system-ui,sans-serif;
   --f-body:'Anuphan','Kanit',system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#080D1C; --bgtop:#16226B; --card:#111A33; --soft:#1B2646; --ink:#F1F4FF; --mute:#98A3CC;
-  --line:#32437A; --shadow:#000; --sky:#5C9BFF; --over:#FF5577; color-scheme:dark;}}
+  --bg:#0C1024; --bgtop:#161C45; --card:#151B38; --soft:#1D2447; --tint:#1E2757; --ink:#EEF1FF; --mute:#98A1C8;
+  --line:#263059; --shadow:rgba(0,0,0,.38); --lime:#6C84FF; --lime2:#8E6CFF; --volt:#35F0B0; --over:#FF7482; --sky:#7FB2FF; color-scheme:dark;}}
 :root[data-theme="dark"]{
-  --bg:#080D1C; --bgtop:#16226B; --card:#111A33; --soft:#1B2646; --ink:#F1F4FF; --mute:#98A3CC;
-  --line:#32437A; --shadow:#000; --sky:#5C9BFF; --over:#FF5577; color-scheme:dark;}
+  --bg:#0C1024; --bgtop:#161C45; --card:#151B38; --soft:#1D2447; --tint:#1E2757; --ink:#EEF1FF; --mute:#98A1C8;
+  --line:#263059; --shadow:rgba(0,0,0,.38); --lime:#6C84FF; --lime2:#8E6CFF; --volt:#35F0B0; --over:#FF7482; --sky:#7FB2FF; color-scheme:dark;}
 
 *{box-sizing:border-box}
 html,body{height:auto}
@@ -280,6 +288,101 @@ input[type=range]{width:100%;accent-color:var(--lime);padding:0;background:none;
 .obopt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
 .obopt[aria-pressed="true"]{background:var(--lime);color:var(--on-accent);box-shadow:2px 2px 0 var(--shadow)}
 .seg button[disabled]{opacity:.4}
+/* ===== Fluid theme: คลีน นุ่ม ลื่น ใช้สีหลักน้อย ===== */
+html{scroll-behavior:smooth}
+h1,h2,h3{font-style:normal;font-weight:600;letter-spacing:-.01em}
+.card{border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 30px var(--shadow)}
+.btn{border:0;border-radius:16px;font-style:normal;letter-spacing:0;background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;box-shadow:0 6px 16px color-mix(in srgb,var(--lime) 30%,transparent);transition:transform .15s,box-shadow .2s,filter .2s}
+.btn:active{transform:scale(.97);box-shadow:none}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.pink{background:var(--tint);color:var(--lime);box-shadow:none}
+.icon-btn{border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.chip{border:1px solid var(--line);transition:background .2s,color .2s,transform .15s}
+.chip:active{transform:scale(.96)}
+.chip[aria-pressed="true"]{background:var(--lime);color:#fff;border-color:var(--lime)}
+.seg{border:1px solid var(--line);border-radius:14px;background:var(--soft)}
+.seg button{transition:background .2s,color .2s}
+.seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff}
+input[type=text],input[type=number],input[type=email],select,textarea{border:1px solid var(--line);background:var(--soft);border-radius:14px;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 22%,transparent)}
+.bar{height:12px;border:0;background:var(--soft)}
+.bar>i{border:0;border-radius:999px;background:linear-gradient(90deg,var(--volt),var(--lime));transition:width .5s}
+.split{border:0;height:10px}
+.thumb{border:0;background:var(--soft)}
+.avatar{background:var(--tint);color:var(--lime);border:0}
+.avatar.big{box-shadow:0 8px 22px var(--shadow)}
+.item{border-top:1px dashed var(--line)}
+.act-grid button{border:1px solid var(--line);border-radius:14px;transition:background .2s,transform .15s}
+.act-grid button[aria-pressed="true"]{background:var(--tint);color:var(--lime);border-color:var(--lime);box-shadow:none}
+.food{border:1px solid var(--line);border-radius:16px}
+#sheet{border:0;border-radius:28px 28px 0 0}
+.photo{border:1.5px dashed var(--line)}
+.sw{border:1px solid var(--line)}
+.sw[aria-pressed="true"]{outline:2.5px solid var(--lime);outline-offset:2px}
+.banner{background:var(--tint);color:var(--ink);border-color:var(--line)}
+.ok{background:var(--tint);border:1px solid transparent}
+.eq>div{border-radius:14px}
+.hero{--volt:#5CFFC8;color:#fff;border:0;background:radial-gradient(120% 90% at 10% 0%,rgba(255,255,255,.22),transparent 55%),linear-gradient(140deg,#4F6BFF 0%,#6D5CFF 55%,#8F5BFF 100%);box-shadow:0 16px 36px rgba(79,107,255,.35)}
+.hero .mute{color:rgba(255,255,255,.78)}
+.hero .lbl{color:#fff}
+.hero .icon-btn{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.35)}
+.hero .eq>div{background:rgba(255,255,255,.16)}
+.mi{border:0;background:var(--tint)}
+.mi-b,.mi-l,.mi-d,.mi-s{background:var(--tint)}
+.qchip b{font-style:normal}
+.streak{background:color-mix(in srgb,var(--sun) 35%,var(--card));color:var(--ink);border-color:transparent;font-style:normal}
+.bubble{border:1px solid var(--line);box-shadow:0 6px 18px var(--shadow);font-style:normal}
+.bubble::after{border-top:1px solid var(--line);border-right:1px solid var(--line)}
+.bubble.act{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border-color:transparent;font-style:normal;font-weight:500}
+.bubble.act::after{border-color:transparent;background:var(--lime2)}
+.choice{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border:0;border-radius:20px;box-shadow:0 10px 24px color-mix(in srgb,var(--lime) 32%,transparent)}
+.choice.alt{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:0 6px 18px var(--shadow)}
+.choice b{font-style:normal}
+.od{background:var(--soft);border:0;transition:background .3s}
+.od.on{background:linear-gradient(90deg,var(--lime),var(--lime2))}
+.obopt{border:1px solid var(--line);border-radius:16px;transition:background .2s,transform .15s}
+.obopt[aria-pressed="true"]{background:var(--tint);color:var(--ink);border-color:var(--lime);box-shadow:none}
+.fig{background:linear-gradient(160deg,var(--tint),color-mix(in srgb,var(--card) 60%,var(--tint)));border:0}
+.tabbar{background:transparent;border:0;pointer-events:none;padding:0 max(12px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-right,0px))}
+.tabbar .in{pointer-events:auto;background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:30px;box-shadow:0 12px 30px var(--shadow);padding:6px}
+.tab{color:var(--mute)}
+.tab[aria-current="page"]{color:var(--lime)}
+.tab .dot{transition:background .25s,transform .3s cubic-bezier(.3,1.6,.5,1)}
+.tab[aria-current="page"] .dot{background:var(--tint);border-color:transparent;color:var(--lime);transform:translateY(-2px) scale(1.06)}
+.fab{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border:0;margin:-34px auto 0;box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 88%,transparent),0 10px 22px color-mix(in srgb,var(--lime) 45%,transparent);transition:transform .2s}
+.fab:active{transform:scale(.94);box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 88%,transparent)}
+.beep-fab{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(100px + env(safe-area-inset-bottom,0px));z-index:19;display:flex;align-items:center;gap:6px;padding:10px 14px 10px 12px;border:0;border-radius:999px;background:linear-gradient(135deg,#19C98B,#5CFFC8);color:#05352A;font-family:var(--f-display);font-weight:600;font-size:14px;box-shadow:0 10px 24px rgba(25,201,139,.4);animation:floaty 3s ease-in-out infinite}
+.beep-fab:active{transform:scale(.95)}
+@keyframes floaty{50%{transform:translateY(-4px)}}
+.chat-list{display:flex;flex-direction:column;gap:8px;max-height:46vh;min-height:140px;overflow-y:auto;padding:4px 2px}
+.cmsg{max-width:86%;padding:9px 13px;border-radius:18px;font-size:14px;line-height:1.55;word-break:break-word;animation:rise .3s both}
+.cmsg.me{align-self:flex-end;background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border-bottom-right-radius:6px}
+.cmsg.bot{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:6px}
+.typing{display:flex;gap:4px;padding:13px 15px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--mute);animation:blip 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blip{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-4px)}}
+.beep-av{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#19C98B,#5CFFC8);color:#05352A;flex:none}
+.emoji-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.em{font-size:28px;line-height:1;padding:10px 0;border:1px solid var(--line);border-radius:16px;background:var(--card);transition:transform .15s,background .2s}
+.em:active{transform:scale(.92)}
+.em[aria-pressed="true"]{background:var(--tint);border-color:var(--lime)}
+.mealbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 6px 18px var(--shadow);transition:transform .15s,border-color .2s}
+.mealbtn:active{transform:scale(.98)}
+.mealbtn .ci{font-size:28px;line-height:1;width:48px;height:48px;border-radius:16px;background:var(--tint);display:grid;place-items:center;flex:none}
+.mealbtn b{display:block;font-family:var(--f-display);font-weight:600;font-size:16px}
+.mealbtn small{color:var(--mute);font-size:12.5px}
+.mealbtn[aria-pressed="true"]{border-color:var(--lime);background:var(--tint)}
+#sheetWrap{-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);background:rgba(15,20,50,.45)}
+#sheetWrap.open{animation:fadeIn .25s}
+#sheetWrap.open #sheet{animation:slideUp .38s cubic-bezier(.2,.9,.3,1)}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+#app.enter>*:not(.tabbar):not(.beep-fab){animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+#app.enter>*:nth-child(2){animation-delay:.05s}#app.enter>*:nth-child(3){animation-delay:.1s}#app.enter>*:nth-child(4){animation-delay:.15s}#app.enter>*:nth-child(5){animation-delay:.2s}#app.enter>*:nth-child(6){animation-delay:.25s}#app.enter>*:nth-child(7){animation-delay:.3s}#app.enter>*:nth-child(8){animation-delay:.35s}
+#toast{border-radius:16px;box-shadow:0 10px 26px var(--shadow)}
+@media (prefers-reduced-motion:reduce){.beep-fab,#app.enter>*,#sheetWrap.open,#sheetWrap.open #sheet{animation:none!important}}
 </style>
 
 </head>
@@ -290,6 +393,7 @@ input[type=range]{width:100%;accent-color:var(--lime);padding:0;background:none;
 <input type="file" id="photoCam" accept="image/*" capture="environment" hidden>
 <input type="file" id="photoPick" accept="image/*" hidden>
 <input type="file" id="avatarIn" accept="image/*" hidden>
+<input type="file" id="avatarCam" accept="image/*" capture="user" hidden>
 <input type="file" id="importIn" accept="application/json,.json" hidden>
 
 <script src="config.js"></script>
@@ -570,7 +674,7 @@ const ACTS=[
 const MEALS=[['b','มื้อเช้า','🌅'],['l','มื้อกลางวัน','🍱'],['d','มื้อเย็น','🌙'],['s','ของว่าง/ขนม','🍿']];
 const CE={'ข้าว/จานเดียว':'🍛','ก๋วยเตี๋ยว/เส้น':'🍜','กับข้าว/อีสาน':'🍲','ของหวาน/เบเกอรี่':'🍰','เครื่องดื่ม':'🧋','ฟาสต์ฟู้ด/ตะวันตก':'🍔','ญี่ปุ่น':'🍣','เกาหลี':'🥘','จีน/เอเชีย':'🥟','ผลไม้':'🍉','ของว่าง/ร้านสะดวกซื้อ':'🍿','ของฉัน':'⭐','ล่าสุด':'🕘','ทั้งหมด':'🍽️'};
 const SKINS=['#FBE0CC','#F3CBA6','#E3AE82','#C98F62','#A96F48','#7A4A2E'];
-const KITS=[['#FF5B1F','ส้ม'],['#2F6BFF','น้ำเงิน'],['#C6FF00','เขียวนีออน'],['#FF3D6E','ชมพู']];
+const KITS=[['#4F6BFF','น้ำเงิน'],['#7C5CFF','ม่วง'],['#19C98B','มินต์'],['#FF8FB1','ชมพู']];
 function foodEmoji(n){const f=foodPool().find(x=>x.name===n);return f?(CE[f.cat]||'🍽️'):'🍽️'}
 const ACT_LV=[[1.2,'แทบไม่ขยับ','นั่งทำงาน/เรียนเป็นหลัก'],[1.375,'ขยับเล็กน้อย','เดินไปมาบ้าง'],[1.55,'ขยับปานกลาง','ยืน/เดินเกือบทั้งวัน'],[1.725,'ขยับหนัก','งานใช้แรงมาก']];
 
@@ -647,7 +751,7 @@ const IC={
  cam:'<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>'
 };
 const initial=n=>(n||'').trim().charAt(0)||'?';
-function avatarHTML(cls){const p=S.profile;return p.avatar?`<img class="avatar ${cls||''}" src="${p.avatar}" alt="รูปโปรไฟล์">`:`<div class="avatar ${cls||''}">${esc(p.name?initial(p.name):'ฉัน')}</div>`}
+function avatarHTML(cls){const p=S.profile;if(p.avatar)return `<img class="avatar ${cls||''}" src="${p.avatar}" alt="รูปโปรไฟล์">`;if(p.emoji)return `<div class="avatar ${cls||''}" style="font-size:${cls?'54px':'26px'};background:var(--tint)">${p.emoji}</div>`;return `<div class="avatar ${cls||''}">${esc(p.name?initial(p.name):'ฉัน')}</div>`}
 function defaultMeal(){const h=new Date().getHours();return h<10?'b':h<15?'l':h<20?'d':'s'}
 
 /* ---------- views ---------- */
@@ -686,7 +790,6 @@ function viewToday(){
   <div class="stage"><div class="ring">${ringSVG(t.eaten,t.budget)}<div class="mid"><span class="small mute">${over?'กินเกินมา':'เหลืออีก'}</span><span class="num big" style="color:${over?'#FF7A94':'#fff'}">${fmt(Math.abs(t.left))}</span><span class="small mute">kcal</span></div></div>${mascotBlock(k,t)}</div>
   <div class="eq"><div><span class="tiny mute">กินแล้ว</span><b>${fmt(t.eaten)}</b></div><div><span class="tiny mute">งบกินวันนี้</span><b>${fmt(t.budget)}</b></div><div><span class="tiny mute">เผาจากออกกำลัง</span><b>+${fmt(t.bw+t.bs)}</b></div></div>
   <p class="tiny mute" style="margin-top:8px;text-align:center">งบ = เป้าประจำวัน ${fmt(t.base)} + ออกกำลังกาย ${fmt(t.bw)} + ก้าวเดิน ${fmt(t.bs)} · TDEE ของคุณ ${fmt(G.tdee)}</p></div>`;
-  h+=quickCard();
   h+=`<div class="card stack"><div class="row between"><h2>💪 สารอาหารวันนี้</h2><span class="small mute">ประมาณการ</span></div>
    <div class="grid3 num" style="text-align:center"><div><b style="font-size:20px">${Math.round(t.p)}</b><div class="tiny mute">โปรตีน (ก.)</div></div><div><b style="font-size:20px">${Math.round(t.c)}</b><div class="tiny mute">คาร์บ (ก.)</div></div><div><b style="font-size:20px">${Math.round(t.f)}</b><div class="tiny mute">ไขมัน (ก.)</div></div></div>
    <div class="split" role="img" aria-label="สัดส่วนพลังงาน โปรตีน ${pc}% คาร์บ ${cc}% ไขมัน ${fc}%">${t.eaten>0?`<i style="width:${pc}%;background:var(--sky)"></i><i style="width:${cc}%;background:var(--sun)"></i><i style="width:${fc}%;background:var(--pink)"></i>`:''}</div>
@@ -808,7 +911,7 @@ function viewMe(){
    <label class="f">ระดับกิจกรรมในชีวิตประจำวัน<select data-bind="profile.act" data-num>${ACT_LV.map(a=>`<option value="${a[0]}" ${p.act===a[0]?'selected':''}>${a[1]} · ${a[2]}</option>`).join('')}</select></label>
    <div id="stats">${statsBox()}</div>
    <p class="tiny mute">ไม่ต้องนับการออกกำลังกายในระดับกิจกรรม เพราะแอปบวกจากที่คุณบันทึกให้แยกต่างหาก</p></div>
-  ${accountCard()}<div class="card stack"><h2>💾 ข้อมูลของฉัน</h2><p class="small mute">${USER?'ข้อมูลสำรองอยู่ในบัญชีของคุณและซิงก์อัตโนมัติ ปุ่มด้านล่างเป็นการสำรองเป็นไฟล์เพิ่มเติม':'ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ถ้าล้างเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย แนะนำให้สำรองไฟล์ไว้'}</p>
+  ${installCard()}${accountCard()}<div class="card stack"><h2>💾 ข้อมูลของฉัน</h2><p class="small mute">${USER?'ข้อมูลสำรองอยู่ในบัญชีของคุณและซิงก์อัตโนมัติ ปุ่มด้านล่างเป็นการสำรองเป็นไฟล์เพิ่มเติม':'ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ถ้าล้างเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย แนะนำให้สำรองไฟล์ไว้'}</p>
    <div class="row wrap"><button class="btn alt" data-act="export">สำรองข้อมูล</button><button class="btn alt" data-act="import">นำเข้าข้อมูล</button></div>
    <button class="btn alt" data-act="obRestart">🔁 ตั้งค่าเริ่มต้นใหม่ (ไม่ลบข้อมูลอาหาร)</button>
    <button class="btn pink" data-act="reset">${ui.confirmReset?'กดอีกครั้งเพื่อยืนยันลบทั้งหมด':'ลบข้อมูลทั้งหมด'}</button></div>`;
@@ -929,7 +1032,7 @@ const OUTFITS=[
  {n:'นักปั่น',e:'🚴',top:'tee',slv:1,bot:'bike',head:'helmet',decal:'stripes'},
  {n:'สตรีท',e:'🧢',top:'tee',slv:1,bot:'cargo',head:'cap',decal:'smile'}
 ];
-const PAL=['#FF5B1F','#FF3D6E','#FF8FB1','#FFD21F','#C6FF00','#22C55E','#14B8A6','#4D8DFF','#2340E0','#8B5CF6','#0B1230','#F1F4FF'];
+const PAL=['#4F6BFF','#7C5CFF','#19C98B','#14B8A6','#6FA8FF','#FF8FB1','#FF6B7A','#FFC857','#FF9F6B','#1B2038','#F4F5FA','#2340E0'];
 const HAIRC=['#2A2433','#5A3A2A','#C9A24A','#D1452F','#FF7FA8','#4D8DFF','#E8E8F0'];
 const HAIRS=['ผมสั้น','หางม้า','บ๊อบ','มวยผม','แกละ','หยิกฟู'];
 function shadeC(h,s){return s>0?mix(h,'#ffffff',s/100):s<0?mix(h,'#000000',-s/100):h}
@@ -1276,25 +1379,118 @@ function accountCard(){
   <button class="btn pink" data-act="delCloud">${ui.confirmCloud?'กดอีกครั้งเพื่อลบข้อมูลบนคลาวด์':'ลบข้อมูลของฉันบนคลาวด์'}</button>
   <p class="tiny mute">บนคลาวด์เก็บเฉพาะโปรไฟล์ เป้าหมาย บันทึกอาหารและออกกำลังกาย (ไม่เก็บรูปอาหาร) ผู้ดูแลระบบเห็นข้อมูลนี้ได้ตามสิทธิ์ของฐานข้อมูล</p></div>`;
 }
+/* ---------- avatar picker, Beep chat, PWA install ---------- */
+const EMOJIS=['🐶','🐱','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐸','🐵','🐧','🐥','🦄','🐷','🐹','🐙','🦖','🍓','🌈'];
+function openAvatar(){ui.sh={mode:'avatar'};$('#sheetWrap').classList.add('open');renderSheet()}
+function renderAvatarSheet(){
+  $('#sheet').innerHTML=`<div class="row between"><h2>รูปโปรไฟล์</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
+  <div style="display:grid;place-items:center">${avatarHTML('big')}</div>
+  <div class="grid2"><button class="btn" data-act="avCam">📷 ถ่ายรูป</button><button class="btn alt" data-act="avPick">🖼️ เลือกจากเครื่อง</button></div>
+  <div class="small mute">หรือเลือกอีโมจิ</div>
+  <div class="emoji-grid">${EMOJIS.map(e=>`<button class="em" data-act="setEmoji" data-v="${e}" aria-pressed="${S.profile.emoji===e&&!S.profile.avatar}" aria-label="อีโมจิ ${e}">${e}</button>`).join('')}</div>
+  ${(S.profile.avatar||S.profile.emoji)?`<button class="btn alt" data-act="avClear">ลบรูป/อีโมจิ ใช้ตัวอักษรชื่อแทน</button>`:''}`;
+}
+async function setAvatarFile(f){
+  if(!f)return;
+  try{const r=await shrink(f,256,0.8);S.profile.avatar=r.url;S.profile.emoji='';if(S.onboarded)S.profile.set=true;save();closeSheet();render()}catch(x){toast('เปิดรูปนี้ไม่ได้')}
+}
+
+const BEEP_ICON='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V4M9.5 4h5"/><circle cx="9" cy="14" r="1.4" fill="currentColor"/><circle cx="15" cy="14" r="1.4" fill="currentColor"/><path d="M10 17.4c1.3.8 2.7.8 4 0"/></svg>';
+const BEEP_SYS=`คุณคือ Beep ผู้ช่วยดูแลสุขภาพประจำแอป Chompy พูดภาษาไทย เป็นกันเอง น่ารัก กระชับ (ไม่เกิน ~6 บรรทัด) ใช้อีโมจิได้เล็กน้อย ให้คำแนะนำเรื่องการออกกำลังกาย อาหาร การนอน และการดูแลตัวเองแบบทั่วไปที่ทำได้จริง โดยอ้างอิงข้อมูลวันนี้ของผู้ใช้ที่แนบมา เมื่อแนะนำการออกกำลังกายให้ระบุชนิด ระยะเวลา และแคลที่เผาโดยประมาณ ไม่วินิจฉัยโรค ไม่แนะนำยา ไม่แนะนำให้กินต่ำกว่า 1,200 kcal (หญิง) หรือ 1,500 kcal (ชาย) ต่อวัน ไม่ส่งเสริมการอดอาหารหรือลดน้ำหนักเร็วเกินไป หากผู้ใช้อายุต่ำกว่า 18 ปี มีอาการผิดปกติ หรือพูดถึงความผิดปกติทางการกิน ให้แนะนำพบแพทย์หรือผู้เชี่ยวชาญอย่างอ่อนโยน ตอบเฉพาะเรื่องสุขภาพ อาหาร การออกกำลังกาย และการใช้แอป`;
+function mdLite(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^\s*[-*] /gm,'• ').replace(/\n/g,'<br>')}
+function openBeep(){ui.sh={mode:'chat'};if(!ui.chat)ui.chat={msgs:[],busy:false};$('#sheetWrap').classList.add('open');renderSheet();setTimeout(scrollChat,40)}
+function chatList(){
+  const c=ui.chat;let h='';
+  if(!c.msgs.length)h+=`<div class="cmsg bot">${mdLite('สวัสดี! Beep เองนะ 🤖 ถามได้เลยว่าวันนี้ควรออกกำลังกายหรือดูแลตัวเองยังไง เดี๋ยว Beep ดูข้อมูลของวันนี้ให้')}</div>`;
+  c.msgs.forEach(m=>{h+=`<div class="cmsg ${m.role==='user'?'me':'bot'}">${mdLite(m.text)}</div>`});
+  if(c.busy)h+=`<div class="cmsg bot typing" aria-label="Beep กำลังพิมพ์"><i></i><i></i><i></i></div>`;
+  return h;
+}
+function renderChatSheet(){
+  const c=ui.chat,sug=['วันนี้ควรออกกำลังกายอะไรดี 🏃','กินอะไรต่อดีให้ไม่เกินงบ 🍽️','ขี้เกียจออกกำลังกาย ทำไงดี 😴','สรุปวันนี้ให้หน่อย 📋'];
+  $('#sheet').innerHTML=`<div class="row between"><div class="row"><span class="beep-av">${BEEP_ICON}</span><div><h2>Beep</h2><div class="tiny mute">ผู้ช่วยดูแลสุขภาพ (AI)</div></div></div><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
+  <div id="chatList" class="chat-list">${chatList()}</div>
+  ${c.msgs.length?'':`<div class="chips" style="flex-wrap:wrap;overflow:visible">${sug.map(x=>`<button class="chip" data-act="beepSug" data-q="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+  <div class="row"><input type="text" id="chatIn" maxlength="300" placeholder="ถาม Beep ได้เลย..." autocomplete="off" ${c.busy?'disabled':''}><button class="btn" data-act="beepSend" ${c.busy?'disabled':''}>ส่ง</button></div>
+  <p class="tiny mute">Beep เป็น AI ให้คำแนะนำทั่วไป ไม่ใช่แพทย์ หากมีอาการผิดปกติควรพบแพทย์</p>`;
+}
+function scrollChat(){const l=$('#chatList');if(l)l.scrollTop=l.scrollHeight}
+function beepContext(){
+  const k=todayKey(),t=totals(k),L=getLog(k),p=S.profile,g=S.goal,G=goalCalc(),now=new Date();
+  const last7=[];for(let i=6;i>=0;i--){const kk=addDays(k,-i),d=totals(kk);last7.push({date:kk,eatenKcal:Math.round(d.eaten),budgetKcal:Math.round(d.budget),steps:d.steps})}
+  return{
+    time:now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}),
+    user:{name:p.name||'',sex:p.sex==='m'?'male':'female',age:p.age,heightCm:p.height,weightKg:p.weight,bmi:r1(bmi(p))},
+    goal:{mode:G.mode,targetKg:g.target,lossKgPerWeek:G.mode==='lose'?r1(G.kgDay*7):0,etaDate:G.eta||null,stepGoal:g.stepGoal},
+    energy:{tdeeKcal:Math.round(G.tdee),baseBudgetKcal:G.budget},
+    today:{eatenKcal:Math.round(t.eaten),budgetKcal:Math.round(t.budget),leftKcal:Math.round(t.left),proteinG:Math.round(t.p),carbsG:Math.round(t.c),fatG:Math.round(t.f),steps:t.steps,burnedWorkoutKcal:t.bw,
+      workouts:L.workouts.map(w=>({name:w.name,min:w.min,kcal:w.kcal})),meals:L.meals.map(m=>({meal:m.meal,name:m.name,kcal:m.kcal}))},
+    last7:last7
+  };
+}
+async function beepSend(text){
+  const c=ui.chat;text=(text||'').trim();
+  if(!text||!c||c.busy)return;
+  c.msgs.push({role:'user',text:text.slice(0,300)});c.busy=true;
+  const inChat=()=>ui.sh&&ui.sh.mode==='chat';
+  if(inChat()){renderChatSheet();scrollChat()}
+  try{
+    const ctx=beepContext();let reply='';
+    if(SAMPLE){
+      const turns=c.msgs.slice(-12).map((m,i)=>({role:m.role==='user'?'user':'assistant',content:(i===0?BEEP_SYS+'\nข้อมูลผู้ใช้ (JSON): '+JSON.stringify(ctx)+'\n\nข้อความของผู้ใช้: ':'')+m.text}));
+      while(turns.length&&turns[0].role!=='user')turns.shift();
+      const r=await SAMPLE(turns,{cache:false});reply=r.text;
+    }else{
+      const ac=new AbortController(),to=setTimeout(()=>ac.abort(),30000);
+      try{
+        const resp=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},signal:ac.signal,body:JSON.stringify({messages:c.msgs.slice(-8),context:ctx})});
+        let j={};try{j=await resp.json()}catch(x){}
+        if(!resp.ok){const er=new Error('api');er.code=j.error||('http_'+resp.status);throw er}
+        reply=j.reply||'';
+      }finally{clearTimeout(to)}
+    }
+    c.msgs.push({role:'assistant',text:reply||'Beep คิดไม่ออกเลย ลองถามใหม่อีกครั้งนะ'});
+  }catch(e){
+    const code=e&&e.code;
+    c.msgs.push({role:'assistant',text:({daily_limit:'วันนี้ถามครบโควตาแล้ว พรุ่งนี้มาคุยกันใหม่นะ 🙏',quota:'ตอนนี้คนใช้เยอะ ลองใหม่อีกสักครู่นะ',not_configured:'Beep ยังไม่เปิดใช้งาน 🛠️'})[code]||('Beep ตอบไม่ได้ตอนนี้ ลองใหม่อีกครั้งนะ (รหัส: '+(code||'network')+')')});
+  }
+  c.msgs=c.msgs.slice(-20);c.busy=false;
+  if(inChat()){renderChatSheet();scrollChat();const i=$('#chatIn');if(i)i.focus()}
+}
+
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;if(S.onboarded&&ui.tab==='me'&&!ui.sh)render()});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;toast('ติดตั้งแล้ว 🎉');if(ui.tab==='me')render()});
+function isStandalone(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}
+function installCard(){
+  if(isStandalone()||window.claude)return '';
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  let body;
+  if(deferredInstall)body=`<button class="btn" data-act="install">📲 ติดตั้งลงหน้าจอโฮม</button>`;
+  else if(ios)body=`<p class="small">iPhone / iPad: เปิดด้วย Safari แล้วกดปุ่มแชร์ (สี่เหลี่ยมมีลูกศรขึ้น) จากนั้นเลือก <b>เพิ่มไปยังหน้าจอโฮม</b></p>`;
+  else body=`<p class="small">Android / คอมพิวเตอร์: กดเมนู ⋮ ของเบราว์เซอร์ แล้วเลือก <b>ติดตั้งแอป</b> หรือ <b>เพิ่มไปยังหน้าจอหลัก</b></p>`;
+  return `<div class="card stack"><h2>📲 ติดตั้งเป็นแอป</h2><p class="small mute">เปิดได้เร็ว เต็มจอ ไม่มีแถบเบราว์เซอร์ เหมือนแอปจริง</p>${body}</div>`;
+}
 const VIEWS={today:viewToday,work:viewWork,goal:viewGoal,me:viewMe};
 function tabbar(){
   const T=(id,ic,label)=>`<button class="tab" data-act="tab" data-v="${id}" ${ui.tab===id?'aria-current="page"':''}><span class="dot">${ic}</span>${label}</button>`;
-  return `<nav class="tabbar" aria-label="เมนูหลัก"><div class="in">${T('today',IC.today,'วันนี้')}${T('work',IC.work,'ออกกำลัง')}<button class="fab" data-act="add" data-meal="${defaultMeal()}" aria-label="เพิ่มอาหาร">${IC.plus}</button>${T('goal',IC.goal,'เป้าหมาย')}${T('me',IC.me,'โปรไฟล์')}</div></nav>`;
+  return `<nav class="tabbar" aria-label="เมนูหลัก"><div class="in">${T('today',IC.today,'วันนี้')}${T('work',IC.work,'ออกกำลัง')}<button class="fab" data-act="add" data-ask="1" data-meal="${defaultMeal()}" aria-label="เพิ่มอาหาร">${IC.plus}</button>${T('goal',IC.goal,'เป้าหมาย')}${T('me',IC.me,'โปรไฟล์')}</div></nav><button class="beep-fab" data-act="beep" aria-label="คุยกับ Beep">${BEEP_ICON}<span>Beep</span></button>`;
 }
 function render(){
   if(AUTH_ON&&!AUTHREADY){stopAv();$('#app').innerHTML=authLoading();return}
   if(AUTH_ON&&!USER&&!GUEST&&!AUTH_FAIL){stopAv();$('#app').innerHTML=loginView();window.scrollTo(0,0);return}
   if(!S.onboarded){stopAv();$('#app').innerHTML=obView();window.scrollTo(0,0);return}
   if(ui.tab==='work'&&!ui.w)ui.w={i:1,min:30,kcal:actKcal(ACTS[1][1],30)};
-  const sy=window.scrollY;
+  const sy=window.scrollY,changed=ui._rt!==ui.tab;ui._rt=ui.tab;
+  $('#app').classList.toggle('enter',changed);
   $('#app').innerHTML=VIEWS[ui.tab]()+tabbar();
   window.scrollTo(0,sy);
   avLife();
 }
 
 /* ---------- add-food sheet ---------- */
-function openAdd(meal){
-  ui.sh={meal:meal,step:'choose',tab:'search',cat:'ทั้งหมด',q:'',sel:null,qty:1,
+function openAdd(meal,ask){
+  ui.sh={meal:meal,step:ask?'meal':'choose',tab:'search',cat:'ทั้งหมด',q:'',sel:null,qty:1,
     ai:{text:'',img:null,blob:null,loading:false,items:null,err:'',note:''},cu:{name:'',kcal:'',p:'',c:'',f:'',keep:true}};
   $('#sheetWrap').classList.add('open');renderSheet();
 }
@@ -1318,6 +1514,15 @@ function aiTotal(){const it=ui.sh.ai.items||[];return it.reduce((a,x)=>a+(+x.kca
 
 function renderSheet(){
   const sh=ui.sh;if(!sh)return;
+  if(sh.mode==='avatar'){renderAvatarSheet();return}
+  if(sh.mode==='chat'){renderChatSheet();return}
+  if(sh.step==='meal'){
+    const hint={b:'ก่อน 10 โมง',l:'ช่วงสายถึงบ่าย',d:'ช่วงเย็นถึงค่ำ',s:'ขนม เครื่องดื่ม ของว่าง'};
+    $('#sheet').innerHTML=`<div class="row between"><h2>กินมื้อไหนดี</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
+    <p class="small mute">เลือกมื้อก่อน แล้วค่อยเลือกวิธีเพิ่มอาหาร</p>
+    ${MEALS.map(m=>`<button class="mealbtn" data-act="pickMeal" data-v="${m[0]}" aria-pressed="${sh.meal===m[0]}"><span class="ci">${m[2]}</span><span class="grow"><b>${m[1]}</b><small>${hint[m[0]]}</small></span><span class="mute">›</span></button>`).join('')}`;
+    return;
+  }
   let h=`<div class="row between"><h2>เพิ่มอาหาร</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
   <div class="chips" role="group" aria-label="มื้อ">${MEALS.map(m=>`<button class="chip" data-act="setMeal" data-v="${m[0]}" aria-pressed="${sh.meal===m[0]}">${m[2]} ${m[1]}</button>`).join('')}</div>`;
   if(sh.step==='choose'){
@@ -1470,7 +1675,8 @@ document.addEventListener('click',e=>{
   switch(a){
     case 'tab':ui.tab=v;ui.confirmReset=false;ui.body=null;render();window.scrollTo(0,0);break;
     case 'day':{const n=addDays(ui.date,+v);if(n<=todayKey()){ui.date=n;render()}break}
-    case 'add':openAdd(el.dataset.meal);break;
+    case 'add':openAdd(el.dataset.meal,el.dataset.ask==='1');break;
+    case 'pickMeal':sh.meal=v;sh.step='choose';renderSheet();break;
     case 'quick':{const f=foodPool().find(x=>x.name===el.dataset.n);if(f){pushMeal({name:f.name,serving:f.serving,qty:1,kcal:f.kcal,p:f.p,c:f.c,f:f.f},defaultMeal());noteRecent(f.name);save();render();toast('+ '+f.name+' '+fmt(f.kcal)+' kcal')}break}
     case 'pickMode':{sh.step='main';if(v==='photo'){sh.tab='ai';renderSheet();$('#photoCam').click();break}sh.tab=v;renderSheet();break}
     case 'quickCam':{openAdd(defaultMeal());ui.sh.tab='ai';renderSheet();$('#photoCam').click();break}
@@ -1542,7 +1748,15 @@ document.addEventListener('click',e=>{
     case 'kit':S.profile.kit=+v;save();render();break;
     case 'saveBody':{const b=ui.body,hh=+b.h,ww=+b.w;if(!(hh>=100&&hh<=230)||!(ww>=20&&ww<=300)){toast('ใส่ส่วนสูง (ซม.) และน้ำหนัก (กก.) ให้ถูกต้องนะ');break}
       S.profile.height=hh;S.profile.weight=ww;S.profile.set=true;upsertWeight(ww);save();ui.body=null;ui.pop=true;render();ui.pop=false;toast('บันทึกแล้ว 💪 อวตารอัปเดตตามรูปร่างปัจจุบัน');break}
-    case 'avatar':$('#avatarIn').click();break;
+    case 'avatar':openAvatar();break;
+    case 'avCam':$('#avatarCam').click();break;
+    case 'avPick':$('#avatarIn').click();break;
+    case 'setEmoji':S.profile.emoji=v;S.profile.avatar='';if(S.onboarded)S.profile.set=true;save();closeSheet();render();break;
+    case 'avClear':S.profile.emoji='';S.profile.avatar='';save();closeSheet();render();break;
+    case 'beep':openBeep();break;
+    case 'beepSend':beepSend(($('#chatIn')||{}).value);break;
+    case 'beepSug':beepSend(el.dataset.q);break;
+    case 'install':if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.then(()=>{deferredInstall=null;render()})}break;
     case 'export':doExport();break;
     case 'import':$('#importIn').click();break;
     case 'reset':
@@ -1553,10 +1767,9 @@ document.addEventListener('click',e=>{
 });
 $('#photoCam').addEventListener('change',e=>{onPhoto(e.target.files[0]);e.target.value=''});
 $('#photoPick').addEventListener('change',e=>{onPhoto(e.target.files[0]);e.target.value=''});
-$('#avatarIn').addEventListener('change',async e=>{
-  const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{const r=await shrink(f,256,0.8);S.profile.avatar=r.url;S.profile.set=true;save();render()}catch(x){toast('เปิดรูปนี้ไม่ได้')}
-});
+$('#avatarIn').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
+$('#avatarCam').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='chatIn'){e.preventDefault();beepSend(e.target.value)}});
 async function doExport(){
   const data=JSON.stringify(S);
   const name='chompy-backup-'+todayKey()+'.json';
@@ -1573,6 +1786,7 @@ $('#importIn').addEventListener('change',e=>{
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.sh)closeSheet()});
 render();
 if(AUTH_ON)authInit();
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)&&!window.claude){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 window.addEventListener('pagehide',()=>{if(SB&&USER&&ui.sync==='pending')pushCloud()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&SB&&USER&&ui.sync==='pending')pushCloud()});
 })();
