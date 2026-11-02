@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>นโยบายความเป็นส่วนตัว · Chompy</title>
+<style>
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:720px;margin:0 auto;padding:24px 16px 64px;line-height:1.7;color:#1B2038;background:#F5F6FA}
+h1{font-size:26px}h2{font-size:18px;margin-top:28px}a{color:#3B5BFF}
+.en{color:#55608A;border-top:1px solid #E3E6F0;margin-top:36px;padding-top:8px}
+@media (prefers-color-scheme:dark){body{background:#0E1120;color:#F1F3FB}a{color:#8A9CFF}.en{color:#9199B8;border-color:#2A3152}}
+</style>
+</head>
+<body>
+<h1>นโยบายความเป็นส่วนตัว (Chompy)</h1>
+<p>มีผลตั้งแต่ 2 พฤศจิกายน 2569 · Chompy เป็นแอปบันทึกอาหาร พลังงาน และเป้าหมายน้ำหนัก</p>
+
+<h2>ข้อมูลที่เราเก็บ</h2>
+<ul>
+<li><b>ข้อมูลบัญชี:</b> อีเมล (ตอนเข้าสู่ระบบด้วยอีเมลหรือบัญชี Google) ใช้เพื่อระบุตัวตนและซิงก์ข้อมูลเท่านั้น</li>
+<li><b>ข้อมูลที่คุณกรอก:</b> ชื่อเล่น เพศ อายุ ส่วนสูง น้ำหนัก ระดับกิจกรรม เป้าหมาย บันทึกอาหาร การออกกำลังกาย ก้าวเดิน และรูปโปรไฟล์/อวตาร</li>
+<li><b>รูปอาหาร:</b> เมื่อคุณใช้ฟีเจอร์ "ถ่ายรูปให้ AI ประเมิน" รูปจะถูกส่งไปประมวลผลที่ Google Gemini เพื่อประเมินแคลอรี่ เราไม่เก็บรูปต้นฉบับบนเซิร์ฟเวอร์ของเรา ภาพย่อในบันทึกอาหารเก็บเฉพาะในเครื่องของคุณ</li>
+</ul>
+
+<h2>ข้อมูลเก็บที่ไหน</h2>
+<ul>
+<li><b>ในเครื่องของคุณ:</b> เก็บในเบราว์เซอร์ (localStorage) ถ้าใช้งานโดยไม่ล็อกอิน ข้อมูลอยู่ที่นี่เท่านั้น</li>
+<li><b>บนคลาวด์:</b> ถ้าล็อกอิน ข้อมูลข้างต้น (ไม่รวมรูปอาหาร) จะซิงก์ไปที่ฐานข้อมูลของ Supabase (เซิร์ฟเวอร์ในยุโรป ไอร์แลนด์) ซึ่งมีระบบจำกัดสิทธิ์ให้แต่ละบัญชีเข้าถึงได้เฉพาะข้อมูลของตัวเอง</li>
+<li><b>ผู้ให้บริการที่เกี่ยวข้อง:</b> Vercel (โฮสต์เว็บ), Supabase (ล็อกอินและฐานข้อมูล), Google (ล็อกอินด้วย Google และ Gemini ประเมินรูปอาหาร) แต่ละรายมีนโยบายของตนเอง</li>
+</ul>
+
+<h2>สิ่งที่เราไม่ทำ</h2>
+<ul>
+<li>ไม่ขายหรือแชร์ข้อมูลของคุณให้บุคคลที่สาม</li>
+<li>ไม่ใช้ข้อมูลเพื่อโฆษณา และไม่ติดตามพฤติกรรมข้ามเว็บไซต์</li>
+</ul>
+
+<h2>สิทธิ์ของคุณ</h2>
+<ul>
+<li>ดูและแก้ไขข้อมูลได้ในแอปทุกเมื่อ</li>
+<li>ลบข้อมูลบนคลาวด์ได้เองที่แท็บโปรไฟล์ → ปุ่ม "ลบข้อมูลของฉันบนคลาวด์" และลบข้อมูลในเครื่องด้วยปุ่ม "ลบข้อมูลทั้งหมด"</li>
+<li>หากต้องการให้ลบบัญชีล็อกอินทั้งหมด หรือมีคำถามเรื่องข้อมูล แจ้งได้ที่ <a href="https://github.com/badinwatt-sin/cal_goal/issues">GitHub Issues</a> ของโปรเจกต์</li>
+</ul>
+
+<h2>ข้อมูลสุขภาพและผู้เยาว์</h2>
+<p>ค่าที่แอปคำนวณเป็นค่าประมาณทั่วไป ไม่ใช่คำแนะนำทางการแพทย์ แอปไม่เหมาะกับผู้ที่อายุต่ำกว่า 18 ปีในการลดน้ำหนัก ผู้ที่ตั้งครรภ์ หรือมีประวัติความผิดปกติทางการกิน ควรปรึกษาแพทย์หรือนักกำหนดอาหาร</p>
+
+<h2>การเปลี่ยนแปลง</h2>
+<p>หากมีการปรับนโยบาย เราจะปรับวันที่ด้านบนของหน้านี้</p>
+
+<div class="en">
+<h2>Privacy Policy (English summary)</h2>
+<p>Chompy is a calorie and goal tracking app. We collect your email (for sign-in) and the data you enter (profile, goals, meals, workouts, weights). Without signing in, data stays in your browser. If you sign in, data (excluding food photos) syncs to a Supabase database (Ireland) with per-user access control. Food photos you choose to analyze are sent to Google Gemini to estimate calories and are not stored by us. We do not sell or share your data and do not use it for advertising. You can delete cloud data from the Profile tab or contact us via <a href="https://github.com/badinwatt-sin/cal_goal/issues">GitHub Issues</a>. Chompy provides general estimates, not medical advice.</p>
+</div>
+</body>
+</html>
