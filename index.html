@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Chompy</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#4F6BFF">
+<meta name="theme-color" content="#0A0C0F">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Chompy">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -19,19 +19,16 @@
 <style>
 /* Layout: single-column phone app, sticker-style cards (thick ink outline + hard shadow), bottom tab bar with a raised "+" button */
 :root{
-  --bg:#F4F6FF; --bgtop:#E3E9FF; --card:#FFFFFF; --soft:#EEF1FB; --tint:#E8EDFF; --ink:#141A33; --mute:#6B7391;
-  --line:#E4E8F5; --shadow:rgba(60,80,200,.10);
-  --lime:#4F6BFF; --lime2:#7C5CFF; --volt:#19C98B; --pink:#FF8FB1; --sky:#6FA8FF; --sun:#FFC857; --over:#FF5C6C;
-  --m1:#4F6BFF; --m2:#8FA3FF; --m3:#CDD6FF; --on-accent:#FFFFFF;
+  /* ธีมมืดสไตล์สปอร์ต (คล้ายแอปติดตามสุขภาพ): พื้นดำถ่าน สีเขียว/เหลือง/แดงบอกสถานะ */
+  --bg:#0A0C0F; --bgtop:#0F2A24; --card:#14171B; --soft:#1B1F25; --tint:#12302A; --ink:#F2F5F7; --mute:#8B95A1;
+  --line:#242A31; --shadow:rgba(0,0,0,.5);
+  --lime:#00E0B8; --lime2:#00B8D9; --volt:#2DE08A; --good:#2DE08A; --warn:#FFD60A; --over:#FF4D5E;
+  --pink:#FF6B8B; --sky:#4DA3FF; --sun:#FFD60A;
+  --m1:#4DA3FF; --m2:#FFD60A; --m3:#FF6B8B; --on-accent:#04140F;
   --f-display:'Kanit','Anuphan',system-ui,sans-serif;
   --f-body:'Anuphan','Kanit',system-ui,sans-serif;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0C1024; --bgtop:#161C45; --card:#151B38; --soft:#1D2447; --tint:#1E2757; --ink:#EEF1FF; --mute:#98A1C8;
-  --line:#263059; --shadow:rgba(0,0,0,.38); --lime:#6C84FF; --lime2:#8E6CFF; --volt:#35F0B0; --over:#FF7482; --sky:#7FB2FF; color-scheme:dark;}}
-:root[data-theme="dark"]{
-  --bg:#0C1024; --bgtop:#161C45; --card:#151B38; --soft:#1D2447; --tint:#1E2757; --ink:#EEF1FF; --mute:#98A1C8;
-  --line:#263059; --shadow:rgba(0,0,0,.38); --lime:#6C84FF; --lime2:#8E6CFF; --volt:#35F0B0; --over:#FF7482; --sky:#7FB2FF; color-scheme:dark;}
 
 *{box-sizing:border-box}
 html,body{height:auto}
@@ -288,21 +285,21 @@ input[type=range]{width:100%;accent-color:var(--lime);padding:0;background:none;
 .obopt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
 .obopt[aria-pressed="true"]{background:var(--lime);color:var(--on-accent);box-shadow:2px 2px 0 var(--shadow)}
 .seg button[disabled]{opacity:.4}
-/* ===== Fluid theme: คลีน นุ่ม ลื่น ใช้สีหลักน้อย ===== */
+/* ===== Dark sport theme ===== */
 html{scroll-behavior:smooth}
-h1,h2,h3{font-style:normal;font-weight:600;letter-spacing:-.01em}
+h1,h2,h3{font-style:italic;font-weight:600;letter-spacing:-.01em}
 .card{border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 30px var(--shadow)}
-.btn{border:0;border-radius:16px;font-style:normal;letter-spacing:0;background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;box-shadow:0 6px 16px color-mix(in srgb,var(--lime) 30%,transparent);transition:transform .15s,box-shadow .2s,filter .2s}
+.btn{border:0;border-radius:16px;font-style:italic;letter-spacing:0;background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent);box-shadow:0 6px 16px color-mix(in srgb,var(--lime) 30%,transparent);transition:transform .15s,box-shadow .2s,filter .2s}
 .btn:active{transform:scale(.97);box-shadow:none}
 .btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
 .btn.pink{background:var(--tint);color:var(--lime);box-shadow:none}
 .icon-btn{border:1px solid var(--line);border-radius:12px;background:var(--card)}
 .chip{border:1px solid var(--line);transition:background .2s,color .2s,transform .15s}
 .chip:active{transform:scale(.96)}
-.chip[aria-pressed="true"]{background:var(--lime);color:#fff;border-color:var(--lime)}
+.chip[aria-pressed="true"]{background:var(--lime);color:var(--on-accent);border-color:var(--lime)}
 .seg{border:1px solid var(--line);border-radius:14px;background:var(--soft)}
 .seg button{transition:background .2s,color .2s}
-.seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff}
+.seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent)}
 input[type=text],input[type=number],input[type=email],select,textarea{border:1px solid var(--line);background:var(--soft);border-radius:14px;transition:border-color .2s,box-shadow .2s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 22%,transparent)}
 .bar{height:12px;border:0;background:var(--soft)}
@@ -322,22 +319,17 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 .banner{background:var(--tint);color:var(--ink);border-color:var(--line)}
 .ok{background:var(--tint);border:1px solid transparent}
 .eq>div{border-radius:14px}
-.hero{--volt:#5CFFC8;color:#fff;border:0;background:radial-gradient(120% 90% at 10% 0%,rgba(255,255,255,.22),transparent 55%),linear-gradient(140deg,#4F6BFF 0%,#6D5CFF 55%,#8F5BFF 100%);box-shadow:0 16px 36px rgba(79,107,255,.35)}
-.hero .mute{color:rgba(255,255,255,.78)}
-.hero .lbl{color:#fff}
-.hero .icon-btn{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.35)}
-.hero .eq>div{background:rgba(255,255,255,.16)}
 .mi{border:0;background:var(--tint)}
 .mi-b,.mi-l,.mi-d,.mi-s{background:var(--tint)}
-.qchip b{font-style:normal}
-.streak{background:color-mix(in srgb,var(--sun) 35%,var(--card));color:var(--ink);border-color:transparent;font-style:normal}
-.bubble{border:1px solid var(--line);box-shadow:0 6px 18px var(--shadow);font-style:normal}
+.qchip b{font-style:italic}
+.streak{background:color-mix(in srgb,var(--sun) 35%,var(--card));color:var(--ink);border-color:transparent;font-style:italic}
+.bubble{border:1px solid var(--line);box-shadow:0 6px 18px var(--shadow);font-style:italic}
 .bubble::after{border-top:1px solid var(--line);border-right:1px solid var(--line)}
-.bubble.act{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border-color:transparent;font-style:normal;font-weight:500}
+.bubble.act{background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent);border-color:transparent;font-style:italic;font-weight:500}
 .bubble.act::after{border-color:transparent;background:var(--lime2)}
-.choice{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border:0;border-radius:20px;box-shadow:0 10px 24px color-mix(in srgb,var(--lime) 32%,transparent)}
+.choice{background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent);border:0;border-radius:20px;box-shadow:0 10px 24px color-mix(in srgb,var(--lime) 32%,transparent)}
 .choice.alt{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:0 6px 18px var(--shadow)}
-.choice b{font-style:normal}
+.choice b{font-style:italic}
 .od{background:var(--soft);border:0;transition:background .3s}
 .od.on{background:linear-gradient(90deg,var(--lime),var(--lime2))}
 .obopt{border:1px solid var(--line);border-radius:16px;transition:background .2s,transform .15s}
@@ -349,14 +341,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 .tab[aria-current="page"]{color:var(--lime)}
 .tab .dot{transition:background .25s,transform .3s cubic-bezier(.3,1.6,.5,1)}
 .tab[aria-current="page"] .dot{background:var(--tint);border-color:transparent;color:var(--lime);transform:translateY(-2px) scale(1.06)}
-.fab{background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border:0;margin:-34px auto 0;box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 88%,transparent),0 10px 22px color-mix(in srgb,var(--lime) 45%,transparent);transition:transform .2s}
+.fab{background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent);border:0;margin:-34px auto 0;box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 88%,transparent),0 10px 22px color-mix(in srgb,var(--lime) 45%,transparent);transition:transform .2s}
 .fab:active{transform:scale(.94);box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 88%,transparent)}
 .beep-fab{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(100px + env(safe-area-inset-bottom,0px));z-index:19;display:flex;align-items:center;gap:6px;padding:10px 14px 10px 12px;border:0;border-radius:999px;background:linear-gradient(135deg,#19C98B,#5CFFC8);color:#05352A;font-family:var(--f-display);font-weight:600;font-size:14px;box-shadow:0 10px 24px rgba(25,201,139,.4);animation:floaty 3s ease-in-out infinite}
 .beep-fab:active{transform:scale(.95)}
 @keyframes floaty{50%{transform:translateY(-4px)}}
 .chat-list{display:flex;flex-direction:column;gap:8px;max-height:46vh;min-height:140px;overflow-y:auto;padding:4px 2px}
 .cmsg{max-width:86%;padding:9px 13px;border-radius:18px;font-size:14px;line-height:1.55;word-break:break-word;animation:rise .3s both}
-.cmsg.me{align-self:flex-end;background:linear-gradient(135deg,var(--lime),var(--lime2));color:#fff;border-bottom-right-radius:6px}
+.cmsg.me{align-self:flex-end;background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent);border-bottom-right-radius:6px}
 .cmsg.bot{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:6px}
 .typing{display:flex;gap:4px;padding:13px 15px}
 .typing i{width:7px;height:7px;border-radius:50%;background:var(--mute);animation:blip 1s infinite}
@@ -373,7 +365,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 .mealbtn b{display:block;font-family:var(--f-display);font-weight:600;font-size:16px}
 .mealbtn small{color:var(--mute);font-size:12.5px}
 .mealbtn[aria-pressed="true"]{border-color:var(--lime);background:var(--tint)}
-#sheetWrap{-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);background:rgba(15,20,50,.45)}
+#sheetWrap{-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);background:rgba(0,0,0,.62)}
 #sheetWrap.open{animation:fadeIn .25s}
 #sheetWrap.open #sheet{animation:slideUp .38s cubic-bezier(.2,.9,.3,1)}
 @keyframes fadeIn{from{opacity:0}}
@@ -383,6 +375,24 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 #app.enter>*:nth-child(2){animation-delay:.05s}#app.enter>*:nth-child(3){animation-delay:.1s}#app.enter>*:nth-child(4){animation-delay:.15s}#app.enter>*:nth-child(5){animation-delay:.2s}#app.enter>*:nth-child(6){animation-delay:.25s}#app.enter>*:nth-child(7){animation-delay:.3s}#app.enter>*:nth-child(8){animation-delay:.35s}
 #toast{border-radius:16px;box-shadow:0 10px 26px var(--shadow)}
 @media (prefers-reduced-motion:reduce){.beep-fab,#app.enter>*,#sheetWrap.open,#sheetWrap.open #sheet{animation:none!important}}
+.hero{color:var(--ink);border:1px solid var(--line);background:radial-gradient(90% 70% at 50% -10%,rgba(0,224,184,.20),transparent 62%),var(--card);box-shadow:none}
+.hero .mute{color:var(--mute)}
+.hero .icon-btn{background:var(--soft);color:var(--ink);border-color:var(--line)}
+.hero .eq>div{background:var(--soft)}
+.ring .big{letter-spacing:-.02em}
+.ring svg circle:last-child{filter:drop-shadow(0 0 7px rgba(255,255,255,.22))}
+.eq span.tiny{letter-spacing:.04em}
+.hero .bubble{background:var(--soft)}
+.hero .bubble.act{background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent)}
+.tabbar .in{background:rgba(20,23,27,.9)}
+.fab{color:var(--on-accent)}
+.btn.alt{background:var(--soft)}
+.card .card{box-shadow:none}
+.cmsg.bot{background:var(--soft)}
+#toast{background:var(--ink);color:#0A0C0F}
+.warn{background:rgba(255,77,94,.12)}
+.mi{background:var(--tint)}
+.banner{background:var(--tint)}
 </style>
 
 </head>
@@ -674,7 +684,7 @@ const ACTS=[
 const MEALS=[['b','มื้อเช้า','🌅'],['l','มื้อกลางวัน','🍱'],['d','มื้อเย็น','🌙'],['s','ของว่าง/ขนม','🍿']];
 const CE={'ข้าว/จานเดียว':'🍛','ก๋วยเตี๋ยว/เส้น':'🍜','กับข้าว/อีสาน':'🍲','ของหวาน/เบเกอรี่':'🍰','เครื่องดื่ม':'🧋','ฟาสต์ฟู้ด/ตะวันตก':'🍔','ญี่ปุ่น':'🍣','เกาหลี':'🥘','จีน/เอเชีย':'🥟','ผลไม้':'🍉','ของว่าง/ร้านสะดวกซื้อ':'🍿','ของฉัน':'⭐','ล่าสุด':'🕘','ทั้งหมด':'🍽️'};
 const SKINS=['#FBE0CC','#F3CBA6','#E3AE82','#C98F62','#A96F48','#7A4A2E'];
-const KITS=[['#4F6BFF','น้ำเงิน'],['#7C5CFF','ม่วง'],['#19C98B','มินต์'],['#FF8FB1','ชมพู']];
+const KITS=[['#00E0B8','มินต์'],['#4DA3FF','น้ำเงิน'],['#FFD60A','เหลือง'],['#FF6B8B','ชมพู']];
 function foodEmoji(n){const f=foodPool().find(x=>x.name===n);return f?(CE[f.cat]||'🍽️'):'🍽️'}
 const ACT_LV=[[1.2,'แทบไม่ขยับ','นั่งทำงาน/เรียนเป็นหลัก'],[1.375,'ขยับเล็กน้อย','เดินไปมาบ้าง'],[1.55,'ขยับปานกลาง','ยืน/เดินเกือบทั้งวัน'],[1.725,'ขยับหนัก','งานใช้แรงมาก']];
 
@@ -755,10 +765,11 @@ function avatarHTML(cls){const p=S.profile;if(p.avatar)return `<img class="avata
 function defaultMeal(){const h=new Date().getHours();return h<10?'b':h<15?'l':h<20?'d':'s'}
 
 /* ---------- views ---------- */
+function ringColor(e,b){const r=b>0?e/b:0;return r>1?'var(--over)':r>=0.85?'var(--warn)':'var(--good)'}
 function ringSVG(eaten,budget){
   const R=88,C=2*Math.PI*R,pr=budget>0?Math.min(eaten/budget,1):0,over=eaten>budget;
-  return `<svg viewBox="0 0 216 216" aria-hidden="true"><circle cx="108" cy="108" r="${R}" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="22"/>
-  <circle cx="108" cy="108" r="${R}" fill="none" stroke="${over?'#FF5C7C':'var(--volt)'}" stroke-width="22" stroke-linecap="round" stroke-dasharray="${(C*pr).toFixed(1)} ${C.toFixed(1)}"/></svg>`}
+  return `<svg viewBox="0 0 216 216" aria-hidden="true"><circle cx="108" cy="108" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="22"/>
+  <circle cx="108" cy="108" r="${R}" fill="none" stroke="${ringColor(eaten,budget)}" stroke-width="22" stroke-linecap="round" stroke-dasharray="${(C*pr).toFixed(1)} ${C.toFixed(1)}"/></svg>`}
 
 function weekChart(){
   const keys=[];for(let i=6;i>=0;i--)keys.push(addDays(ui.date,-i));
@@ -787,7 +798,7 @@ function viewToday(){
   let h=`<div class="top">${avatarHTML()}<div class="grow"><h1 style="font-size:20px">สวัสดี ${esc(p.name||'เพื่อน')} 👋</h1><p class="small mute">${isToday?'วันนี้กินอะไรดี':'ย้อนดูบันทึก'}</p></div>${streak()?`<span class="chip streak">🔥 ${streak()} วันติด</span>`:''}</div>`;
   if(!p.set)h+=`<div class="card banner"><b>ตั้งค่าโปรไฟล์ก่อนนะ</b><p class="small" style="margin:4px 0 10px">ตอนนี้ใช้ค่าตัวอย่าง (หญิง 25 ปี 165 ซม. 60 กก.) กรอกข้อมูลจริงเพื่อให้ TDEE ตรงกับตัวคุณ</p><button class="btn sm alt" data-act="tab" data-v="me">ไปกรอกโปรไฟล์</button></div>`;
   h+=`<div class="card hero"><div class="date-nav"><button class="icon-btn" data-act="day" data-v="-1" aria-label="วันก่อนหน้า">${IC.left}</button><span class="lbl">${esc(lbl)}</span><button class="icon-btn" data-act="day" data-v="1" aria-label="วันถัดไป" ${isToday?'disabled style="opacity:.35"':''}>${IC.right}</button></div>
-  <div class="stage"><div class="ring">${ringSVG(t.eaten,t.budget)}<div class="mid"><span class="small mute">${over?'กินเกินมา':'เหลืออีก'}</span><span class="num big" style="color:${over?'#FF7A94':'#fff'}">${fmt(Math.abs(t.left))}</span><span class="small mute">kcal</span></div></div>${mascotBlock(k,t)}</div>
+  <div class="stage"><div class="ring">${ringSVG(t.eaten,t.budget)}<div class="mid"><span class="small mute">${over?'กินเกินมา':'เหลืออีก'}</span><span class="num big" style="color:${over?'var(--over)':'var(--ink)'}">${fmt(Math.abs(t.left))}</span><span class="small mute">kcal</span></div></div>${mascotBlock(k,t)}</div>
   <div class="eq"><div><span class="tiny mute">กินแล้ว</span><b>${fmt(t.eaten)}</b></div><div><span class="tiny mute">งบกินวันนี้</span><b>${fmt(t.budget)}</b></div><div><span class="tiny mute">เผาจากออกกำลัง</span><b>+${fmt(t.bw+t.bs)}</b></div></div>
   <p class="tiny mute" style="margin-top:8px;text-align:center">งบ = เป้าประจำวัน ${fmt(t.base)} + ออกกำลังกาย ${fmt(t.bw)} + ก้าวเดิน ${fmt(t.bs)} · TDEE ของคุณ ${fmt(G.tdee)}</p></div>`;
   h+=`<div class="card stack"><div class="row between"><h2>💪 สารอาหารวันนี้</h2><span class="small mute">ประมาณการ</span></div>
@@ -1032,7 +1043,7 @@ const OUTFITS=[
  {n:'นักปั่น',e:'🚴',top:'tee',slv:1,bot:'bike',head:'helmet',decal:'stripes'},
  {n:'สตรีท',e:'🧢',top:'tee',slv:1,bot:'cargo',head:'cap',decal:'smile'}
 ];
-const PAL=['#4F6BFF','#7C5CFF','#19C98B','#14B8A6','#6FA8FF','#FF8FB1','#FF6B7A','#FFC857','#FF9F6B','#1B2038','#F4F5FA','#2340E0'];
+const PAL=['#00E0B8','#4DA3FF','#7C5CFF','#FFD60A','#FF6B8B','#FF4D5E','#FF9F6B','#2DE08A','#00B8D9','#F2F5F7','#1B2038','#0A0C0F'];
 const HAIRC=['#2A2433','#5A3A2A','#C9A24A','#D1452F','#FF7FA8','#4D8DFF','#E8E8F0'];
 const HAIRS=['ผมสั้น','หางม้า','บ๊อบ','มวยผม','แกละ','หยิกฟู'];
 function shadeC(h,s){return s>0?mix(h,'#ffffff',s/100):s<0?mix(h,'#000000',-s/100):h}
