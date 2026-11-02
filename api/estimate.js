@@ -30,7 +30,24 @@ function send(res, code, body) {
 }
 
 module.exports = async (req, res) => {
-  if (req.method === 'GET') return send(res, 200, { ok: true, configured: !!process.env.GEMINI_API_KEY, model: MODEL, dailyLimit: DAILY_LIMIT });
+  if (req.method === 'GET') {
+    const info = { ok: true, configured: !!process.env.GEMINI_API_KEY, model: MODEL, dailyLimit: DAILY_LIMIT };
+    // เปิด /api/estimate?test=1 เพื่อทดลองเรียก Gemini แบบข้อความสั้นๆ 1 ครั้ง (ใช้ตรวจ key/โมเดล)
+    if (req.query && req.query.test && info.configured) {
+      try {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
+          body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'ตอบสั้นๆ ว่า OK' }] }] }),
+        });
+        info.geminiStatus = r.status;
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) info.geminiError = String(j?.error?.message || '').slice(0, 200);
+        else info.geminiReply = String(j?.candidates?.[0]?.content?.parts?.[0]?.text || '').slice(0, 40);
+      } catch (e) { info.geminiStatus = 'network'; info.geminiError = String(e && e.message || e).slice(0, 120); }
+    }
+    return send(res, 200, info);
+  }
   if (req.method !== 'POST') return send(res, 405, { error: 'method_not_allowed' });
 
   // รับเฉพาะคำขอที่มาจากหน้าเว็บของเราเอง
