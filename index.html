@@ -472,9 +472,9 @@ mark.hit{background:color-mix(in srgb,var(--lime) 35%,transparent);color:inherit
 /* ===== หน้าเพิ่มอาหารแบบเต็มจอ (AI/กรอกเอง/ค้นหา) เลื่อนได้ไม่ค้าง ===== */
 #sheet{max-height:min(92dvh,calc(var(--vvh,100dvh) - 12px))}
 #sheetWrap.full #sheet{overflow-y:auto;max-height:none}
-#sheetWrap.full.split #sheet{overflow:hidden}
-#sheetWrap.full:not(.split) #sheet>*{flex:none}
-#sheetWrap.full:not(.split) #sheet{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+#sheetWrap.full.srch #sheet{overflow:hidden}
+#sheetWrap.full:not(.srch) #sheet>*{flex:none}
+#sheetWrap.full:not(.srch) #sheet{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 .pickrow .btn{padding:14px 8px;font-size:16px}
 .photo{max-height:240px}
 .photo.has{aspect-ratio:auto;max-height:none;padding:0;border-style:solid;background:#000;display:flex;justify-content:center}
@@ -1485,7 +1485,7 @@ function accountCard(){
 }
 /* ---------- avatar picker, Beep chat, PWA install ---------- */
 const EMOJIS=['🐶','🐱','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐸','🐵','🐧','🐥','🦄','🐷','🐹','🐙','🦖','🍓','🌈'];
-function openAvatar(){ui.sh={mode:'avatar'};$('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');renderSheet()}
+function openAvatar(){ui.sh={mode:'avatar'};$('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');navPush('sheet');renderSheet()}
 function renderAvatarSheet(){
   $('#sheet').innerHTML=`<div class="row between"><h2>รูปโปรไฟล์</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
   <div style="display:grid;place-items:center">${avatarHTML('big')}</div>
@@ -1611,6 +1611,7 @@ function eveningNudge(){
   if(h>=16&&h<21&&!L.workouts.length&&(L.steps||0)<S.goal.stepGoal*0.6)beepTip('ยังไม่ได้ขยับตัวเลยวันนี้ 🏃 ให้ Beep แนะนำท่าง่ายๆ ไหม?','แนะนำการออกกำลังกายง่ายๆ ช่วงเย็นนี้ที');
 }
 function openBeepPanel(){
+  if(!ui.beepOpen)navPush('beep');
   ui.beepOpen=true;hideTip();document.body.classList.add('beep-open');
   const m=$('#beepPanelMount');if(!m)return;
   m.innerHTML=`<div class="beep-panel" role="dialog" aria-label="แชตกับ Beep">
@@ -1623,7 +1624,7 @@ function openBeepPanel(){
   updateBeepChips();refreshChat();
   setTimeout(()=>{const i=$('#chatIn');if(i&&!ui.chat.busy)i.focus({preventScroll:true})},120);
 }
-function closeBeepPanel(){ui.beepOpen=false;document.body.classList.remove('beep-open');const m=$('#beepPanelMount');if(m)m.innerHTML=''}
+function closeBeepPanel(){ui.beepOpen=false;document.body.classList.remove('beep-open');const m=$('#beepPanelMount');if(m)m.innerHTML='';navUnwind(k=>k==='beep')}
 function updateBeepChips(){
   const c=$('#chatChips');if(!c)return;
   c.innerHTML=(BEEP_CHIPS[ui.tab]||BEEP_CHIPS.today).map(x=>`<button class="chip" data-act="beepSug" data-q="${esc(x)}">${esc(x)}</button>`).join('');
@@ -1718,9 +1719,24 @@ function renderMain(){
 function openAdd(meal,ask){
   ui.sh={meal:meal,step:ask?'meal':'choose',tab:'search',cat:'ทั้งหมด',q:'',sel:null,qty:1,
     ai:{text:'',img:null,blob:null,loading:false,items:null,err:'',note:''},cu:{name:'',kcal:'',p:'',c:'',f:'',keep:true}};
-  $('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');renderSheet();
+  $('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');navPush('sheet');renderSheet();
 }
-function closeSheet(){ui.sh=null;document.body.classList.remove('sheet-open');$('#sheetWrap').classList.remove('open','full');$('#sheet').innerHTML=''}
+function closeSheet(){ui.sh=null;document.body.classList.remove('sheet-open');$('#sheetWrap').classList.remove('open','full','srch');$('#sheet').innerHTML='';navUnwind(k=>k==='sheet'||k==='step')}
+/* ---------- ปัดย้อนกลับ / ปุ่ม Back: แต่ละขั้นที่เปิดจะ push history 1 รายการ ---------- */
+const NAV=[];let navIgnore=0;
+try{history.replaceState({cg:1},'')}catch(e){}
+function navPush(kind){NAV.push(kind);try{history.pushState({cg:1,k:kind,n:NAV.length},'')}catch(e){}}
+function navUnwind(pred){let n=0;while(NAV.length&&pred(NAV[NAV.length-1])){NAV.pop();n++}if(n>0){navIgnore++;try{history.go(-n)}catch(e){navIgnore--}}}
+function sheetStep(){const sh=ui.sh;if(!sh)return;(sh.h=sh.h||[]).push({step:sh.step,tab:sh.tab,sel:sh.sel,qty:sh.qty});navPush('step')}
+function sheetBackOne(){const sh=ui.sh;if(!sh)return;const b=sh.h&&sh.h.pop();if(b){sh.step=b.step;sh.tab=b.tab;sh.sel=b.sel;sh.qty=b.qty;renderSheet()}else closeSheet()}
+window.addEventListener('popstate',()=>{
+  if(navIgnore>0){navIgnore--;return}
+  const k=NAV.pop();if(!k)return;
+  if(k==='beep'){ui.beepOpen=false;document.body.classList.remove('beep-open');const m=$('#beepPanelMount');if(m)m.innerHTML=''}
+  else if(k==='step')sheetBackOne();
+  else if(k==='sheet')closeSheet();
+  else if(k==='tab'){ui.tab='today';ui.confirmReset=false;ui.body=null;render();window.scrollTo(0,0)}
+});
 function foodPool(){return FOODS.concat(S.custom.map(c=>({...c,cat:'ของฉัน'})))}
 function foodMatches(){
   const sh=ui.sh,toks=sh.q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -1755,7 +1771,7 @@ function aiTotal(){const it=ui.sh.ai.items||[];return it.reduce((a,x)=>a+(+x.kca
 
 function renderSheet(){
   const sh=ui.sh;if(!sh)return;
-  $('#sheetWrap').classList.remove('full','split');
+  $('#sheetWrap').classList.remove('full','srch');
   if(sh.mode==='avatar'){renderAvatarSheet();return}
   if(sh.step==='meal'){
     const hint={b:'ก่อน 10 โมง',l:'ช่วงสายถึงบ่าย',d:'ช่วงเย็นถึงค่ำ',s:'ขนม เครื่องดื่ม ของว่าง'};
@@ -1764,7 +1780,7 @@ function renderSheet(){
     ${MEALS.map(m=>`<button class="mealbtn" data-act="pickMeal" data-v="${m[0]}" aria-pressed="${sh.meal===m[0]}"><span class="ci">${m[2]}</span><span class="grow"><b>${m[1]}</b><small>${hint[m[0]]}</small></span><span class="mute">›</span></button>`).join('')}`;
     return;
   }
-  let h=`<div class="row between"><h2>เพิ่มอาหาร</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
+  let h=`<div class="row between"><div class="row">${sh.h&&sh.h.length?`<button class="icon-btn" data-act="back" aria-label="ย้อนกลับ">${IC.left}</button>`:''}<h2>เพิ่มอาหาร</h2></div><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
   <div class="chips collapse" role="group" aria-label="มื้อ">${MEALS.map(m=>`<button class="chip" data-act="setMeal" data-v="${m[0]}" aria-pressed="${sh.meal===m[0]}">${m[2]} ${m[1]}</button>`).join('')}</div>`;
   if(sh.step==='choose'){
     h+=`<p class="small mute">เพิ่มอาหารด้วยวิธีไหนดี</p>
@@ -1813,7 +1829,7 @@ function renderSheet(){
   }
   $('#sheet').innerHTML=h;
   const split=sh.tab==='search'&&!sh.sel,full=split||sh.tab==='ai'||sh.tab==='custom';
-  $('#sheetWrap').classList.toggle('full',full);$('#sheetWrap').classList.toggle('split',split);$('#sheet').classList.toggle('searching',false);
+  $('#sheetWrap').classList.toggle('full',full);$('#sheetWrap').classList.toggle('srch',split);$('#sheet').classList.toggle('searching',false);
   if(full){const ac=$('#catChips [aria-pressed="true"]');if(ac)ac.scrollIntoView({block:'nearest',inline:'center'})}
 }
 
@@ -1918,12 +1934,14 @@ document.addEventListener('click',e=>{
   if(!el){if(e.target.id==='sheetWrap')closeSheet();return}
   const a=el.dataset.act,v=el.dataset.v,sh=ui.sh;
   switch(a){
-    case 'tab':ui.tab=v;ui.confirmReset=false;ui.body=null;render();window.scrollTo(0,0);break;
+    case 'tab':{const prev=ui.tab;ui.tab=v;ui.confirmReset=false;ui.body=null;
+      if(prev==='today'&&v!=='today')navPush('tab');else if(v==='today')navUnwind(k=>k==='tab');
+      render();window.scrollTo(0,0);break}
     case 'day':{const n=addDays(ui.date,+v);if(n<=todayKey()){ui.date=n;render()}break}
     case 'add':openAdd(el.dataset.meal,el.dataset.ask==='1');break;
-    case 'pickMeal':sh.meal=v;sh.step='choose';renderSheet();break;
+    case 'pickMeal':sheetStep();sh.meal=v;sh.step='choose';renderSheet();break;
     case 'quick':{const f=foodPool().find(x=>x.name===el.dataset.n);if(f){pushMeal({name:f.name,serving:f.serving,qty:1,kcal:f.kcal,p:f.p,c:f.c,f:f.f},defaultMeal());noteRecent(f.name);save();render();toast('+ '+f.name+' '+fmt(f.kcal)+' kcal')}break}
-    case 'pickMode':{sh.step='main';if(v==='photo'){sh.tab='ai';renderSheet();break}sh.tab=v;renderSheet();break}
+    case 'pickMode':{sheetStep();sh.step='main';if(v==='photo'){sh.tab='ai';renderSheet();break}sh.tab=v;renderSheet();break}
     case 'quickCam':{openAdd(defaultMeal());ui.sh.step='main';ui.sh.tab='ai';renderSheet();break}
     case 'coachGo':{const mins=+el.dataset.mins||30;ui.tab='work';ui.w={i:1,min:mins,kcal:actKcal(ACTS[1][1],mins)};ui.body=null;render();window.scrollTo(0,0);break}
     case 'poke':{el.classList.remove('poke');void el.offsetWidth;el.classList.add('poke');playAct(['jump','spin','heart','dance','wave'][Math.floor(Math.random()*5)]);const bt=$('.bubble .bt');if(bt){const q=QUIPS[el.dataset.st]||QUIPS.happy;if(!bt.dataset.o)bt.dataset.o=bt.textContent;bt.textContent=q[Math.floor(Math.random()*q.length)];clearTimeout(window._q);window._q=setTimeout(()=>{bt.textContent=bt.dataset.o},2600)}break}
@@ -1932,8 +1950,8 @@ document.addEventListener('click',e=>{
     case 'shTab':sh.tab=v;renderSheet();break;
     case 'qClear':{ui.sh.q='';const q=$('#q');if(q){q.value='';q.focus()}renderResults();break}
     case 'cat':sh.cat=v;renderSheet();break;
-    case 'pickFood':{const f=foodPool().find(x=>x.name===el.dataset.n);if(f){sh.sel=f;sh.qty=1;renderSheet()}break}
-    case 'unpick':sh.sel=null;renderSheet();break;
+    case 'pickFood':{const f=foodPool().find(x=>x.name===el.dataset.n);if(f){sheetStep();sh.sel=f;sh.qty=1;renderSheet()}break}
+    case 'unpick':case 'back':history.back();break;
     case 'qty':{sh.qty=Math.max(0.5,r1(sh.qty+(+v)));$('#qtyIn').value=sh.qty;pv();break}
     case 'confirmFood':{const f=sh.sel,q=sh.qty;pushMeal({name:f.name,serving:f.serving,qty:q,kcal:f.kcal*q,p:f.p*q,c:f.c*q,f:f.f*q});noteRecent(f.name);save();closeSheet();render();toast('เพิ่ม '+f.name+' แล้ว');break}
     case 'photoCam':$('#photoCam').click();break;
