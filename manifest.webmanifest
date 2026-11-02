@@ -1,7 +1,7 @@
 {
-  "name": "Chompy",
-  "short_name": "Chompy",
-  "description": "บันทึกอาหาร แคลอรี่ และเป้าหมายสุขภาพ",
+  "name": "Cal Goal",
+  "short_name": "Cal Goal",
+  "description": "สุขภาพดีต้องมีเป้าหมาย · บันทึกอาหาร แคลอรี่ และเป้าหมายสุขภาพ",
   "lang": "th",
   "start_url": "./",
   "scope": "./",

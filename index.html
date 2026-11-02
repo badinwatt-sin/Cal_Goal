@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Chompy</title>
+<title>Cal Goal</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0A0C0F">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Chompy">
+<meta name="apple-mobile-web-app-title" content="Cal Goal">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -1275,7 +1275,7 @@ function obView(){
   const back=st>0?`<button class="btn alt" data-act="obBack">‹ ย้อนกลับ</button>`:'';
   let h=`<div class="ob-dots" role="img" aria-label="ขั้นที่ ${st+1} จาก 5">${dots}</div>`;
   if(st===0){
-    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:24px">สวัสดี! ยินดีต้อนรับสู่ Chompy 👋</h1>
+    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:24px">สวัสดี! ยินดีต้อนรับสู่ Cal Goal 👋</h1>
     <p class="small mute">ตอบไม่กี่ข้อ แอปจะคำนวณพลังงานและเป้าหมายที่เหมาะกับคุณ ใช้เวลาไม่ถึง 1 นาที ไม่ต้องล็อกอิน</p>
     <label class="f" style="text-align:left">เรียกคุณว่าอะไรดี<input type="text" data-bind="profile.name" maxlength="24" value="${esc(p.name)}" placeholder="เช่น มิ้นท์"></label>
     <div style="text-align:left"><div class="small mute" style="margin-bottom:6px">เพศ (ใช้ในสมการคำนวณพลังงาน)</div><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div>
@@ -1387,7 +1387,7 @@ function authLoading(){return `<div class="card stack" style="text-align:center;
 function loginView(){
   const a=ui.auth||(ui.auth={email:'',code:'',sent:false,busy:false,err:''});
   let h=`<div class="card stack" style="text-align:center;margin-top:24px"><div class="ob-av">${mascot('happy',{id:'l'})}</div>
-  <h1 style="font-size:24px">Chompy</h1><p class="small mute">เข้าสู่ระบบเพื่อเก็บข้อมูลไว้ในบัญชี เปิดใช้ได้ทุกเครื่อง ข้อมูลไม่หาย</p>`;
+  <h1 style="font-size:28px">Cal Goal</h1><p style="font-family:var(--f-display);font-style:italic;font-weight:700;color:var(--lime);margin-top:-4px">สุขภาพดีต้องมีเป้าหมาย</p><p class="small mute">เข้าสู่ระบบเพื่อเก็บข้อมูลไว้ในบัญชี เปิดใช้ได้ทุกเครื่อง ข้อมูลไม่หาย</p>`;
   if(CFG.google!==false)h+=`<button class="btn" data-act="gLogin" ${a.busy?'disabled':''}>เข้าสู่ระบบด้วย Google</button><div class="small mute">หรือ</div>`;
   if(!a.sent){
     h+=`<label class="f" style="text-align:left">อีเมล<input type="email" id="authEmail" data-model="auth.email" inputmode="email" autocomplete="email" placeholder="you@example.com" value="${esc(a.email)}"></label>
@@ -1429,7 +1429,7 @@ async function setAvatarFile(f){
 }
 
 const BEEP_ICON='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V4M9.5 4h5"/><circle cx="9" cy="14" r="1.4" fill="currentColor"/><circle cx="15" cy="14" r="1.4" fill="currentColor"/><path d="M10 17.4c1.3.8 2.7.8 4 0"/></svg>';
-const BEEP_SYS=`คุณคือ Beep ผู้ช่วยดูแลสุขภาพประจำแอป Chompy พูดภาษาไทย เป็นกันเอง น่ารัก กระชับ (ไม่เกิน ~6 บรรทัด) ใช้อีโมจิได้เล็กน้อย ให้คำแนะนำเรื่องการออกกำลังกาย อาหาร การนอน และการดูแลตัวเองแบบทั่วไปที่ทำได้จริง โดยอ้างอิงข้อมูลวันนี้ของผู้ใช้ที่แนบมา เมื่อแนะนำการออกกำลังกายให้ระบุชนิด ระยะเวลา และแคลที่เผาโดยประมาณ ไม่วินิจฉัยโรค ไม่แนะนำยา ไม่แนะนำให้กินต่ำกว่า 1,200 kcal (หญิง) หรือ 1,500 kcal (ชาย) ต่อวัน ไม่ส่งเสริมการอดอาหารหรือลดน้ำหนักเร็วเกินไป หากผู้ใช้อายุต่ำกว่า 18 ปี มีอาการผิดปกติ หรือพูดถึงความผิดปกติทางการกิน ให้แนะนำพบแพทย์หรือผู้เชี่ยวชาญอย่างอ่อนโยน ตอบเฉพาะเรื่องสุขภาพ อาหาร การออกกำลังกาย และการใช้แอป`;
+const BEEP_SYS=`คุณคือ Beep ผู้ช่วยดูแลสุขภาพประจำแอป Cal Goal พูดภาษาไทย เป็นกันเอง น่ารัก กระชับ (ไม่เกิน ~6 บรรทัด) ใช้อีโมจิได้เล็กน้อย ให้คำแนะนำเรื่องการออกกำลังกาย อาหาร การนอน และการดูแลตัวเองแบบทั่วไปที่ทำได้จริง โดยอ้างอิงข้อมูลวันนี้ของผู้ใช้ที่แนบมา เมื่อแนะนำการออกกำลังกายให้ระบุชนิด ระยะเวลา และแคลที่เผาโดยประมาณ ไม่วินิจฉัยโรค ไม่แนะนำยา ไม่แนะนำให้กินต่ำกว่า 1,200 kcal (หญิง) หรือ 1,500 kcal (ชาย) ต่อวัน ไม่ส่งเสริมการอดอาหารหรือลดน้ำหนักเร็วเกินไป หากผู้ใช้อายุต่ำกว่า 18 ปี มีอาการผิดปกติ หรือพูดถึงความผิดปกติทางการกิน ให้แนะนำพบแพทย์หรือผู้เชี่ยวชาญอย่างอ่อนโยน ตอบเฉพาะเรื่องสุขภาพ อาหาร การออกกำลังกาย และการใช้แอป`;
 function mdLite(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^\s*[-*] /gm,'• ').replace(/\n/g,'<br>')}
 function chatList(){
   const c=ui.chat;let h='';
@@ -1920,7 +1920,7 @@ $('#avatarCam').addEventListener('change',e=>{const f=e.target.files[0];e.target
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='chatIn'){e.preventDefault();beepSend(e.target.value)}if(e.key==='Escape'&&ui.beepOpen&&!ui.sh)closeBeepPanel()});
 async function doExport(){
   const data=JSON.stringify(S);
-  const name='chompy-backup-'+todayKey()+'.json';
+  const name='calgoal-backup-'+todayKey()+'.json';
   if(HAS_DL){try{await HAS_DL.save({filename:name,data:data});toast('สำรองข้อมูลแล้ว');return}catch(e){if(e&&e.code==='cancelled')return}}
   try{await navigator.clipboard.writeText(data);toast('คัดลอกข้อมูลสำรองแล้ว วางเก็บไว้ในโน้ตได้เลย')}catch(e){toast('สำรองข้อมูลไม่สำเร็จ ลองเปิดผ่าน Claude')}
 }
