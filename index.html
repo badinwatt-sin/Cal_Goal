@@ -468,6 +468,15 @@ body.sheet-open{overflow:hidden}
 .rcount{font-size:12.5px;color:var(--mute);padding:0 2px}
 mark.hit{background:color-mix(in srgb,var(--lime) 35%,transparent);color:inherit;border-radius:4px;padding:0 1px}
 .results .food{padding:12px 14px}
+
+/* ===== หน้าเพิ่มอาหารแบบเต็มจอ (AI/กรอกเอง/ค้นหา) เลื่อนได้ไม่ค้าง ===== */
+#sheet{max-height:min(92dvh,calc(var(--vvh,100dvh) - 12px))}
+#sheetWrap.full #sheet{overflow-y:auto;max-height:none}
+#sheetWrap.full.split #sheet{overflow:hidden}
+#sheetWrap.full:not(.split) #sheet>*{flex:none}
+#sheetWrap.full:not(.split) #sheet{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+.pickrow .btn{padding:14px 8px;font-size:16px}
+.photo{max-height:240px}
 </style>
 
 </head>
@@ -1744,6 +1753,7 @@ function aiTotal(){const it=ui.sh.ai.items||[];return it.reduce((a,x)=>a+(+x.kca
 
 function renderSheet(){
   const sh=ui.sh;if(!sh)return;
+  $('#sheetWrap').classList.remove('full','split');
   if(sh.mode==='avatar'){renderAvatarSheet();return}
   if(sh.step==='meal'){
     const hint={b:'ก่อน 10 โมง',l:'ช่วงสายถึงบ่าย',d:'ช่วงเย็นถึงค่ำ',s:'ขนม เครื่องดื่ม ของว่าง'};
@@ -1779,14 +1789,14 @@ function renderSheet(){
   }else if(sh.tab==='ai'){
     const a=sh.ai;
     h+=`<div class="photo">${a.img?`<img src="${a.img}" alt="รูปอาหารที่เลือก">`:`<div>${IC.cam}<p class="small" style="margin-top:6px">ถ่ายรูปหรือเลือกรูปอาหาร<br>AI จะช่วยประเมินเมนูและแคลอรี่</p></div>`}</div>
-    <div class="grid2"><button class="btn alt" data-act="photoCam">ถ่ายรูป</button><button class="btn alt" data-act="photoPick">เลือกจากอัลบั้ม</button></div>
+    <div class="grid2 pickrow"><button class="btn" data-act="photoCam">📷 ถ่ายรูป</button><button class="btn alt" data-act="photoPick">🖼️ เลือกจากเครื่อง</button></div>
     <label class="f">รายละเอียดเพิ่มเติม (ไม่บังคับ)<textarea id="aiText" data-model="sh.ai.text" placeholder="เช่น กะเพราหมูสับไข่ดาว ข้าว 1.5 จาน ไม่ใส่น้ำมันเพิ่ม">${esc(a.text)}</textarea></label>`;
     if(!SAMPLE&&!USE_API)h+=`<div class="warn">ฟีเจอร์ AI ใช้ได้เมื่อเปิดหน้านี้ผ่าน Claude เท่านั้น ตอนนี้ใช้แท็บ “ค้นหาเมนู” หรือ “กำหนดเอง” แทนได้</div>`;
     if(USE_API)h+=`<p class="tiny mute">รูปจะถูกส่งไปประมวลผลที่ Google Gemini (แพ็กเกจฟรี Google อาจนำข้อมูลไปปรับปรุงผลิตภัณฑ์) อย่าถ่ายติดใบหน้าหรือข้อมูลส่วนตัว</p>`;
     h+=`<button class="btn" data-act="runAI" ${(a.loading||(!SAMPLE&&!USE_API))?'disabled':''}>${a.loading?'<span class="spin"></span> กำลังประเมิน... (ราว 5–15 วินาที)':'ให้ AI ประเมินแคลอรี่'}</button>`;
     if(a.err)h+=`<div class="warn">${esc(a.err)}</div>`;
     if(a.items){
-      h+=`<div class="card stack"><div class="row between"><h3>ผลประเมิน (แก้ไขได้)</h3><span class="kc" id="aiTot">${fmt(aiTotal())} kcal</span></div><div class="eq" id="aiMac">${aiMacHTML()}</div>`;
+      h+=`<div class="card stack" id="aiRes"><div class="row between"><h3>ผลประเมิน (แก้ไขได้)</h3><span class="kc" id="aiTot">${fmt(aiTotal())} kcal</span></div><div class="eq" id="aiMac">${aiMacHTML()}</div>`;
       a.items.forEach((it,i)=>{h+=`<div class="row"><div class="grow"><input type="text" data-model="sh.ai.items.${i}.name" value="${esc(it.name)}" aria-label="ชื่อ"><div class="tiny mute" style="margin-top:2px">${esc(it.portion||'')} · P${Math.round(it.p)} C${Math.round(it.c)} F${Math.round(it.f)}</div></div><input type="number" style="width:86px" inputmode="numeric" data-model="sh.ai.items.${i}.kcal" data-num data-after="aitotal" value="${it.kcal}" aria-label="kcal"></div>`});
       if(a.note)h+=`<p class="small mute">${esc(a.note)}</p>`;
       h+=`<p class="tiny mute">AI ประเมินจากภาพ อาจคลาดเคลื่อนได้ ปรับตัวเลขให้ตรงกับที่กินจริงก่อนบันทึก</p><button class="btn" data-act="confirmAI">เพิ่มลง${esc(MEALS.find(m=>m[0]===sh.meal)[1])}</button></div>`;
@@ -1800,8 +1810,8 @@ function renderSheet(){
     <button class="btn" data-act="confirmCustom">เพิ่มลง${esc(MEALS.find(m=>m[0]===sh.meal)[1])}</button></div>`;
   }
   $('#sheet').innerHTML=h;
-  const full=sh.tab==='search'&&!sh.sel;
-  $('#sheetWrap').classList.toggle('full',full);$('#sheet').classList.toggle('searching',false);
+  const split=sh.tab==='search'&&!sh.sel,full=split||sh.tab==='ai'||sh.tab==='custom';
+  $('#sheetWrap').classList.toggle('full',full);$('#sheetWrap').classList.toggle('split',split);$('#sheet').classList.toggle('searching',false);
   if(full){const ac=$('#catChips [aria-pressed="true"]');if(ac)ac.scrollIntoView({block:'nearest',inline:'center'})}
 }
 
@@ -1826,7 +1836,7 @@ async function onPhoto(file){
   try{
     const big=await shrink(file,USE_API?768:1024,USE_API?0.75:0.82),small=await shrink(file,260,0.7);
     ui.sh.tab='ai';ui.sh.ai.blob=big.blob;ui.sh.ai.img=small.url;ui.sh.ai.items=null;ui.sh.ai.err='';
-    renderSheet();if(SAMPLE||USE_API)runAI();
+    renderSheet();const shEl=$('#sheet');if(shEl)shEl.scrollTop=0;if(SAMPLE||USE_API)runAI();
   }catch(e){toast('เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ')}
 }
 async function runAI(){
@@ -1851,7 +1861,7 @@ async function runAI(){
     if(USE_API){a.err=({daily_limit:'วันนี้ใช้ AI ครบโควตาแล้ว พรุ่งนี้ลองใหม่ หรือใช้แท็บค้นหาเมนูแทนนะ',quota:'ตอนนี้มีคนใช้ AI เยอะ ลองใหม่อีกสักครู่ หรือใช้แท็บค้นหาเมนูแทน',too_large:'รูปใหญ่เกินไป ลองรูปอื่น',not_configured:'ฟีเจอร์ AI ยังไม่เปิดใช้งาน ใช้แท็บค้นหาเมนูแทนได้เลย'})[c]||('ประเมินไม่สำเร็จ ลองใหม่หรือใช้แท็บค้นหาเมนูแทน (รหัส: '+(c||'network')+(e&&e.info?' · '+e.info:'')+')');a.loading=false;if(ui.sh)renderSheet();return}
     a.err=c==='not_granted'?'ต้องอนุญาตให้ใช้ Claude ก่อนจึงจะประเมินได้ ลองกดใหม่อีกครั้ง':c==='rate_limited'?'ใช้ถี่เกินไป รอสักครู่แล้วลองใหม่':c==='images_unavailable'?'หน้านี้ยังส่งรูปให้ AI ไม่ได้ ลองพิมพ์รายละเอียดอาหารแทน':'ประเมินไม่สำเร็จ ลองใหม่หรือใช้แท็บค้นหาเมนูแทน';
   }
-  a.loading=false;if(ui.sh)renderSheet();
+  a.loading=false;if(ui.sh){renderSheet();const r=$('#aiRes')||document.querySelector('#sheet .warn');if(r)setTimeout(()=>r.scrollIntoView({block:'center',behavior:'smooth'}),60)}
 }
 
 async function callApi(a){
@@ -1911,8 +1921,8 @@ document.addEventListener('click',e=>{
     case 'add':openAdd(el.dataset.meal,el.dataset.ask==='1');break;
     case 'pickMeal':sh.meal=v;sh.step='choose';renderSheet();break;
     case 'quick':{const f=foodPool().find(x=>x.name===el.dataset.n);if(f){pushMeal({name:f.name,serving:f.serving,qty:1,kcal:f.kcal,p:f.p,c:f.c,f:f.f},defaultMeal());noteRecent(f.name);save();render();toast('+ '+f.name+' '+fmt(f.kcal)+' kcal')}break}
-    case 'pickMode':{sh.step='main';if(v==='photo'){sh.tab='ai';renderSheet();$('#photoCam').click();break}sh.tab=v;renderSheet();break}
-    case 'quickCam':{openAdd(defaultMeal());ui.sh.tab='ai';renderSheet();$('#photoCam').click();break}
+    case 'pickMode':{sh.step='main';if(v==='photo'){sh.tab='ai';renderSheet();break}sh.tab=v;renderSheet();break}
+    case 'quickCam':{openAdd(defaultMeal());ui.sh.step='main';ui.sh.tab='ai';renderSheet();break}
     case 'coachGo':{const mins=+el.dataset.mins||30;ui.tab='work';ui.w={i:1,min:mins,kcal:actKcal(ACTS[1][1],mins)};ui.body=null;render();window.scrollTo(0,0);break}
     case 'poke':{el.classList.remove('poke');void el.offsetWidth;el.classList.add('poke');playAct(['jump','spin','heart','dance','wave'][Math.floor(Math.random()*5)]);const bt=$('.bubble .bt');if(bt){const q=QUIPS[el.dataset.st]||QUIPS.happy;if(!bt.dataset.o)bt.dataset.o=bt.textContent;bt.textContent=q[Math.floor(Math.random()*q.length)];clearTimeout(window._q);window._q=setTimeout(()=>{bt.textContent=bt.dataset.o},2600)}break}
     case 'close':closeSheet();break;
