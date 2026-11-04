@@ -496,6 +496,38 @@ mark.hit{background:color-mix(in srgb,var(--lime) 35%,transparent);color:inherit
 @keyframes camFlash{from{opacity:.85}to{opacity:0}}
 body.cam-open{overflow:hidden}
 body.cam-open .beep-dock{display:none}
+/* ---------- IF fasting ---------- */
+.fmini{position:absolute;left:-4px;top:0;width:72px;height:72px;padding:0;border:0;background:none;color:var(--ink);cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent}
+.fmini svg{width:100%;height:100%;transform:rotate(-90deg);display:block}
+.fmini .fm-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.fmini b{font-family:var(--f-display);font-style:italic;font-size:16px;font-weight:700}
+.fmini small{font-size:10px;color:var(--mute)}
+.fmini:active{transform:scale(.94)}
+.ok-t{color:var(--good)}
+.fbig{position:relative;width:216px;height:216px;margin:0 auto}
+.fbig svg{width:100%;height:100%;transform:rotate(-90deg)}
+.fbig .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.fbig .big{font-size:44px;font-weight:700;line-height:1.1;font-style:italic}
+.fnow{display:flex;gap:12px;align-items:center;background:var(--tint);border:1px solid var(--line);border-radius:16px;padding:12px}
+.fnow>div{display:flex;flex-direction:column}
+.fnow b{font-size:17px}
+.fic{font-size:24px;flex:none}
+.fplans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fplan{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:14px;border:1.5px solid var(--line);background:var(--soft);color:var(--ink);font:inherit;cursor:pointer}
+.fplan b{font-family:var(--f-display);font-style:italic;font-size:15px}
+.fplan small{font-size:11px;color:var(--mute)}
+.fplan[aria-pressed="true"]{border-color:var(--lime);background:var(--tint)}
+.fplan[aria-pressed="true"] small{color:var(--lime)}
+.fplan:disabled{opacity:.35}
+.fst{border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:0 12px}
+.fst summary{display:flex;gap:10px;align-items:center;padding:10px 0;cursor:pointer;list-style:none}
+.fst summary::-webkit-details-marker{display:none}
+.fst summary b{display:block;font-size:14px}
+.fst summary small{display:block;font-size:12px;color:var(--mute)}
+.fst p{margin:0 0 10px}
+.fst.cur{border-color:var(--sky);background:rgba(77,163,255,.1)}
+.fst.past{opacity:.7}
+.flist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 </style>
 
 </head>
@@ -801,9 +833,10 @@ function defaults(){return{
   onboarded:false,rev:0,
   profile:{name:'',avatar:'',sex:'f',age:25,height:165,weight:60,act:1.2,set:false},
   goal:{target:55,period:'week',amount:0.5,stepGoal:8000},
+  fast:{hours:16,start:null,hist:[]},
   logs:{},weights:[],custom:[],recent:[]}}
 let S=defaults();
-try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw){const d=defaults();S={...d,...raw,profile:{...d.profile,...raw.profile},goal:{...d.goal,...raw.goal}}}}catch(e){}
+try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw){const d=defaults();S={...d,...raw,profile:{...d.profile,...raw.profile},goal:{...d.goal,...raw.goal},fast:{...d.fast,...raw.fast}}}}catch(e){}
 if(!S.onboarded&&S.profile.set)S.onboarded=true;
 function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('พื้นที่เก็บข้อมูลเต็ม ลองลบรูปเก่าออกก่อนนะ')}}
 function save(){S.rev=Date.now();saveLocal();queueCloud()}
@@ -896,6 +929,112 @@ function weekChart(){
   return s+'</svg>';
 }
 
+/* ---------- Intermittent Fasting (IF) ---------- */
+const FAST_PLANS=[
+  {h:12,n:'12:12',lv:'เริ่มต้น',d:'เหมือนเลื่อนมื้อดึกออก ทำได้เกือบทุกคน เหมาะเริ่มสัปดาห์แรก'},
+  {h:14,n:'14:10',lv:'มือใหม่',d:'งดหลังมื้อเย็น 2 ทุ่ม กินอีกที 10 โมง ร่างกายเริ่มคุ้นกับช่วงอินซูลินต่ำ'},
+  {h:16,n:'16:8',lv:'ยอดนิยม',d:'แบบที่มีงานวิจัยมากที่สุด กินในช่วง 8 ชม. เช่น เที่ยง–2 ทุ่ม'},
+  {h:18,n:'18:6',lv:'ขั้นกลาง',d:'ช่วงกินสั้นลง ต้องวางแผนโปรตีนให้พอใน 2 มื้อ'},
+  {h:20,n:'20:4',lv:'ขั้นสูง',d:'กินในช่วง 4 ชม. ควรผ่าน 16:8 มาได้สบายก่อน'},
+  {h:23,n:'OMAD 23:1',lv:'ไม่แนะนำมือใหม่',d:'กินมื้อเดียว ได้สารอาหารครบยาก เสี่ยงกินเกินในมื้อเดียว'}];
+const FAST_STAGES=[
+  {from:0,ic:'🍽️',t:'ย่อยและดูดซึม',k:'น้ำตาลในเลือดขึ้น · อินซูลินสูง',
+   d:'หลังมื้อสุดท้าย น้ำตาลจากอาหารเข้ากระแสเลือด ตับอ่อนหลั่งอินซูลินพาน้ำตาลเข้าเซลล์ ส่วนที่เหลือเก็บเป็นไกลโคเจนและไขมัน',
+   m:'ช่วงนี้ร่างกาย “เก็บ” พลังงาน ยังไม่ได้ดึงไขมันออกมาใช้'},
+  {from:4,ic:'📉',t:'น้ำตาลเริ่มลด',k:'น้ำตาลกลับสู่ระดับปกติ · อินซูลินลดลง',
+   d:'อาหารย่อยเสร็จ น้ำตาลในเลือดลดลงสู่ระดับพื้นฐาน ร่างกายเริ่มดึงไกลโคเจนจากตับมาใช้รักษาระดับน้ำตาล',
+   m:'อาจรู้สึกหิวตามเวลาที่เคยกิน (ฮอร์โมน ghrelin) เป็นความเคยชิน มักหายไปใน 20–30 นาที ดื่มน้ำช่วยได้'},
+  {from:8,ic:'🔋',t:'อินซูลินต่ำ',k:'ใช้ไกลโคเจน · เริ่มสลายไขมัน',
+   d:'อินซูลินอยู่ระดับต่ำ ฮอร์โมนกลูคากอนเพิ่ม ไกลโคเจนในตับลดลงเรื่อยๆ ร่างกายเริ่มปล่อยกรดไขมันจากเซลล์ไขมัน (lipolysis)',
+   m:'อินซูลินต่ำต่อเนื่องช่วยให้ร่างกายเข้าถึงไขมันสะสมได้ง่ายขึ้น และอาจช่วยเรื่องความไวต่ออินซูลินในระยะยาว'},
+  {from:12,ic:'🔥',t:'เปลี่ยนมาใช้ไขมัน',k:'Metabolic switch · คีโตนเริ่มขึ้น',
+   d:'ไกลโคเจนในตับเหลือน้อย ร่างกายเปลี่ยนมาใช้ไขมันเป็นพลังงานหลักมากขึ้น ตับเริ่มผลิตคีโตนในระดับต่ำ',
+   m:'เป็นจุดที่ IF แตกต่างจากการกินปกติ แต่น้ำหนักจะลดได้จริงก็ต่อเมื่อพลังงานรวมทั้งวันยังติดลบ'},
+  {from:16,ic:'⚡',t:'คีโตนเพิ่มขึ้น',k:'Mild ketosis · Growth hormone เพิ่ม',
+   d:'ระดับคีโตนสูงขึ้นชัดเจน การเผาผลาญไขมันเด่นขึ้น ฮอร์โมนการเจริญเติบโตเพิ่มขึ้นช่วยรักษามวลกล้ามเนื้อ',
+   m:'บางคนรู้สึกสมองแล่นและหิวน้อยลง บางคนอาจเวียนหัว ถ้าใจสั่น หน้ามืด ให้หยุดฟาสต์แล้วกินทันที'},
+  {from:18,ic:'♻️',t:'Autophagy เริ่มเพิ่ม',k:'เซลล์รีไซเคิลส่วนที่เสื่อม (ข้อมูลส่วนใหญ่จากสัตว์ทดลอง)',
+   d:'งานวิจัยในสัตว์พบกระบวนการ autophagy (เซลล์ย่อยสลายชิ้นส่วนเก่ามาใช้ใหม่) เพิ่มขึ้นเมื่ออดอาหารนานขึ้น ในมนุษย์ยังวัดได้ไม่ชัดว่าเริ่มกี่ชั่วโมง',
+   m:'อย่าหวังผลวิเศษ ประโยชน์หลักที่พิสูจน์แล้วของ IF ในคนคือช่วยคุมพลังงานที่กินได้ง่ายขึ้น'},
+  {from:24,ic:'⚠️',t:'เกินกรอบ IF ทั่วไป',k:'ควรอยู่ในการดูแลของแพทย์',
+   d:'อดเกิน 24 ชม. เพิ่มความเสี่ยงน้ำตาลต่ำ เกลือแร่ไม่สมดุล และสูญเสียกล้ามเนื้อ',
+   m:'แนะนำเบรกฟาสต์ด้วยมื้อเบาๆ มีโปรตีน ไม่ควรอดนานกว่านี้เองโดยไม่ปรึกษาแพทย์'}];
+function fastState(){
+  const F=S.fast||{},now=Date.now();
+  if(!F.start)return{on:false,hours:F.hours||16};
+  const el=Math.max(0,(now-F.start)/36e5),goal=F.hours||16;
+  let si=0;FAST_STAGES.forEach((s,i)=>{if(el>=s.from)si=i});
+  return{on:true,hours:goal,el,left:Math.max(0,goal-el),done:el>=goal,pr:Math.min(el/goal,1),si,end:F.start+goal*36e5};
+}
+function hm(h){const m=Math.floor(h*60);return Math.floor(m/60)+':'+String(m%60).padStart(2,'0')}
+function hms(h){const s=Math.floor(h*3600);return Math.floor(s/3600)+':'+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function clock(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
+function dayClock(ts){const d=new Date(ts),k=dk(d),t=todayKey();return (k===t?'วันนี้ ':k===addDays(t,-1)?'เมื่อวาน ':k===addDays(t,1)?'พรุ่งนี้ ':d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' ')+clock(ts)}
+function fastRing(st,R,sw,size){
+  const C=2*Math.PI*R,c=size/2,col=st.on?(st.done?'var(--good)':'var(--sky)'):'rgba(255,255,255,.18)';
+  return `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="${sw}"/>${st.on?`<circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(C*st.pr).toFixed(1)} ${C.toFixed(1)}"/>`:''}</svg>`}
+function fastMini(){
+  const st=fastState();
+  return `${fastRing(st,30,7,72)}<span class="fm-in">${st.on?(st.done?`<b class="ok-t">ครบ!</b><small>${hm(st.el)}</small>`:`<b>${hm(st.left)}</b><small>เหลือ</small>`):`<b>IF</b><small>เริ่ม</small>`}</span>`}
+function fastLive(){
+  const st=fastState(),F=S.fast,plan=FAST_PLANS.find(p=>p.h===st.hours);
+  if(!st.on){
+    const last=(F.hist||[])[0];
+    return `<div class="fbig">${fastRing(st,92,16,216)}<div class="mid"><span class="small mute">แผน</span><span class="num big">${plan?plan.n:st.hours+':'+(24-st.hours)}</span><span class="small mute">ยังไม่ได้เริ่ม</span></div></div>
+    <button class="btn" data-act="fastStart">▶︎ เริ่ม Fast ตอนนี้</button>
+    <p class="tiny mute" style="text-align:center">กดหลังกินมื้อสุดท้ายเสร็จ · ลืมกด? เริ่มแล้วค่อยแก้เวลาเริ่มได้${last?`<br>ครั้งล่าสุด ${r1((last.e-last.s)/36e5)} ชม. (${dayClock(last.e)})`:''}</p>`}
+  const S0=FAST_STAGES[st.si];
+  return `<div class="fbig">${fastRing(st,92,16,216)}<div class="mid"><span class="small mute">${st.done?'ครบเป้าแล้ว 🎉 ผ่านมา':'เหลืออีก'}</span><span class="num big" style="font-size:40px${st.done?';color:var(--good)':''}">${hms(st.done?st.el:st.left)}</span><span class="small mute">ฟาสต์ไปแล้ว ${r1(st.el)} / ${st.hours} ชม.</span></div></div>
+  <div class="eq" style="grid-template-columns:1fr 1fr"><div><span class="tiny mute">เริ่ม</span><b>${dayClock(F.start)}</b></div><div><span class="tiny mute">ครบเป้า</span><b>${dayClock(st.end)}</b></div></div>
+  <div class="fnow"><span class="fic">${S0.ic}</span><div><span class="tiny mute">ตอนนี้ร่างกายอยู่ช่วง</span><b>${S0.t}</b><span class="small">${S0.k}</span></div></div>
+  <button class="btn ${st.done?'':'alt'}" data-act="fastEnd">${st.done?'🍽️ Break fast ได้เลย':ui.fcf?'แตะอีกครั้งเพื่อยืนยันหยุดฟาสต์':'⏹ Break fast ก่อนครบ'}</button>`}
+function renderFastSheet(){
+  const st=fastState(),F=S.fast,young=S.profile.age<18;
+  const hist=(F.hist||[]).slice(0,7);
+  $('#sheet').innerHTML=`<div class="row between"><h2>⏱️ Intermittent Fasting</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
+  ${young?`<div class="warn">อายุต่ำกว่า 18 ปี ร่างกายยังเจริญเติบโต ไม่แนะนำให้อดอาหารเป็นช่วงยาว ใช้ได้แค่แผน 12:12 (เว้นมื้อดึก) เท่านั้น</div>`:''}
+  <div id="fastLive" class="stack">${fastLive()}</div>
+  ${st.on?`<label class="f">แก้เวลาเริ่ม (ถ้าลืมกด)<input type="time" id="fastT" value="${new Date(F.start).toTimeString().slice(0,5)}"></label>`:''}
+  <h3 style="margin-top:6px">เลือกแผน IF</h3>
+  <div class="fplans">${FAST_PLANS.map(p=>{const dis=young&&p.h>12;return `<button class="fplan" data-act="fastPlan" data-v="${p.h}" aria-pressed="${st.hours===p.h}" ${dis?'disabled':''}><b>${p.n}</b><small>${p.lv}</small></button>`}).join('')}</div>
+  <p class="small mute">${(FAST_PLANS.find(p=>p.h===st.hours)||{}).d||''}</p>
+  <h3 style="margin-top:6px">ร่างกายเปลี่ยนไปยังไงระหว่างฟาสต์</h3>
+  <div id="fastStages" class="stack">${fastStages(st)}</div>
+  ${hist.length?`<h3 style="margin-top:6px">ประวัติล่าสุด</h3><div class="fhist">${hist.map(x=>{const h=(x.e-x.s)/36e5,ok=h>=x.h;return `<div class="item"><div class="grow"><div class="nm">${ok?'✅':'⏸️'} ${r1(h)} ชม. <span class="tiny mute">/ เป้า ${x.h}</span></div><div class="tiny mute">${dayClock(x.s)} → ${dayClock(x.e)}</div></div></div>`}).join('')}</div>`:''}
+  <div class="warn small"><b>ใครไม่ควรทำ IF เอง:</b> ตั้งครรภ์/ให้นมบุตร · เบาหวานหรือใช้ยาลดน้ำตาล/อินซูลิน · มีประวัติโรคการกินผิดปกติ · อายุต่ำกว่า 18 · มีโรคประจำตัวหรือกินยาที่ต้องกินพร้อมอาหาร ควรปรึกษาแพทย์ก่อน<br>ระหว่างฟาสต์ดื่มน้ำเปล่า ชา/กาแฟดำไม่ใส่น้ำตาลได้</div>
+  <p class="tiny mute">ช่วงเวลาแต่ละระยะเป็นค่าประมาณ ขึ้นกับมื้อสุดท้าย กิจกรรม และร่างกายแต่ละคน · อ้างอิง: de Cabo &amp; Mattson, NEJM 2019; Anton et al., Obesity 2018; Liu et al., NEJM 2022</p>`;
+}
+function fastStages(st){
+  return FAST_STAGES.map((s,i)=>{const cur=st.on&&i===st.si,past=st.on&&i<st.si;
+    return `<details class="fst ${cur?'cur':''} ${past?'past':''}" ${cur?'open':''}><summary><span class="fic">${s.ic}</span><span class="grow"><b>${s.from}${FAST_STAGES[i+1]?'–'+FAST_STAGES[i+1].from:'+'} ชม. · ${s.t}</b><small>${s.k}</small></span>${cur?'<span class="chip">ตอนนี้</span>':past?'<span class="ok-t">✓</span>':''}</summary><p class="small">${s.d}</p><p class="small"><b>มีผลยังไง:</b> ${s.m}</p></details>`}).join('')}
+function openFast(){ui.sh={mode:'fast'};$('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');navPush('sheet');renderSheet()}
+let fastSi=-1,fastDoneSeen=false;
+function fastTick(){
+  const m=$('#fastMini');if(m)m.innerHTML=fastMini();
+  if(ui.sh&&ui.sh.mode==='fast'){const st=fastState(),l=$('#fastLive');if(l&&document.activeElement?.closest('#fastLive')==null)l.innerHTML=fastLive();
+    if(st.si!==fastSi){fastSi=st.si;const s=$('#fastStages');if(s)s.innerHTML=fastStages(st)}}
+  const st=fastState();
+  if(st.on&&st.done&&!fastDoneSeen&&S.fast.notified!==S.fast.start){fastDoneSeen=true;S.fast.notified=S.fast.start;saveLocal();toast('⏱️ ครบ '+st.hours+' ชม. แล้ว! Break fast ได้เลย 🎉')}
+}
+function fastGuide(){
+  const G=goalCalc(),p=S.profile,young=p.age<18;
+  if(G.mode!=='lose')return '';
+  const def=G.deficit||0,rec=young?12:def<350?14:16;
+  const R=FAST_PLANS.find(x=>x.h===rec),win=24-rec,startEat=rec>=16?12:rec>=14?10:8;
+  const pro=Math.round(p.weight*1.2)+'–'+Math.round(p.weight*1.6);
+  const meals=win>=8?3:2;
+  return `<div class="card stack"><h2>⏱️ IF ช่วยลดน้ำหนักยังไง</h2>
+   <p class="small">IF ไม่ได้เผาไขมันเพิ่มด้วยตัวมันเอง งานวิจัยในคน (เช่น Liu et al., NEJM 2022) พบว่าลดน้ำหนักได้<b>พอๆ กับการคุมแคลปกติ</b> ข้อดีคือช่วงกินสั้นลง ทำให้คุมงบ <b>${fmt(G.budget)} kcal/วัน</b> ได้ง่ายขึ้น โดยเฉพาะคนที่ชอบกินดึก</p>
+   <div class="eq" style="grid-template-columns:1fr 1fr"><div><span class="tiny mute">แผนที่แนะนำสำหรับเป้านี้</span><b>${R.n}</b></div><div><span class="tiny mute">ช่วงกิน (ตัวอย่าง)</span><b>${String(startEat).padStart(2,'0')}:00–${String(startEat+win).padStart(2,'0')}:00</b></div></div>
+   <ul class="small flist">
+    <li>${young?'อายุต่ำกว่า 18 ใช้แค่ 12:12 คือเลิกกินหลังมื้อเย็น ไม่ควรอดยาว':def<350?'เป้าลดไม่หนัก ใช้ 14:10 ก็พอ ไม่ต้องอดนาน':'เริ่มที่ 12:12 สัปดาห์แรก แล้วขยับขึ้นครั้งละ 1–2 ชม. จนถึง 16:8'}</li>
+    <li>แบ่งงบในช่วงกินเป็น ~${meals} มื้อ มื้อละ ~${fmt(G.budget/meals)} kcal ห้ามกินชดเชยจนเกินงบ</li>
+    <li>โปรตีนให้ได้ ${pro} ก./วัน (1.2–1.6 ก./กก.) ช่วยรักษากล้ามเนื้อ อิ่มนาน</li>
+    <li>เบรกฟาสต์ด้วยโปรตีน + ผัก ก่อนแป้ง ช่วยไม่ให้น้ำตาลพุ่ง</li>
+    <li>ถ้าหิวจนกินเกินในมื้อถัดไป หรือเวียนหัว ใจสั่น ให้ลดชั่วโมงลง แคลรวมสำคัญกว่าชั่วโมงฟาสต์</li></ul>
+   <div class="grid2"><button class="btn sm" data-act="fastPlan" data-v="${rec}" data-go="1">ใช้แผน ${R.n}</button><button class="btn sm alt" data-act="openFast">ดูรายละเอียด IF</button></div></div>`;
+}
+
 function viewToday(){
   const k=ui.date,t=totals(k),L=getLog(k),isToday=k===todayKey(),p=S.profile,G=goalCalc();
   const over=t.left<0;
@@ -905,7 +1044,7 @@ function viewToday(){
   let h=`<div class="top">${avatarHTML()}<div class="grow"><h1 style="font-size:20px">สวัสดี ${esc(p.name||'เพื่อน')} 👋</h1><p class="small mute">${isToday?'วันนี้กินอะไรดี':'ย้อนดูบันทึก'}</p></div>${streak()?`<span class="chip streak">🔥 ${streak()} วันติด</span>`:''}</div>`;
   if(!p.set)h+=`<div class="card banner"><b>ตั้งค่าโปรไฟล์ก่อนนะ</b><p class="small" style="margin:4px 0 10px">ตอนนี้ใช้ค่าตัวอย่าง (หญิง 25 ปี 165 ซม. 60 กก.) กรอกข้อมูลจริงเพื่อให้ TDEE ตรงกับตัวคุณ</p><button class="btn sm alt" data-act="tab" data-v="me">ไปกรอกโปรไฟล์</button></div>`;
   h+=`<div class="card hero"><div class="date-nav"><button class="icon-btn" data-act="day" data-v="-1" aria-label="วันก่อนหน้า">${IC.left}</button><span class="lbl">${esc(lbl)}</span><button class="icon-btn" data-act="day" data-v="1" aria-label="วันถัดไป" ${isToday?'disabled style="opacity:.35"':''}>${IC.right}</button></div>
-  <div class="stage"><div class="ring">${ringSVG(t.eaten,t.budget)}<div class="mid"><span class="small mute">${over?'กินเกินมา':'เหลืออีก'}</span><span class="num big" style="color:${over?'var(--over)':'var(--ink)'}">${fmt(Math.abs(t.left))}</span><span class="small mute">kcal</span></div></div>${mascotBlock(k,t)}</div>
+  <div class="stage"><div class="ring">${ringSVG(t.eaten,t.budget)}<div class="mid"><span class="small mute">${over?'กินเกินมา':'เหลืออีก'}</span><span class="num big" style="color:${over?'var(--over)':'var(--ink)'}">${fmt(Math.abs(t.left))}</span><span class="small mute">kcal</span></div></div>${isToday?`<button class="fmini ${S.fast.start?'on':''}" id="fastMini" data-act="openFast" aria-label="ตัวจับเวลา Intermittent Fasting">${fastMini()}</button>`:''}${mascotBlock(k,t)}</div>
   <div class="eq"><div><span class="tiny mute">กินแล้ว</span><b>${fmt(t.eaten)}</b></div><div><span class="tiny mute">งบกินวันนี้</span><b>${fmt(t.budget)}</b></div><div><span class="tiny mute">เผาจากออกกำลัง</span><b>+${fmt(t.bw+t.bs)}</b></div></div>
   <p class="tiny mute" style="margin-top:8px;text-align:center">งบ = เป้าประจำวัน ${fmt(t.base)} + ออกกำลังกาย ${fmt(t.bw)} + ก้าวเดิน ${fmt(t.bs)} · TDEE ของคุณ ${fmt(G.tdee)}</p></div>`;
   h+=`<div class="card stack"><div class="row between"><h2>💪 สารอาหารวันนี้</h2><span class="small mute">ประมาณการ</span></div>
@@ -993,6 +1132,7 @@ function viewGoal(){
    <div><div class="small mute" style="margin-bottom:6px">ตั้งความเร็วเป็นรอบ</div><div class="seg">${['week','month','year'].map(x=>`<button data-act="period" data-v="${x}" aria-pressed="${g.period===x}">รายสัปดาห์${''}</button>`.replace('รายสัปดาห์','ราย'+PL[x])).join('')}</div></div>
    <label class="f">อยากลดกี่กิโลต่อ${PL[g.period]}<input type="number" step="0.1" min="0" inputmode="decimal" data-bind="goal.amount" data-num value="${g.amount}"></label>
    <div id="goalBox" class="stack">${goalBox()}</div></div>
+  ${fastGuide()}
   <div class="card stack"><h2>🏅 เป้าหมายก้าวเดิน</h2>
    <label class="f">ก้าวต่อวัน<input type="number" step="500" min="1000" inputmode="numeric" data-bind="goal.stepGoal" data-num value="${g.stepGoal}"></label>
    <p class="small mute">ค่าแนะนำสำหรับคุณ ~${sug} ก้าว/วัน งานวิจัยพบว่าความเสี่ยงเสียชีวิตก่อนวัยลดลงชัดเจนที่ราว 7,000–10,000 ก้าว/วัน</p></div>
@@ -1450,7 +1590,7 @@ async function pullCloud(){
       const c=data.data;
       if((c.rev||0)>(S.rev||0)||(!S.onboarded&&c.onboarded)){
         const d=defaults();
-        S={...d,...c,profile:{...d.profile,...c.profile},goal:{...d.goal,...c.goal}};
+        S={...d,...c,profile:{...d.profile,...c.profile},goal:{...d.goal,...c.goal},fast:{...d.fast,...c.fast}};
         saveLocal();ui.tab='today';ui.ob=null;ui.body=null;toast('ซิงก์ข้อมูลจากบัญชีแล้ว');
       }else if((S.rev||0)>(c.rev||0)&&S.onboarded){await pushCloud()}
     }else if(S.onboarded){await pushCloud()}
@@ -1538,6 +1678,7 @@ function beepContext(){
     energy:{tdeeKcal:Math.round(G.tdee),baseBudgetKcal:G.budget},
     today:{eatenKcal:Math.round(t.eaten),budgetKcal:Math.round(t.budget),leftKcal:Math.round(t.left),proteinG:Math.round(t.p),carbsG:Math.round(t.c),fatG:Math.round(t.f),steps:t.steps,burnedWorkoutKcal:t.bw,
       workouts:L.workouts.map(w=>({name:w.name,min:w.min,kcal:w.kcal})),meals:L.meals.map(m=>({meal:m.meal,name:m.name,kcal:m.kcal}))},
+    fasting:(()=>{const f=fastState();return f.on?{active:true,planHours:f.hours,elapsedH:r1(f.el),stage:FAST_STAGES[f.si].t}:{active:false,planHours:f.hours}})(),
     last7:last7
   };
 }
@@ -1569,7 +1710,7 @@ function renderBeepDock(){
     beepStarted=true;
     let seen=false;try{seen=localStorage.getItem(BEEP_INTRO_KEY)==='1';localStorage.setItem(BEEP_INTRO_KEY,'1')}catch(e){}
     if(!seen)setTimeout(()=>beepTip('สวัสดี! Beep อยู่ตรงนี้นะ ถามเรื่องกินหรือออกกำลังกายได้ตลอด ลากย้ายที่ได้ด้วย 💬','แนะนำตัวหน่อยว่าช่วยอะไรได้บ้าง',12000,true),2500);
-    setInterval(eveningNudge,60000);
+    setInterval(eveningNudge,60000);setInterval(fastTick,1000);
   }
 }
 function initBeepDrag(){
@@ -1791,6 +1932,7 @@ function renderSheet(){
   const sh=ui.sh;if(!sh)return;
   $('#sheetWrap').classList.remove('full','srch');
   if(sh.mode==='avatar'){renderAvatarSheet();return}
+  if(sh.mode==='fast'){fastSi=-1;renderFastSheet();return}
   if(sh.step==='meal'){
     const hint={b:'ก่อน 10 โมง',l:'ช่วงสายถึงบ่าย',d:'ช่วงเย็นถึงค่ำ',s:'ขนม เครื่องดื่ม ของว่าง'};
     $('#sheet').innerHTML=`<div class="row between"><h2>กินมื้อไหนดี</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
@@ -1979,6 +2121,7 @@ document.addEventListener('change',e=>{
   const el=e.target;
   if(el.dataset.live){render();return}
   if(el.id==='cuKeep'&&ui.sh)ui.sh.cu.keep=el.checked;
+  if(el.id==='fastT'&&S.fast.start&&el.value){const [hh,mm]=el.value.split(':').map(Number),d=new Date();d.setHours(hh,mm,0,0);if(d.getTime()>Date.now())d.setDate(d.getDate()-1);S.fast.start=d.getTime();S.fast.notified=null;fastDoneSeen=false;save();renderSheet();fastTick();toast('แก้เวลาเริ่มเป็น '+dayClock(S.fast.start));return}
   if(el.dataset.bind){
     let v=el.value;
     if(el.dataset.num!==undefined){v=parseFloat(v);if(isNaN(v)||v<0){render();return}}
@@ -2082,6 +2225,12 @@ document.addEventListener('click',e=>{
     case 'saveBody':{const b=ui.body,hh=+b.h,ww=+b.w;if(!(hh>=100&&hh<=230)||!(ww>=20&&ww<=300)){toast('ใส่ส่วนสูง (ซม.) และน้ำหนัก (กก.) ให้ถูกต้องนะ');break}
       S.profile.height=hh;S.profile.weight=ww;S.profile.set=true;upsertWeight(ww);save();ui.body=null;ui.pop=true;render();ui.pop=false;toast('บันทึกแล้ว 💪 อวตารอัปเดตตามรูปร่างปัจจุบัน');break}
     case 'avatar':openAvatar();break;
+    case 'openFast':openFast();break;
+    case 'fastPlan':{const h=+v;if(S.profile.age<18&&h>12){toast('อายุต่ำกว่า 18 ใช้ได้แค่ 12:12');break}S.fast.hours=h;save();if(el.dataset.go){toast('ตั้งแผน IF เป็น '+FAST_PLANS.find(x=>x.h===h).n+' แล้ว');render()}else if(ui.sh)renderSheet();break}
+    case 'fastStart':{if(S.profile.age<18&&S.fast.hours>12)S.fast.hours=12;S.fast.start=Date.now();fastDoneSeen=false;save();renderSheet();fastTick();toast('เริ่มฟาสต์แล้ว 💧 ดื่มน้ำเยอะๆ นะ');break}
+    case 'fastEnd':{const F=S.fast;if(!F.start)break;const e=Date.now(),h=(e-F.start)/36e5;if(h<F.hours&&!ui.fcf){ui.fcf=true;fastTick();setTimeout(()=>{ui.fcf=false},4000);break}ui.fcf=false;
+      if(h>=0.25)(F.hist=F.hist||[]).unshift({s:F.start,e,h:F.hours});F.hist=(F.hist||[]).slice(0,30);F.start=null;save();renderSheet();fastTick();
+      toast(h>=F.hours?'เก่งมาก! ฟาสต์ครบ '+r1(h)+' ชม. 🎉 เริ่มมื้อแรกด้วยโปรตีน+ผักนะ':'หยุดที่ '+r1(h)+' ชม. ไม่เป็นไร ฟังร่างกายสำคัญที่สุด 💛');break}
     case 'avCam':$('#avatarCam').click();break;
     case 'avPick':$('#avatarIn').click();break;
     case 'setEmoji':S.profile.emoji=v;S.profile.avatar='';if(S.onboarded)S.profile.set=true;save();closeSheet();render();break;
