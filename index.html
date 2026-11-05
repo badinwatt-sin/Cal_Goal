@@ -528,6 +528,7 @@ body.cam-open .beep-dock{display:none}
 .fst.cur{border-color:var(--sky);background:rgba(77,163,255,.1)}
 .fst.past{opacity:.7}
 .fnote{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--mute);background:var(--soft);border-radius:12px;padding:10px 12px}
+.nf{display:flex;flex-direction:column;gap:8px;margin-top:10px;padding:12px;border:1.5px dashed var(--line);border-radius:16px;background:var(--soft)}
 .flist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 </style>
 
@@ -544,6 +545,7 @@ body.cam-open .beep-dock{display:none}
 <input type="file" id="importIn" accept="application/json,.json" hidden>
 
 <script src="foods-th.js"></script>
+<script src="foods-more.js"></script>
 <script src="config.js"></script>
 <script>
 (function(){
@@ -812,6 +814,7 @@ const FOODS=[];
   const a=l.split('|');const k=+a[2],p=+a[3],f=+a[4];
   FOODS.push({name:a[0],serving:a[1],kcal:k,p:p,f:f,c:Math.max(0,Math.round((k-4*p-9*f)/4)),cat:cat})})})();
 // เมนูจากกรมอนามัย 2561 (src D, ต่อ 100 ก.ส่วนที่กินได้ หรือหน่วยครัวเรือน) และฉลาก Nissin (src N) — มีเฉพาะพลังงาน ไม่มีสารอาหาร
+(window.FOODS_MORE||[]).forEach(a=>{const [name,cat,serving,k,p,f,al,en]=a;if(!CATS.includes(cat))CATS.push(cat);FOODS.push({name,cat,serving,kcal:k,p,f,c:Math.max(0,Math.round((k-4*p-9*f)/4)),al:al||'',en:en||'',src:'E'})});
 (window.FOODS_EXTRA||[]).forEach(a=>{if(!CATS.includes(a[1]))CATS.push(a[1]);FOODS.push({name:a[0],cat:a[1],serving:a[2],kcal:a[3],p:0,c:0,f:0,en:a[4]||'',src:a[5],g:a[6]||null,nomac:true})});
 
 /* ---------- activities (MET จาก Compendium of Physical Activities) ---------- */
@@ -822,7 +825,7 @@ const ACTS=[
  ['ฟุตบอล',7,'⚽'],['บาสเกตบอล',6.5,'🏀'],['เทนนิส',7.3,'🎾'],['ปิงปอง / ตะกร้อ',4,'🏓'],['ขึ้นบันได',8.8,'🪜'],['เดินป่า / ปีนเขา',6,'🥾'],['ทำงานบ้าน',3.3,'🧹']
 ];
 const MEALS=[['b','มื้อเช้า','🌅'],['l','มื้อกลางวัน','🍱'],['d','มื้อเย็น','🌙'],['s','ของว่าง/ขนม','🍿']];
-const CE={'อาหารปรุงสำเร็จ':'🥘','ผัก':'🥬','ปลา & อาหารทะเล':'🐟','ของทอด & ของว่าง':'🍤','บะหมี่กึ่งสำเร็จรูป':'🍥','เนื้อสัตว์ & ไข่':'🍗','ถั่ว & เมล็ดพืช':'🥜','ข้าว & ธัญพืช':'🌾','เครื่องปรุง':'🧂','นม & โยเกิร์ต':'🥛','ข้าว/จานเดียว':'🍛','ก๋วยเตี๋ยว/เส้น':'🍜','กับข้าว/อีสาน':'🍲','ของหวาน/เบเกอรี่':'🍰','เครื่องดื่ม':'🧋','ฟาสต์ฟู้ด/ตะวันตก':'🍔','ญี่ปุ่น':'🍣','เกาหลี':'🥘','จีน/เอเชีย':'🥟','ผลไม้':'🍉','ของว่าง/ร้านสะดวกซื้อ':'🍿','ของฉัน':'⭐','ล่าสุด':'🕘','ทั้งหมด':'🍽️'};
+const CE={'อาหารปรุงสำเร็จ':'🥘','ผัก':'🥬','ปลา & อาหารทะเล':'🐟','ของทอด & ของว่าง':'🍤','บะหมี่กึ่งสำเร็จรูป':'🍥','เนื้อสัตว์ & ไข่':'🍗','ถั่ว & เมล็ดพืช':'🥜','ข้าว & ธัญพืช':'🌾','เครื่องปรุง':'🧂','นม & โยเกิร์ต':'🥛','ข้าว/จานเดียว':'🍛','ก๋วยเตี๋ยว/เส้น':'🍜','กับข้าว/อีสาน':'🍲','ของหวาน/เบเกอรี่':'🍰','เครื่องดื่ม':'🧋','ฟาสต์ฟู้ด/ตะวันตก':'🍔','ญี่ปุ่น':'🍣','เกาหลี':'🥘','จีน/เอเชีย':'🥟','ผลไม้':'🍉','คลีน/สุขภาพ':'🥗','ของว่าง/ร้านสะดวกซื้อ':'🍿','ของฉัน':'⭐','ล่าสุด':'🕘','ทั้งหมด':'🍽️'};
 const SKINS=['#FBE0CC','#F3CBA6','#E3AE82','#C98F62','#A96F48','#7A4A2E'];
 const KITS=[['#00E0B8','มินต์'],['#4DA3FF','น้ำเงิน'],['#FFD60A','เหลือง'],['#FF6B8B','ชมพู']];
 function foodEmoji(n){const f=foodPool().find(x=>x.name===n);return f?(CE[f.cat]||'🍽️'):'🍽️'}
@@ -1931,29 +1934,46 @@ window.addEventListener('popstate',()=>{
   else if(k==='tab'){ui.tab='today';ui.confirmReset=false;ui.body=null;render();window.scrollTo(0,0)}
 });
 function foodPool(){return FOODS.concat(S.custom.map(c=>({...c,cat:'ของฉัน'})))}
+/* ค้นหาแบบทนคำผิด: ไม่สนช่องว่าง/วรรณยุกต์ รองรับคำเรียกอื่น + ภาษาอังกฤษ + ค้นใกล้เคียงเมื่อไม่เจอ */
+const SPELL=[[/กระเพรา|กระเพา|กะเพา|กะเพรา/g,'กะเพรา'],[/ผัดไทย/g,'ผัดไท'],[/หมูกะทะ/g,'หมูกระทะ'],[/ํา/g,'ำ'],[/ไอติม/g,'ไอศกรีม'],[/ช็?อ[คก]โก?แลต|ชอ[คก]โกแลต|ช๊อคโกแลต/g,'ช็อกโกแลต'],[/เบอ(?:ร์)?เกอ(?:ร์)?/g,'เบอร์เกอร์'],[/แซน(?:ด์)?วิ[ชส]/g,'แซนด์วิช'],[/สปาเก[็]?(?:ต|ตต)ี้?/g,'สปาเก็ตตี้'],[/เฟรน(?:ช์)?(?:ฟราย|ฟรายส์|ฟรายด์)/g,'เฟรนช์ฟรายส์'],[/ฮ[็]?[อ]?[ทต]ดอก/g,'ฮอทดอก'],[/คุ[๊]?กกี้/g,'คุกกี้'],[/โยเกิ[ร]?[์]?ต/g,'โยเกิร์ต'],[/บุฟเฟ่ต์?|บุฟเฟต์/g,'บุฟเฟ่ต์']];
+const SYN=[['ชาเย็น','ชาไทย'],['ชานม','ชาไทย'],['มาม่า','บะหมี่กึ่งสำเร็จรูป'],['ไวไว','บะหมี่กึ่งสำเร็จรูป'],['ยำยำ','บะหมี่กึ่งสำเร็จรูป'],['โค้ก','น้ำอัดลม'],['เป๊ปซี่','น้ำอัดลม'],['กาแฟเย็น','ลาเต้'],['กาแฟ','ลาเต้'],['ส้มตำ','ตำ'],['เซเว่น','ร้านสะดวกซื้อ'],['7-11','ร้านสะดวกซื้อ'],['711','ร้านสะดวกซื้อ'],['kfc','ไก่ทอด'],['แมค','เบอร์เกอร์'],['mcdonald','เบอร์เกอร์'],['ไข่มุก','ชานมไข่มุก'],['บับเบิ้ล','ชานมไข่มุก'],['สลัด','salad'],['เวย์','โปรตีน'],['ก๋วยเตี๋ยว','บะหมี่'],['ข้าวต้ม','โจ๊ก'],['หมูกระทะ','ปิ้งย่าง'],['ชาบู','สุกี้'],['ปิ้งย่าง','ยากินิกุ']];
+function canon(x){let t=String(x||'').toLowerCase().normalize('NFC').replace(/[\s​()\[\],.\/\-+&·:'"%*!?]/g,'');SPELL.forEach(r=>{t=t.replace(r[0],r[1])});return t}
+const loose=t=>t.replace(/[็-์]/g,'');
+function foodKey(f){if(f._h===undefined){f._n=canon(f.name);f._h=f._n+'|'+canon(f.al||'')+'|'+canon(f.en||'')+'|'+canon(f.cat||'');f._l=loose(f._h)}return f}
+function qAlts(tok){const c=canon(tok),out=[c];SYN.forEach(g=>{const a=canon(g[0]),b=canon(g[1]);if(c.includes(a)&&a!==b)out.push(c.replace(a,b))});return out}
+function bigrams(t){const a=[];for(let i=0;i<t.length-1;i++)a.push(t.slice(i,i+2));return a}
+function dice(a,b){if(a.length<2||b.length<2)return 0;const A=bigrams(a),B=bigrams(b),m=new Map();B.forEach(x=>m.set(x,(m.get(x)||0)+1));let n=0;A.forEach(x=>{const v=m.get(x);if(v){n++;m.set(x,v-1)}});return 2*n/(A.length+B.length)}
 function foodMatches(){
-  const sh=ui.sh,toks=sh.q.toLowerCase().split(/\s+/).filter(Boolean);
-  let pool=foodPool();
+  const sh=ui.sh,toks=sh.q.trim().split(/\s+/).filter(Boolean);
+  let pool=foodPool();sh.fuzzy=false;
   if(sh.cat==='ล่าสุด'){pool=S.recent.map(n=>pool.find(f=>f.name===n)).filter(Boolean)}
   else if(sh.cat!=='ทั้งหมด')pool=pool.filter(f=>f.cat===sh.cat);
-  if(toks.length){
-    pool=pool.filter(f=>toks.every(t=>(f.name+' '+f.cat+' '+(f.en||'')).toLowerCase().includes(t)));
-    const q0=toks[0];
-    const score=f=>{const n=f.name.toLowerCase();let s=n.startsWith(q0)?0:n.includes(q0)?1:(f.en||'').toLowerCase().includes(q0)?3:2;if(!f.src)s-=0.5;return s*1000+n.length};
-    pool=pool.map(f=>[score(f),f]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
-  }
-  return pool;
+  if(!toks.length)return pool;
+  const alts=toks.map(qAlts),la=alts.map(a=>a.map(loose));
+  const rank=f=>{foodKey(f);const q=alts[0];let s=9;
+    for(const a of q){if(f._n.startsWith(a))s=Math.min(s,0);else if(f._n.includes(a))s=Math.min(s,1);else if(f._h.split('|')[1].includes(a))s=Math.min(s,1.5);else if(f._h.split('|')[2].includes(a))s=Math.min(s,3)}
+    if(s===9)s=2.5;if(f.src==='D')s+=1.2;else if(f.src==='N')s+=0.6;if(f.cat==='ของฉัน')s-=0.3;return s*1000+f.name.length};
+  let m=pool.filter(f=>{foodKey(f);return alts.every((as,i)=>as.some(a=>f._h.includes(a))||la[i].some(a=>f._l.includes(a)))});
+  if(!m.length){
+    const q=loose(canon(toks.join('')));
+    if(q.length>=2){sh.fuzzy=true;
+      m=pool.map(f=>{foodKey(f);const parts=[loose(f._n)].concat(loose(canon(f.al||'')).split(',').filter(Boolean));const sc=Math.max(...parts.map(x=>Math.max(dice(q,x),x.length>q.length?dice(q,x.slice(0,q.length+2)):0)));return [sc,f]}).filter(x=>x[0]>=0.42).sort((a,b)=>b[0]-a[0]).slice(0,25).map(x=>x[1])}
+    return m}
+  return m.map(f=>[rank(f),f]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
 }
+function srcBadge(f){return f.src==='N'?'ฉลากผู้ผลิต':f.src==='D'?'กรมอนามัย':''}
 function hl(name){
   const q=(ui.sh&&ui.sh.q||'').trim().split(/\s+/)[0];let e=esc(name);
   if(!q)return e;const i=name.toLowerCase().indexOf(q.toLowerCase());
   if(i<0)return e;return esc(name.slice(0,i))+'<mark class="hit">'+esc(name.slice(i,i+q.length))+'</mark>'+esc(name.slice(i+q.length));
 }
-function countText(){const n=foodMatches().length;return ui.sh.q.trim()?`พบ ${fmt(n)} รายการ`:`${fmt(n)} รายการ${n>80?' · พิมพ์เพื่อค้นหา':''}`}
+function countText(){const n=foodMatches().length;return ui.sh.q.trim()?(!n?'ไม่พบเมนูนี้':ui.sh.fuzzy?`ใกล้เคียง ${fmt(n)} รายการ`:`พบ ${fmt(n)} รายการ`):`${fmt(n)} รายการ${n>80?' · พิมพ์เพื่อค้นหา':''}`}
 function foodRows(){
   const m=foodMatches();
-  if(!m.length)return `<p class="empty">ไม่เจอเมนูนี้ ลองให้ AI ประเมินจากชื่อหรือรูป หรือเพิ่มเองในแท็บ “กำหนดเอง”</p>`;
-  return m.slice(0,80).map((f,i)=>`<button class="food" data-act="pickFood" data-n="${esc(f.name)}"><div class="grow"><div class="nm" style="font-weight:500">${CE[f.cat]||'🍽️'} ${hl(f.name)}</div><div class="tiny mute">${esc(f.serving)} · ${esc(f.cat)}${f.src?` · <span class="srcb">${f.src==='N'?'ฉลากผู้ผลิต':'กรมอนามัย'}</span>`:''}</div></div><span class="kc">${fmt(f.kcal)} <span class="tiny mute">kcal</span></span></button>`).join('')+(m.length>80?`<p class="tiny mute" style="text-align:center">แสดง 80 รายการแรก พิมพ์ค้นหาเพิ่มเติมได้</p>`:'');
+  const q=ui.sh.q.trim();
+  const nf=q?`<div class="nf"><b>${m.length?'ไม่เจอเมนูที่ใช่?':'ไม่เจอ “'+esc(q)+'” ในรายการ'}</b><span class="small mute">ให้ AI ประเมินจากชื่อเมนูได้เลย ผลจะถูกจำไว้ใน “ของฉัน” ค้นครั้งหน้าเจอทันที</span><div class="grid2"><button class="btn sm" data-act="aiFromSearch">✨ ให้ AI ประเมิน</button><button class="btn sm alt" data-act="customFromSearch">✏️ ใส่แคลเอง</button></div></div>`:'';
+  if(!m.length)return nf;
+  return (ui.sh.fuzzy?`<p class="tiny mute" style="margin:2px 0 6px">ไม่เจอคำนี้ตรงๆ — เมนูที่ใกล้เคียง:</p>`:'')+m.slice(0,80).map((f,i)=>`<button class="food" data-act="pickFood" data-n="${esc(f.name)}"><div class="grow"><div class="nm" style="font-weight:500">${CE[f.cat]||'🍽️'} ${hl(f.name)}</div><div class="tiny mute">${esc(f.serving)} · ${esc(f.cat)}${srcBadge(f)?` · <span class="srcb">${srcBadge(f)}</span>`:''}</div></div><span class="kc">${fmt(f.kcal)} <span class="tiny mute">kcal</span></span></button>`).join('')+(m.length>80?`<p class="tiny mute" style="text-align:center">แสดง 80 รายการแรก พิมพ์ค้นหาเพิ่มเติมได้</p>`:'')+nf;
 }
 function renderResults(){
   const r=$('#results');if(!r)return;r.innerHTML=foodRows();r.scrollTop=0;
@@ -1988,7 +2008,7 @@ function renderSheet(){
   if(sh.tab==='search'){
     if(sh.sel){
       const f=sh.sel,q=sh.qty;
-      h+=`<div class="card stack"><div class="row between"><div class="grow"><h2>${esc(f.name)}</h2><p class="small mute">1 หน่วย = ${esc(f.serving)}${f.src?` · <span class="srcb">${f.src==='N'?'ฉลากผู้ผลิต':'กรมอนามัย 2561'}</span>`:''}</p>${f.en?`<p class="tiny mute">${esc(f.en)}</p>`:''}${f.serving==='100 ก.'?`<p class="tiny mute">ค่าต่อ 100 กรัมส่วนที่กินได้ · 1 จานโดยประมาณ 250–350 ก. (2.5–3.5 หน่วย)</p>`:''}</div><button class="icon-btn" data-act="unpick" aria-label="กลับไปรายการ">${IC.left}</button></div>
+      h+=`<div class="card stack"><div class="row between"><div class="grow"><h2>${esc(f.name)}</h2><p class="small mute">1 หน่วย = ${esc(f.serving)}${srcBadge(f)?` · <span class="srcb">${srcBadge(f)==='กรมอนามัย'?'กรมอนามัย 2561':srcBadge(f)}</span>`:''}</p>${f.en?`<p class="tiny mute">${esc(f.en)}</p>`:''}${f.serving==='100 ก.'?`<p class="tiny mute">ค่าต่อ 100 กรัมส่วนที่กินได้ · 1 จานโดยประมาณ 250–350 ก. (2.5–3.5 หน่วย)</p>`:''}</div><button class="icon-btn" data-act="unpick" aria-label="กลับไปรายการ">${IC.left}</button></div>
       <div class="qty"><button class="icon-btn" data-act="qty" data-v="-0.5" aria-label="ลดจำนวน">−</button><input type="number" id="qtyIn" step="0.5" min="0.5" inputmode="decimal" value="${q}" aria-label="จำนวน"><button class="icon-btn" data-act="qty" data-v="0.5" aria-label="เพิ่มจำนวน">+</button><span class="small mute">หน่วย</span></div>
       <div class="eq"><div><span class="tiny mute">พลังงาน</span><b id="pvK">${fmt(f.kcal*q)}</b></div>${f.nomac?`<div><span class="tiny mute">ปริมาณรวม</span><b id="pvG">${f.g?fmt(f.g*q)+' ก.':'—'}</b></div><div><span class="tiny mute">สารอาหาร</span><b style="font-size:13px">ไม่มีข้อมูล</b></div>`:`<div><span class="tiny mute">โปรตีน</span><b id="pvP">${Math.round(f.p*q)}g</b></div><div><span class="tiny mute">คาร์บ/ไขมัน</span><b id="pvCF">${Math.round(f.c*q)}/${Math.round(f.f*q)}g</b></div>`}</div>
       <button class="btn" data-act="confirmFood">เพิ่มลง${esc(MEALS.find(m=>m[0]===sh.meal)[1])}</button></div>`;
@@ -2006,7 +2026,7 @@ function renderSheet(){
     if(!SAMPLE&&!USE_API)h+=`<div class="warn">ฟีเจอร์ AI ใช้ได้เมื่อเปิดหน้านี้ผ่าน Claude เท่านั้น ตอนนี้ใช้แท็บ “ค้นหาเมนู” หรือ “กำหนดเอง” แทนได้</div>`;
     if(USE_API)h+=`<p class="tiny mute">รูปจะถูกส่งไปประมวลผลที่ Google Gemini (แพ็กเกจฟรี Google อาจนำข้อมูลไปปรับปรุงผลิตภัณฑ์) อย่าถ่ายติดใบหน้าหรือข้อมูลส่วนตัว</p>`;
     h+=`<button class="btn" data-act="runAI" ${(a.loading||(!SAMPLE&&!USE_API))?'disabled':''}>${a.loading?'<span class="spin"></span> กำลังประเมิน... (ราว 5–15 วินาที)':'ให้ AI ประเมินแคลอรี่'}</button>`;
-    if(a.err)h+=`<div class="warn">${esc(a.err)}</div>`;
+    if(a.err)h+=`<div class="warn">${esc(a.err)}</div>${a.text.trim()?`<button class="btn sm alt" data-act="searchFromAI">🔎 ค้นหา “${esc(a.text.trim().slice(0,30))}” ในรายการอาหารแทน</button>`:''}`;
     if(a.items){
       h+=`<div class="card stack" id="aiRes"><div class="row between"><h3>ผลประเมิน (แก้ไขได้)</h3><span class="kc" id="aiTot">${fmt(aiTotal())} kcal</span></div><div class="eq" id="aiMac">${aiMacHTML()}</div>`;
       a.items.forEach((it,i)=>{h+=`<div class="row"><div class="grow"><input type="text" data-model="sh.ai.items.${i}.name" value="${esc(it.name)}" aria-label="ชื่อ"><div class="tiny mute" style="margin-top:2px">${esc(it.portion||'')} · P${Math.round(it.p)} C${Math.round(it.c)} F${Math.round(it.f)}</div></div><input type="number" style="width:86px" inputmode="numeric" data-model="sh.ai.items.${i}.kcal" data-num data-after="aitotal" value="${it.kcal}" aria-label="kcal"></div>`});
@@ -2111,7 +2131,10 @@ async function runAI(){
   try{
     let r;
     if(SAMPLE){r=await SAMPLE.json(prompt,a.blob?{images:[a.blob]}:{})}
-    else{r=await callApi(a)}
+    else{try{r=await callApi(a)}catch(e1){
+      // ล้มเหลวชั่วคราว (เน็ตหลุด/เซิร์ฟเวอร์ล่ม/JSON เสีย) ลองใหม่อัตโนมัติ 1 ครั้ง
+      if(!['upstream','bad_json','network'].includes(e1.code||'network')&&!/^http_5/.test(e1.code||''))throw e1;
+      await new Promise(z=>setTimeout(z,1200));r=await callApi(a)}}
     const items=(r&&r.items||[]).map(x=>({name:String(x.name||'อาหาร'),portion:String(x.portion||''),kcal:Math.round(+x.kcal||0),k0:Math.round(+x.kcal||0),p:+x.protein||0,c:+x.carbs||0,f:+x.fat||0}));
     if(!items.length)a.err=(r&&r.note)||'AI ไม่พบอาหารในข้อมูลนี้ ลองรูปที่ชัดขึ้นหรือพิมพ์รายละเอียด';
     else{a.items=items;a.note=r.note||''}
@@ -2203,12 +2226,16 @@ document.addEventListener('click',e=>{
     case 'camClose':history.back();break;
     case 'photoPick':$('#photoPick').click();break;
     case 'runAI':runAI();break;
+    case 'aiFromSearch':{const q=sh.q.trim();if(!q)break;sheetStep();sh.tab='ai';sh.sel=null;Object.assign(sh.ai,{text:q,img:null,blob:null,prev:null,items:null,err:'',note:'',fromQ:true});renderSheet();runAI();break}
+    case 'customFromSearch':{sheetStep();sh.tab='custom';sh.sel=null;sh.cu.name=sh.q.trim();renderSheet();break}
+    case 'searchFromAI':{sheetStep();sh.tab='search';sh.sel=null;sh.q=sh.ai.text.trim();sh.cat='ทั้งหมด';renderSheet();break}
     case 'confirmAI':{
       const items=sh.ai.items.filter(x=>+x.kcal>=0&&x.name);
       items.forEach((x,i)=>{
         const fc=x.k0>0?(+x.kcal)/x.k0:1;pushMeal({name:x.name,serving:x.portion,qty:1,kcal:+x.kcal,p:x.p*fc,c:x.c*fc,f:x.f*fc,img:i===0?sh.ai.img:''});
       });
-      save();closeSheet();render();toast('เพิ่มจาก AI แล้ว');break}
+      let kept=0;if(!sh.ai.blob)items.forEach(x=>{const fc=x.k0>0?(+x.kcal)/x.k0:1;if(!S.custom.some(c=>c.name===x.name)){S.custom.push({name:x.name,serving:x.portion||'1 หน่วย',kcal:+x.kcal,p:r1(x.p*fc),c:r1(x.c*fc),f:r1(x.f*fc),ai:true});kept++}});
+      save();closeSheet();render();toast(kept?'เพิ่มแล้ว · จำเมนูไว้ใน “ของฉัน” แล้ว ⭐':'เพิ่มจาก AI แล้ว');break}
     case 'confirmCustom':{
       const c=sh.cu;if(!c.name.trim()||!(+c.kcal>=0)||c.kcal===''){toast('ใส่ชื่อและแคลอรี่ก่อนนะ');break}
       const o={name:c.name.trim(),serving:'1 หน่วย',qty:1,kcal:+c.kcal,p:+c.p||0,c:+c.c||0,f:+c.f||0};

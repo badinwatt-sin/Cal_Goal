@@ -23,7 +23,8 @@
 
 ## ตั้งค่า AI ประเมินแคลจากรูป (Vercel + Gemini)
 1. สร้าง API key ที่ https://aistudio.google.com/apikey
-2. Vercel → Project → Settings → Environment Variables เพิ่ม `GEMINI_API_KEY` (ไม่บังคับ: `GEMINI_MODEL` ค่าเริ่มต้น `gemini-3.5-flash-lite`, `DAILY_LIMIT` ค่าเริ่มต้น 10 รูป/IP/วัน)
+2. Vercel → Project → Settings → Environment Variables เพิ่ม `GEMINI_API_KEY` (ไม่บังคับ: `GEMINI_MODEL` ค่าเริ่มต้น `gemini-3.5-flash-lite`, `GEMINI_FALLBACK_MODELS` โมเดลสำรองคั่นด้วย `,` ค่าเริ่มต้น `gemini-flash-lite-latest,gemini-flash-latest`, `DAILY_LIMIT` ค่าเริ่มต้น 20 รูป/IP/วัน, `TEXT_LIMIT` ค่าเริ่มต้น 60 ครั้ง/IP/วัน สำหรับประเมินจากชื่อเมนู)
+   - ถ้าโมเดลหลักเต็มโควตา ล่ม หมดเวลา หรือตอบไม่เป็น JSON ระบบจะลองโมเดลสำรองให้อัตโนมัติ (โควตาฟรีแยกต่อโมเดล)
 3. Redeploy
 
 ฟังก์ชันอยู่ที่ `api/estimate.js` ตัวนับต่อ IP เก็บในหน่วยความจำ เป็นเพียงด่านกันใช้เกินแบบหยาบ ถ้าเปิดสาธารณะจริงควรเพิ่มที่เก็บภายนอก (เช่น Upstash Redis) และตั้งเพดานงบในบัญชี Google
@@ -41,3 +42,11 @@
 - เมนูหลักในแอป: ค่าประมาณต่อหน่วยเสิร์ฟ (อยู่ใน `index.html`)
 - `foods-th.js`: 633 เมนูจากกรมอนามัย 2561 (ส่วนใหญ่ต่อ 100 ก.) และฉลาก Nissin สร้างจาก `data/thai_food_calories_633.csv` ด้วย `python3 data/build_foods_th.py data/thai_food_calories_633.csv`
 - `data/foods_th_review.csv`: เทียบชื่อเดิม (OCR) กับชื่อที่แก้แล้ว ไว้ตรวจทาน
+- `foods-more.js`: ~670 เมนูยอดนิยมเพิ่มเติม (สตรีทฟู้ด ร้านสะดวกซื้อ คาเฟ่ ฟาสต์ฟู้ด ญี่ปุ่น เกาหลี คลีน เครื่องปรุง) ค่าประมาณต่อหน่วยเสิร์ฟ มีโปรตีน/ไขมัน และคำค้นอื่น — แก้ที่ `data/foods_more.txt` แล้วรัน `python3 data/build_foods_more.py`
+- การค้นหาทนคำผิด: ไม่สนช่องว่าง/วรรณยุกต์ รู้จักคำสะกดยอดนิยม (กระเพรา, ผัดไท, สเต๊ก…) คำเรียกอื่น (ชาเย็น, ไอติม, เซเว่น…) และภาษาอังกฤษ ถ้าไม่เจอจะแสดงเมนูใกล้เคียง + ปุ่มให้ AI ประเมินจากชื่อ (ผลถูกจำไว้ใน “ของฉัน”)
+
+## แจ้งเตือนฟาสต์ครบ (ไม่บังคับ)
+ตอนแอปเปิดอยู่จะเตือนได้เลย ถ้าอยากให้เด้งแม้ปิดแอป ตั้งค่าใน Vercel → Environment Variables:
+- `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` สร้างด้วย `npx web-push generate-vapid-keys` (ห้ามใส่ private key ใน repo)
+- `QSTASH_TOKEN` จาก console.upstash.com → QStash (ฟรี 500 ข้อความ/วัน; ถ้า Upstash ให้ URL ภูมิภาคมาด้วย ใส่ `QSTASH_URL`)
+- iPhone ต้องเพิ่มแอปไปที่หน้าจอโฮมก่อน (iOS 16.4+) จึงจะรับแจ้งเตือนได้

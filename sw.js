@@ -1,6 +1,6 @@
 // Service worker: เปิดแอปได้เร็วและใช้ออฟไลน์ได้ (เฉพาะหน้าแอป) ไม่แคช API / Supabase
-const VER = 'calgoal-v10';
-const SHELL = ['./', 'index.html', 'foods-th.js', 'config.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', 'terms.html', 'assets/beep_wave_base.png', 'assets/beep_wave_hand.png', 'assets/beep_head.png'];
+const VER = 'calgoal-v11';
+const SHELL = ['./', 'index.html', 'foods-th.js', 'foods-more.js', 'config.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', 'terms.html', 'assets/beep_wave_base.png', 'assets/beep_wave_hand.png', 'assets/beep_head.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VER).then((c) => Promise.allSettled(SHELL.map((u) => c.add(u)))).then(() => self.skipWaiting()));
