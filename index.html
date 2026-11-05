@@ -527,6 +527,7 @@ body.cam-open .beep-dock{display:none}
 .fst p{margin:0 0 10px}
 .fst.cur{border-color:var(--sky);background:rgba(77,163,255,.1)}
 .fst.past{opacity:.7}
+.fnote{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--mute);background:var(--soft);border-radius:12px;padding:10px 12px}
 .flist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 </style>
 
@@ -994,6 +995,7 @@ function renderFastSheet(){
   $('#sheet').innerHTML=`<div class="row between"><h2>⏱️ Intermittent Fasting</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
   ${young?`<div class="warn">อายุต่ำกว่า 18 ปี ร่างกายยังเจริญเติบโต ไม่แนะนำให้อดอาหารเป็นช่วงยาว ใช้ได้แค่แผน 12:12 (เว้นมื้อดึก) เท่านั้น</div>`:''}
   <div id="fastLive" class="stack">${fastLive()}</div>
+  ${notifRow()}
   ${st.on?`<label class="f">แก้เวลาเริ่ม (ถ้าลืมกด)<input type="time" id="fastT" value="${new Date(F.start).toTimeString().slice(0,5)}"></label>`:''}
   <h3 style="margin-top:6px">เลือกแผน IF</h3>
   <div class="fplans">${FAST_PLANS.map(p=>{const dis=young&&p.h>12;return `<button class="fplan" data-act="fastPlan" data-v="${p.h}" aria-pressed="${st.hours===p.h}" ${dis?'disabled':''}><b>${p.n}</b><small>${p.lv}</small></button>`}).join('')}</div>
@@ -1014,7 +1016,7 @@ function fastTick(){
   if(ui.sh&&ui.sh.mode==='fast'){const st=fastState(),l=$('#fastLive');if(l&&document.activeElement?.closest('#fastLive')==null)l.innerHTML=fastLive();
     if(st.si!==fastSi){fastSi=st.si;const s=$('#fastStages');if(s)s.innerHTML=fastStages(st)}}
   const st=fastState();
-  if(st.on&&st.done&&!fastDoneSeen&&S.fast.notified!==S.fast.start){fastDoneSeen=true;S.fast.notified=S.fast.start;saveLocal();toast('⏱️ ครบ '+st.hours+' ชม. แล้ว! Break fast ได้เลย 🎉')}
+  if(st.on&&st.done&&!fastDoneSeen&&S.fast.notified!==S.fast.start){fastDoneSeen=true;S.fast.notified=S.fast.start;saveLocal();localFastNotif(st);toast('⏱️ ครบ '+st.hours+' ชม. แล้ว! Break fast ได้เลย 🎉')}
 }
 function fastGuide(){
   const G=goalCalc(),p=S.profile,young=p.age<18;
@@ -1035,6 +1037,37 @@ function fastGuide(){
    <div class="grid2"><button class="btn sm" data-act="fastPlan" data-v="${rec}" data-go="1">ใช้แผน ${R.n}</button><button class="btn sm alt" data-act="openFast">ดูรายละเอียด IF</button></div></div>`;
 }
 
+/* ---------- แจ้งเตือนเมื่อฟาสต์ครบ: Web Push (ตอนปิดแอป) + แจ้งเตือนในเครื่อง (ตอนแอปเปิดอยู่เบื้องหลัง) ---------- */
+let FPUSH=null;
+async function fastPushCfg(){if(FPUSH)return FPUSH;try{const r=await fetch('/api/fast-push');FPUSH=r.ok?await r.json():{configured:false}}catch(e){FPUSH={configured:false}}return FPUSH}
+function notifOK(){return 'Notification' in window&&'serviceWorker' in navigator}
+function isStandalone(){return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}
+function isIOS(){return /iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}
+function askNotif(){if(!notifOK())return Promise.resolve('unsupported');if(Notification.permission!=='default')return Promise.resolve(Notification.permission);try{return Promise.resolve(Notification.requestPermission()).catch(()=>'denied')}catch(e){return Promise.resolve('denied')}}
+function b64u(x){const b=atob((x+'='.repeat((4-x.length%4)%4)).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(b,c=>c.charCodeAt(0))}
+function fpost(o){return fetch('/api/fast-push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)})}
+async function fastSchedule(){
+  const F=S.fast;
+  if(F.msg){const id=F.msg;F.msg=null;saveLocal();fpost({action:'cancel',id}).catch(()=>{})}
+  if(!F.start||!notifOK()||Notification.permission!=='granted')return;
+  const at=F.start+F.hours*36e5,start=F.start;if(at<=Date.now())return;
+  const cfg=await fastPushCfg();if(!cfg.configured||!cfg.publicKey)return;
+  try{const reg=await navigator.serviceWorker.ready;if(!reg.pushManager)return;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(cfg.publicKey)});
+    const j=await (await fpost({action:'schedule',sub:sub.toJSON(),at,start,h:F.hours})).json();
+    if(j.id&&S.fast.start===start){S.fast.msg=j.id;saveLocal()}
+  }catch(e){}
+}
+function localFastNotif(st){
+  if(!notifOK()||Notification.permission!=='granted'||!document.hidden)return;
+  navigator.serviceWorker.ready.then(r=>r.showNotification('⏱️ ฟาสต์ครบ '+st.hours+' ชม. แล้ว!',{body:'เก่งมาก 🎉 Break fast ได้เลย เริ่มด้วยโปรตีน + ผัก แล้วอย่าลืมบันทึกมื้อแรกนะ',tag:'fast-done-'+S.fast.start,icon:'icon-192.png',badge:'icon-192.png',data:{url:'/?fast=1'}})).catch(()=>{})}
+function notifRow(){
+  if(!notifOK())return isIOS()&&!isStandalone()?`<div class="fnote">🔔 <span>iPhone/iPad: กดปุ่ม <b>แชร์</b> → <b>เพิ่มไปยังหน้าจอโฮม</b> แล้วเปิดแอปจากไอคอน ถึงจะรับแจ้งเตือนตอนฟาสต์ครบได้ (iOS 16.4 ขึ้นไป)</span></div>`:`<div class="fnote">🔕 <span>เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือน</span></div>`;
+  const p=Notification.permission;
+  if(p==='granted')return `<div class="fnote">🔔 <span>เปิดแจ้งเตือนแล้ว จะเด้งบอกเมื่อฟาสต์ครบ${FPUSH&&!FPUSH.configured?' (ตอนนี้แจ้งได้เฉพาะตอนแอปยังเปิดค้างอยู่)':''}</span></div>`;
+  if(p==='denied')return `<div class="fnote">🔕 <span>การแจ้งเตือนถูกปิดไว้ เปิดได้ที่ ตั้งค่าเครื่อง/เบราว์เซอร์ → การแจ้งเตือน → Cal Goal</span></div>`;
+  return `<button class="btn sm alt" data-act="fastNotif">🔔 เปิดแจ้งเตือนเมื่อฟาสต์ครบ</button>`}
 function viewToday(){
   const k=ui.date,t=totals(k),L=getLog(k),isToday=k===todayKey(),p=S.profile,G=goalCalc();
   const over=t.left<0;
@@ -1710,7 +1743,8 @@ function renderBeepDock(){
     beepStarted=true;
     let seen=false;try{seen=localStorage.getItem(BEEP_INTRO_KEY)==='1';localStorage.setItem(BEEP_INTRO_KEY,'1')}catch(e){}
     if(!seen)setTimeout(()=>beepTip('สวัสดี! Beep อยู่ตรงนี้นะ ถามเรื่องกินหรือออกกำลังกายได้ตลอด ลากย้ายที่ได้ด้วย 💬','แนะนำตัวหน่อยว่าช่วยอะไรได้บ้าง',12000,true),2500);
-    setInterval(eveningNudge,60000);setInterval(fastTick,1000);
+    setInterval(eveningNudge,60000);setInterval(fastTick,1000);fastPushCfg();
+    if(/[?&]fast=1/.test(location.search)){try{history.replaceState({cg:1},'',location.pathname)}catch(e){}setTimeout(openFast,300)}
   }
 }
 function initBeepDrag(){
@@ -2121,7 +2155,7 @@ document.addEventListener('change',e=>{
   const el=e.target;
   if(el.dataset.live){render();return}
   if(el.id==='cuKeep'&&ui.sh)ui.sh.cu.keep=el.checked;
-  if(el.id==='fastT'&&S.fast.start&&el.value){const [hh,mm]=el.value.split(':').map(Number),d=new Date();d.setHours(hh,mm,0,0);if(d.getTime()>Date.now())d.setDate(d.getDate()-1);S.fast.start=d.getTime();S.fast.notified=null;fastDoneSeen=false;save();renderSheet();fastTick();toast('แก้เวลาเริ่มเป็น '+dayClock(S.fast.start));return}
+  if(el.id==='fastT'&&S.fast.start&&el.value){const [hh,mm]=el.value.split(':').map(Number),d=new Date();d.setHours(hh,mm,0,0);if(d.getTime()>Date.now())d.setDate(d.getDate()-1);S.fast.start=d.getTime();S.fast.notified=null;fastDoneSeen=false;save();renderSheet();fastTick();fastSchedule();toast('แก้เวลาเริ่มเป็น '+dayClock(S.fast.start));return}
   if(el.dataset.bind){
     let v=el.value;
     if(el.dataset.num!==undefined){v=parseFloat(v);if(isNaN(v)||v<0){render();return}}
@@ -2226,10 +2260,11 @@ document.addEventListener('click',e=>{
       S.profile.height=hh;S.profile.weight=ww;S.profile.set=true;upsertWeight(ww);save();ui.body=null;ui.pop=true;render();ui.pop=false;toast('บันทึกแล้ว 💪 อวตารอัปเดตตามรูปร่างปัจจุบัน');break}
     case 'avatar':openAvatar();break;
     case 'openFast':openFast();break;
-    case 'fastPlan':{const h=+v;if(S.profile.age<18&&h>12){toast('อายุต่ำกว่า 18 ใช้ได้แค่ 12:12');break}S.fast.hours=h;save();if(el.dataset.go){toast('ตั้งแผน IF เป็น '+FAST_PLANS.find(x=>x.h===h).n+' แล้ว');render()}else if(ui.sh)renderSheet();break}
-    case 'fastStart':{if(S.profile.age<18&&S.fast.hours>12)S.fast.hours=12;S.fast.start=Date.now();fastDoneSeen=false;save();renderSheet();fastTick();toast('เริ่มฟาสต์แล้ว 💧 ดื่มน้ำเยอะๆ นะ');break}
+    case 'fastNotif':askNotif().then(p=>{if(p==='granted'){toast('เปิดแจ้งเตือนแล้ว 🔔');fastSchedule()}else if(p==='denied')toast('ไม่ได้รับสิทธิ์แจ้งเตือน');if(ui.sh&&ui.sh.mode==='fast')renderSheet()});break;
+    case 'fastPlan':{const h=+v;if(S.profile.age<18&&h>12){toast('อายุต่ำกว่า 18 ใช้ได้แค่ 12:12');break}S.fast.hours=h;save();if(S.fast.start){S.fast.notified=null;fastDoneSeen=false;fastSchedule()}if(el.dataset.go){toast('ตั้งแผน IF เป็น '+FAST_PLANS.find(x=>x.h===h).n+' แล้ว');render()}else if(ui.sh)renderSheet();break}
+    case 'fastStart':{if(S.profile.age<18&&S.fast.hours>12)S.fast.hours=12;S.fast.start=Date.now();fastDoneSeen=false;save();renderSheet();fastTick();askNotif().then(()=>{fastSchedule();if(ui.sh&&ui.sh.mode==='fast')renderSheet()});toast('เริ่มฟาสต์แล้ว 💧 ดื่มน้ำเยอะๆ นะ');break}
     case 'fastEnd':{const F=S.fast;if(!F.start)break;const e=Date.now(),h=(e-F.start)/36e5;if(h<F.hours&&!ui.fcf){ui.fcf=true;fastTick();setTimeout(()=>{ui.fcf=false},4000);break}ui.fcf=false;
-      if(h>=0.25)(F.hist=F.hist||[]).unshift({s:F.start,e,h:F.hours});F.hist=(F.hist||[]).slice(0,30);F.start=null;save();renderSheet();fastTick();
+      if(h>=0.25)(F.hist=F.hist||[]).unshift({s:F.start,e,h:F.hours});F.hist=(F.hist||[]).slice(0,30);F.start=null;save();renderSheet();fastTick();fastSchedule();
       toast(h>=F.hours?'เก่งมาก! ฟาสต์ครบ '+r1(h)+' ชม. 🎉 เริ่มมื้อแรกด้วยโปรตีน+ผักนะ':'หยุดที่ '+r1(h)+' ชม. ไม่เป็นไร ฟังร่างกายสำคัญที่สุด 💛');break}
     case 'avCam':$('#avatarCam').click();break;
     case 'avPick':$('#avatarIn').click();break;

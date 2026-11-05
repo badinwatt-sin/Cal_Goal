@@ -1,0 +1,8 @@
+{
+  "name": "cal-goal",
+  "private": true,
+  "description": "Cal Goal - Thai calorie & goal tracker (static app + Vercel functions)",
+  "dependencies": {
+    "web-push": "^3.6.7"
+  }
+}

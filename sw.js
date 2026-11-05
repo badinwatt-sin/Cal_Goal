@@ -1,5 +1,5 @@
 // Service worker: เปิดแอปได้เร็วและใช้ออฟไลน์ได้ (เฉพาะหน้าแอป) ไม่แคช API / Supabase
-const VER = 'calgoal-v9';
+const VER = 'calgoal-v10';
 const SHELL = ['./', 'index.html', 'foods-th.js', 'config.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', 'terms.html', 'assets/beep_wave_base.png', 'assets/beep_wave_hand.png', 'assets/beep_head.png'];
 
 self.addEventListener('install', (e) => {
@@ -24,5 +24,23 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(caches.match(req).then((m) => {   // ไฟล์อื่น: ใช้ของแคชก่อน แล้วอัปเดตเบื้องหลัง
     const net = fetch(req).then((r) => { if (r && r.ok) { const cp = r.clone(); caches.open(VER).then((c) => c.put(req, cp)); } return r; }).catch(() => m);
     return m || net;
+  }));
+});
+
+// แจ้งเตือนฟาสต์ครบ (ส่งมาจาก /api/fast-push ผ่าน Web Push)
+self.addEventListener('push', (e) => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data && e.data.text() }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'Cal Goal', {
+    body: d.body || '', tag: d.tag || 'calgoal', icon: 'icon-192.png', badge: 'icon-192.png',
+    data: { url: d.url || '/' }, renotify: true, vibrate: [120, 60, 120]
+  }));
+});
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || '/';
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((cs) => {
+    for (const c of cs) { if ('focus' in c) { c.navigate && c.navigate(url).catch(() => {}); return c.focus(); } }
+    return self.clients.openWindow(url);
   }));
 });
