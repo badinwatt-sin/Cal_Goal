@@ -52,8 +52,8 @@ test('invalid numbers and malformed quotes do not silently become health reading
   assert.equal(validNumber('8,000','steps'),8000);
   assert.throws(()=>parseCSV('date,steps\n"2026-11-07,5000'),/คำพูด/);
 });
-test('imports are idempotent, preserve meals/workouts, and retain selected-day history',()=>{
-  const state={profile:{weight:61},logs:{'2026-11-07':{steps:2000,meals:[{name:'ข้าว',kcal:500}],workouts:[{name:'วิ่ง',kcal:200}]}},weights:[{d:'2026-11-07',w:61}]};
+test('imports are idempotent, preserve meals/workouts/water and personal tools, and retain selected-day history',()=>{
+  const state={profile:{weight:61},wellness:{waterGoal:1800,macroSplit:{p:30,c:40,f:30}},character:{outfit:'hoodie',top:'#65BDA2'},favorites:[{id:'fav'}],mealTemplates:[{id:'template'}],logs:{'2026-11-07':{steps:2000,meals:[{name:'ข้าว',kcal:500}],workouts:[{name:'วิ่ง',kcal:200}],water:[{id:'water',ml:250}]}},weights:[{d:'2026-11-07',w:61}]};
   const before=JSON.stringify(state),days=[{date:'2026-11-07',steps:8000,activeKcal:400,weightKg:60}];
   const selected={steps:true,activeKcal:true,weightKg:true};
   const first=applyHealthDays(state,days,selected,'Apple Health','now','2026-11-08');
@@ -61,6 +61,8 @@ test('imports are idempotent, preserve meals/workouts, and retain selected-day h
   assert.equal(JSON.stringify(state),before,'preview must not mutate existing data');
   assert.deepEqual(first.state.logs['2026-11-07'].meals,state.logs['2026-11-07'].meals);
   assert.deepEqual(first.state.logs['2026-11-07'].workouts,state.logs['2026-11-07'].workouts);
+  assert.deepEqual(first.state.logs['2026-11-07'].water,state.logs['2026-11-07'].water);
+  for(const key of ['wellness','character','favorites','mealTemplates'])assert.deepEqual(first.state[key],state[key]);
   assert.equal(first.state.profile.weight,61);
   const second=applyHealthDays(first.state,days,selected,'Apple Health','later','2026-11-08');
   assert.equal(second.changes.days,0);
