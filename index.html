@@ -10,6 +10,33 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Cal Goal">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script>
+// Apply the saved/device theme before the first paint, including login and onboarding.
+const APP_THEME=(()=>{
+  const key='calgoal.theme',modes=['system','light','dark'];
+  const device=window.matchMedia('(prefers-color-scheme: dark)');
+  function read(){try{const v=localStorage.getItem(key);return modes.includes(v)?v:'system'}catch(e){return 'system'}}
+  let preference=read();
+  function apply(){
+    const theme=preference==='system'?(device.matches?'dark':'light'):preference;
+    document.documentElement.dataset.theme=theme;
+    document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#0A0C0F':'#F4F8F7';
+    document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content=theme==='dark'?'black':'default';
+    document.querySelectorAll('[data-act="theme"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===preference)));
+  }
+  function set(value){
+    if(!modes.includes(value))return;
+    preference=value;
+    try{localStorage.setItem(key,value)}catch(e){}
+    apply();
+  }
+  if(device.addEventListener)device.addEventListener('change',apply);
+  else device.addListener(apply);
+  window.addEventListener('storage',e=>{if(e.key===key||e.key===null){preference=read();apply()}});
+  apply();
+  return {get preference(){return preference},set};
+})();
+</script>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -28,6 +55,14 @@
   --f-display:'Kanit','Anuphan',system-ui,sans-serif;
   --f-body:'Anuphan','Kanit',system-ui,sans-serif;
   color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#F4F8F7; --bgtop:#E0F3ED; --card:#FFFFFF; --soft:#EEF3F1; --tint:#DDF3EB; --ink:#182D29; --mute:#596D67;
+  --line:#D4E1DB; --shadow:rgba(21,52,42,.08);
+  --lime:#007D66; --lime2:#00758A; --volt:#087F4B; --good:#087F4B; --warn:#946300; --over:#C62E43;
+  --pink:#BA385A; --sky:#1E65B8; --sun:#946300;
+  --m1:#1E65B8; --m2:#946300; --m3:#BA385A; --on-accent:#FFFFFF;
+  color-scheme:light;
 }
 
 *{box-sizing:border-box}
@@ -384,12 +419,12 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 .eq span.tiny{letter-spacing:.04em}
 .hero .bubble{background:var(--soft)}
 .hero .bubble.act{background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent)}
-.tabbar .in{background:rgba(20,23,27,.9)}
+.tabbar .in{background:color-mix(in srgb,var(--card) 90%,transparent)}
 .fab{color:var(--on-accent)}
 .btn.alt{background:var(--soft)}
 .card .card{box-shadow:none}
 .cmsg.bot{background:var(--soft)}
-#toast{background:var(--ink);color:#0A0C0F}
+#toast{background:var(--ink);color:var(--bg)}
 .warn{background:rgba(255,77,94,.12)}
 .mi{background:var(--tint)}
 .banner{background:var(--tint)}
@@ -1200,6 +1235,9 @@ function viewMe(){
   return `<div class="top"><h1 style="font-size:22px">โปรไฟล์</h1></div>
   <div class="card stack" style="align-items:center"><button data-act="avatar" style="background:none;border:0;padding:0;border-radius:50%" aria-label="เปลี่ยนรูปโปรไฟล์">${avatarHTML('big')}</button><button class="btn sm alt" data-act="avatar">เปลี่ยนรูป</button>
   <label class="f" style="width:100%">ชื่อเล่น<input type="text" data-bind="profile.name" maxlength="24" value="${esc(p.name)}" placeholder="เช่น มิ้นท์"></label></div>
+  <div class="card stack"><h2 id="themeTitle">🎨 ธีมแอป</h2>
+   <div class="seg" role="group" aria-labelledby="themeTitle">${[['system','ตามเครื่อง'],['light','สว่าง'],['dark','มืด']].map(([v,label])=>`<button type="button" data-act="theme" data-v="${v}" aria-pressed="${APP_THEME.preference===v}">${label}</button>`).join('')}</div>
+   <p class="small mute">เลือก “ตามเครื่อง” เพื่อเปลี่ยนธีมอัตโนมัติตามการตั้งค่าอุปกรณ์</p></div>
   ${bodyCard()}${styleCard()}
   <div class="card stack"><h2>📏 ข้อมูลร่างกาย</h2>
    <div><div class="small mute" style="margin-bottom:6px">เพศ (ใช้ในสมการคำนวณ)</div><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div>
@@ -2199,6 +2237,7 @@ document.addEventListener('click',e=>{
   if(!el){if(e.target.id==='sheetWrap')closeSheet();return}
   const a=el.dataset.act,v=el.dataset.v,sh=ui.sh;
   switch(a){
+    case 'theme':APP_THEME.set(v);break;
     case 'tab':{const prev=ui.tab;ui.tab=v;ui.confirmReset=false;ui.body=null;
       if(prev==='today'&&v!=='today')navPush('tab');else if(v==='today')navUnwind(k=>k==='tab');
       render();window.scrollTo(0,0);break}
