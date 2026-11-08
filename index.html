@@ -451,9 +451,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 
 /* ===== Beep 3D character ===== */
 .beep-btn{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important;display:block!important;position:relative;touch-action:none;cursor:grab;-webkit-tap-highlight-color:transparent}
-.bchar{position:relative;display:block;width:86px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.45))}
+.bchar{position:relative;display:block;width:112px;height:146px}
 .bchar *{pointer-events:none}
-.bbody{position:relative;display:block;transform-origin:50% 96%;animation:bBreath 2.4s ease-in-out infinite}
+.bchar canvas{position:absolute;inset:0;width:100%;height:100%}
+.bchar[data-renderer="webgl"]>.bbody,.bchar[data-renderer="webgl"]>.bshd{display:none}
+.bbody{position:absolute;left:13px;bottom:2px;width:86px;display:block;transform-origin:50% 96%;animation:bBreath 2.4s ease-in-out infinite;filter:drop-shadow(0 10px 14px rgba(0,0,0,.3))}
 .bbody>img:first-child{display:block;width:100%}
 .bhand{position:absolute;transform-origin:32% 98%;animation:bHandIdle 3s ease-in-out infinite}
 .blid{position:absolute;border-radius:50%;transform-origin:50% 0;border-bottom:2px solid #22325A;transform:scaleY(0);animation:bBlink 4.3s infinite}
@@ -461,6 +463,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 .bshd{position:absolute;left:18%;width:64%;bottom:-3px;height:9px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.45),transparent);animation:bShadow 2.4s ease-in-out infinite}
 .bchat{position:absolute;right:-6px;bottom:18px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:linear-gradient(135deg,#00E0B8,#00B8D9);box-shadow:0 4px 10px rgba(0,0,0,.4);border:2px solid var(--bg)}
 .beep-dock[data-side="l"] .bchat{right:auto;left:-6px}
+.beep-jump{position:absolute;left:-4px;bottom:16px;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--bg);border-radius:50%;background:var(--card);color:var(--lime);box-shadow:0 4px 10px var(--shadow);font-size:20px;font-weight:700;line-height:1;padding:0;cursor:pointer;touch-action:manipulation}
+.beep-jump[hidden]{display:none}
+.beep-jump:active{transform:scale(.9)}
+.beep-dock[data-side="l"] .beep-jump{left:auto;right:-6px}
+.beep-dock:has(.bchar[data-renderer="fallback"]) .beep-jump{display:none}
 .beep-dock.waving .bhand{animation:bWave .42s ease-in-out infinite}
 .beep-dock.waving .bbody{animation:bHop .48s ease-in-out 3,bBreath 2.4s ease-in-out 1.44s infinite}
 .beep-btn.wiggle{animation:none}
@@ -480,7 +487,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);bo
 .bav{width:32px;height:32px;flex:none;border-radius:50%;object-fit:cover;object-position:50% 20%;background:#12302A;border:1px solid var(--line)}
 body.beep-open .beep-dock{opacity:0;pointer-events:none;transform:scale(.6)}
 .beep-dock{transition:top .25s ease,opacity .2s,transform .2s}
-@media (prefers-reduced-motion:reduce){.bbody,.bhand,.blid,.bshd{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.bbody,.bhand,.blid,.bshd{animation:none!important}.beep-jump{display:none}}
 .srcb{display:inline-block;font-size:10.5px;font-weight:600;padding:0 6px;border-radius:999px;background:var(--tint);color:var(--lime);line-height:1.6}
 
 /* ===== ลื่นขึ้น: ไม่ซูม ไม่กระตุก, หน้าค้นหาเต็มจอ ===== */
@@ -1763,7 +1770,7 @@ try{const sp=JSON.parse(localStorage.getItem(BEEP_POS_KEY)||'null');if(sp&&(sp.s
 ui.chat={msgs:[],busy:false};
 try{const sv=JSON.parse(localStorage.getItem(BEEP_CHAT_KEY)||'null');if(Array.isArray(sv))ui.chat.msgs=sv.filter(m=>m&&(m.role==='user'||m.role==='assistant')&&typeof m.text==='string').slice(-20)}catch(e){}
 ui.beepOpen=false;
-let tipT=null,tipCount=0,lastTipAt=0,beepStarted=false;
+let tipT=null,tipCount=0,lastTipAt=0,beepStarted=false,beepActor=null;
 const BEEP_CHIPS={
   today:['สรุปวันนี้ให้หน่อย 📋','กินอะไรต่อดี 🍽️','เหลือแคลเท่านี้ กินขนมได้ไหม 🍰'],
   work:['วันนี้ควรออกกำลังกายอะไรดี 🏃','ท่าอบอุ่นร่างกายง่ายๆ 🔥','ขี้เกียจออกกำลังกาย ทำไงดี 😴'],
@@ -1777,8 +1784,14 @@ function renderBeepDock(){
   const show=!!(S.onboarded&&AUTHREADY&&(!AUTH_ON||USER||GUEST||AUTH_FAIL));
   root.hidden=!show;if(!show)return;
   if(!$('#beepDock')){
-    root.innerHTML=`<div id="beepDock" class="beep-dock" data-side="${beepPos.side}" style="top:${beepY()}px"><div id="beepTip" class="beep-tip" hidden></div><button id="beepBtn" class="beep-btn" data-act="beepToggle" aria-label="คุยกับ Beep">${beepCharHTML()}<span class="bchat">💬</span></button></div><div id="beepPanelMount"></div>`;
+    root.innerHTML=`<div id="beepDock" class="beep-dock" data-side="${beepPos.side}" style="top:${beepY()}px"><div id="beepTip" class="beep-tip" hidden></div><button id="beepBtn" class="beep-btn" data-act="beepToggle" aria-label="คุยกับ Beep">${beepCharHTML()}<span class="bchat">💬</span></button><button id="beepJump" class="beep-jump" data-act="beepJump" aria-label="ให้ Beep กระโดด" title="ให้ Beep กระโดด" hidden>↟</button></div><div id="beepPanelMount"></div>`;
     initBeepDrag();
+    const host=$('#beepBtn .bchar');
+    import('./beep-3d.js').then(({mountBeep})=>{
+      if(!host.isConnected)return;
+      beepActor=mountBeep(host);
+      if(beepActor)$('#beepJump').hidden=false;
+    }).catch(()=>{host.dataset.renderer='fallback';host.querySelector('canvas')?.remove()});
   }
   if(!beepStarted){
     beepStarted=true;
@@ -1814,7 +1827,7 @@ function initBeepDrag(){
   window.addEventListener('resize',()=>{const d=$('#beepDock');if(d)d.style.top=beepY()+'px'});
 }
 function beepCharHTML(){
-  // Beep 3D: ตัวหลัก + มือโบกแยกชิ้น + เปลือกตากะพริบ (สัดส่วนอิงภาพต้นฉบับ 509x652)
+  // Original artwork is shown while the 3D module loads or WebGL is unavailable.
   const W=509,H=652,pc=(v,d)=>(v/d*100).toFixed(3)+'%';
   const lid=(x0,y0,x1,y1,c)=>`<i class="blid" style="left:${pc(x0-1,W)};top:${pc(y0-1,H)};width:${pc(x1-x0+2,W)};height:${pc(y1-y0+2,H)};background:radial-gradient(circle at 50% 25%,#F2F0F5,${c} 75%)"></i>`;
   return `<span class="bchar"><span class="bshd"></span><span class="bbody"><img src="assets/beep_wave_base.png" alt="" draggable="false"><img class="bhand" src="assets/beep_wave_hand.png" alt="" draggable="false" style="left:${pc(392,W)};top:${pc(128,H)};width:${pc(117,W)}">${lid(153,172,236,242,'#E8E5EC')}${lid(285,140,347,208,'#F1EFF4')}</span></span>`;
@@ -2337,6 +2350,7 @@ document.addEventListener('click',e=>{
     case 'setEmoji':S.profile.emoji=v;S.profile.avatar='';if(S.onboarded)S.profile.set=true;save();closeSheet();render();break;
     case 'avClear':S.profile.emoji='';S.profile.avatar='';save();closeSheet();render();break;
     case 'beepToggle':if(ui._noClick)break;ui.beepOpen?closeBeepPanel():openBeepPanel();break;
+    case 'beepJump':if(beepActor)beepActor.play('jump');break;
     case 'beepTipGo':{hideTip();const q=el.dataset.q;openBeepPanel();if(q)beepSend(q);break}
     case 'beepTipX':hideTip();break;
     case 'beepClear':ui.chat.msgs=[];saveChat();refreshChat();break;
