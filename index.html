@@ -99,7 +99,7 @@ button{cursor:pointer}
 .chips::-webkit-scrollbar{display:none}
 
 label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute);min-width:0}
-input[type=text],input[type=number],input[type=email],select,textarea{width:100%;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);min-width:0}
+input[type=text],input[type=number],input[type=email],input[type=date],select,textarea{width:100%;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);min-width:0}
 textarea{resize:vertical;min-height:70px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -335,7 +335,7 @@ h1,h2,h3{font-style:italic;font-weight:600;letter-spacing:-.01em}
 .seg{border:1px solid var(--line);border-radius:14px;background:var(--soft)}
 .seg button{transition:background .2s,color .2s}
 .seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--lime),var(--lime2));color:var(--on-accent)}
-input[type=text],input[type=number],input[type=email],select,textarea{border:1px solid var(--line);background:var(--soft);border-radius:14px;transition:border-color .2s,box-shadow .2s}
+input[type=text],input[type=number],input[type=email],input[type=date],select,textarea{border:1px solid var(--line);background:var(--soft);border-radius:14px;transition:border-color .2s,box-shadow .2s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--lime);box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 22%,transparent)}
 .bar{height:12px;border:0;background:var(--soft)}
 .bar>i{border:0;border-radius:999px;background:linear-gradient(90deg,var(--volt),var(--lime));transition:width .5s}
@@ -572,6 +572,12 @@ body.cam-open .beep-dock{display:none}
 .fnote{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--mute);background:var(--soft);border-radius:12px;padding:10px 12px}
 .nf{display:flex;flex-direction:column;gap:8px;margin-top:10px;padding:12px;border:1.5px dashed var(--line);border-radius:16px;background:var(--soft)}
 .flist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.health-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.health-table th,.health-table td{padding:7px 3px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.health-table th:first-child,.health-table td:first-child{text-align:left}
+.health-check{display:flex;gap:8px;align-items:center;font-size:14px}
+.health-check input{accent-color:var(--lime);width:18px;height:18px;flex:none}
+.health-note{padding:10px 12px;border-radius:14px;background:var(--tint);font-size:12px;line-height:1.6}
 </style>
 
 </head>
@@ -585,6 +591,7 @@ body.cam-open .beep-dock{display:none}
 <input type="file" id="avatarIn" accept="image/*" hidden>
 <input type="file" id="avatarCam" accept="image/*" capture="user" hidden>
 <input type="file" id="importIn" accept="application/json,.json" hidden>
+<input type="file" id="healthFile" accept=".zip,.xml,.csv,application/zip,application/xml,text/xml,text/csv" hidden>
 
 <script src="foods-th.js"></script>
 <script src="foods-more.js"></script>
@@ -928,8 +935,9 @@ function totals(k){
   const L=getLog(k),G=goalCalc();
   let e=0,p=0,c=0,f=0;L.meals.forEach(m=>{e+=m.kcal;p+=m.p;c+=m.c;f+=m.f});
   const bw=L.workouts.reduce((a,w)=>a+w.kcal,0),bs=stepKcal(L.steps||0);
-  const budget=G.budget+bw+bs;
-  return{eaten:e,p:p,c:c,f:f,bw:bw,bs:bs,base:G.budget,budget:budget,left:budget-e,steps:L.steps||0}
+  const energy=L.health?.activeKcal,fromHealth=typeof energy==='number'&&Number.isFinite(energy)&&energy>=0&&energy<=20000;
+  const burn=fromHealth?energy:bw+bs,budget=G.budget+burn;
+  return{eaten:e,p:p,c:c,f:f,bw:bw,bs:bs,burn:burn,fromHealth:fromHealth,base:G.budget,budget:budget,left:budget-e,steps:L.steps||0}
 }
 
 /* ---------- UI utils ---------- */
@@ -1123,8 +1131,8 @@ function viewToday(){
   if(!p.set)h+=`<div class="card banner"><b>ตั้งค่าโปรไฟล์ก่อนนะ</b><p class="small" style="margin:4px 0 10px">ตอนนี้ใช้ค่าตัวอย่าง (หญิง 25 ปี 165 ซม. 60 กก.) กรอกข้อมูลจริงเพื่อให้ TDEE ตรงกับตัวคุณ</p><button class="btn sm alt" data-act="tab" data-v="me">ไปกรอกโปรไฟล์</button></div>`;
   h+=`<div class="card hero"><div class="date-nav"><button class="icon-btn" data-act="day" data-v="-1" aria-label="วันก่อนหน้า">${IC.left}</button><span class="lbl">${esc(lbl)}</span><button class="icon-btn" data-act="day" data-v="1" aria-label="วันถัดไป" ${isToday?'disabled style="opacity:.35"':''}>${IC.right}</button></div>
   <div class="stage"><div class="ring">${ringSVG(t.eaten,t.budget)}<div class="mid"><span class="small mute">${over?'กินเกินมา':'เหลืออีก'}</span><span class="num big" style="color:${over?'var(--over)':'var(--ink)'}">${fmt(Math.abs(t.left))}</span><span class="small mute">kcal</span></div></div>${isToday?`<button class="fmini ${S.fast.start?'on':''}" id="fastMini" data-act="openFast" aria-label="ตัวจับเวลา Intermittent Fasting">${fastMini()}</button>`:''}${mascotBlock(k,t)}</div>
-  <div class="eq"><div><span class="tiny mute">กินแล้ว</span><b>${fmt(t.eaten)}</b></div><div><span class="tiny mute">งบกินวันนี้</span><b>${fmt(t.budget)}</b></div><div><span class="tiny mute">เผาจากออกกำลัง</span><b>+${fmt(t.bw+t.bs)}</b></div></div>
-  <p class="tiny mute" style="margin-top:8px;text-align:center">งบ = เป้าประจำวัน ${fmt(t.base)} + ออกกำลังกาย ${fmt(t.bw)} + ก้าวเดิน ${fmt(t.bs)} · TDEE ของคุณ ${fmt(G.tdee)}</p></div>`;
+  <div class="eq"><div><span class="tiny mute">กินแล้ว</span><b>${fmt(t.eaten)}</b></div><div><span class="tiny mute">งบกินวันนี้</span><b>${fmt(t.budget)}</b></div><div><span class="tiny mute">${t.fromHealth?'พลังงานกิจกรรม':'เผาจากออกกำลัง'}</span><b>+${fmt(t.burn)}</b></div></div>
+  <p class="tiny mute" style="margin-top:8px;text-align:center">งบ = เป้าประจำวัน ${fmt(t.base)} + ${t.fromHealth?`พลังงานกิจกรรมที่บันทึก ${fmt(t.burn)}`:`ออกกำลังกาย ${fmt(t.bw)} + ก้าวเดิน ${fmt(t.bs)}`} · TDEE ของคุณ ${fmt(G.tdee)}</p></div>`;
   h+=`<div class="card stack"><div class="row between"><h2>💪 สารอาหารวันนี้</h2><span class="small mute">ประมาณการ</span></div>
    <div class="grid3 num" style="text-align:center"><div><b style="font-size:20px">${Math.round(t.p)}</b><div class="tiny mute">โปรตีน (ก.)</div></div><div><b style="font-size:20px">${Math.round(t.c)}</b><div class="tiny mute">คาร์บ (ก.)</div></div><div><b style="font-size:20px">${Math.round(t.f)}</b><div class="tiny mute">ไขมัน (ก.)</div></div></div>
    <div class="split" role="img" aria-label="สัดส่วนพลังงาน โปรตีน ${pc}% คาร์บ ${cc}% ไขมัน ${fc}%">${t.eaten>0?`<i style="width:${pc}%;background:var(--sky)"></i><i style="width:${cc}%;background:var(--sun)"></i><i style="width:${fc}%;background:var(--pink)"></i>`:''}</div>
@@ -1132,7 +1140,7 @@ function viewToday(){
   const sp=Math.min(t.steps/S.goal.stepGoal,1);
   h+=`<div class="card stack"><div class="row between"><h2>👟 ก้าวเดิน</h2><button class="btn sm alt" data-act="tab" data-v="work">อัปเดต</button></div>
    <div class="bar" role="progressbar" aria-valuenow="${t.steps}" aria-valuemax="${S.goal.stepGoal}"><i class="${sp===0?'zero':''}" style="width:${sp*100}%"></i></div>
-   <div class="row between small"><span class="num"><b>${fmt(t.steps)}</b> / ${fmt(S.goal.stepGoal)} ก้าว</span><span class="mute">${r1(stepKm(t.steps))} กม. · ${fmt(t.bs)} kcal</span></div></div>`;
+   <div class="row between small"><span class="num"><b>${fmt(t.steps)}</b> / ${fmt(S.goal.stepGoal)} ก้าว</span><span class="mute">${r1(stepKm(t.steps))} กม.${t.fromHealth?'':` · ${fmt(t.bs)} kcal`}</span></div></div>`;
   MEALS.forEach(m=>{
     const items=L.meals.filter(x=>x.meal===m[0]),sum=items.reduce((a,x)=>a+x.kcal,0);
     h+=`<div class="card"><div class="meal-h"><div><h3><span class="mi mi-${m[0]}">${m[2]}</span>${m[1]}</h3><span class="small mute num">${fmt(sum)} kcal</span></div><button class="btn sm" data-act="add" data-meal="${m[0]}">+ เพิ่ม</button></div>`;
@@ -1148,12 +1156,12 @@ function viewToday(){
 
 function viewWork(){
   const k=ui.date,L=getLog(k),t=totals(k),w=ui.w;
-  let h=`<div class="top"><h1 style="font-size:22px">🏃 ออกกำลังกาย</h1></div>
+  let h=`<div class="top"><h1 style="font-size:22px" class="grow">🏃 ออกกำลังกาย</h1><button class="btn sm alt" data-act="openHealth">⌚ นาฬิกา</button></div>
   <div class="card stack"><div class="row between"><h2>👟 ก้าวเดิน${k===todayKey()?'วันนี้':''}</h2><span class="small mute">เป้า ${fmt(S.goal.stepGoal)}</span></div>
    <div class="bar"><i class="${t.steps===0?'zero':''}" style="width:${Math.min(t.steps/S.goal.stepGoal,1)*100}%"></i></div>
    <div class="row"><input type="number" id="stepIn" inputmode="numeric" min="0" step="100" value="${t.steps||''}" placeholder="จำนวนก้าว" aria-label="จำนวนก้าว"><button class="btn" data-act="saveSteps">บันทึก</button></div>
    <div class="row wrap"><button class="chip" data-act="stepAdd" data-v="1000">+1,000</button><button class="chip" data-act="stepAdd" data-v="2000">+2,000</button><button class="chip" data-act="stepAdd" data-v="5000">+5,000</button></div>
-   <p class="small mute">${r1(stepKm(t.steps))} กม. · เผาผลาญเพิ่ม ~${fmt(t.bs)} kcal (คิดจากส่วนสูงและน้ำหนักของคุณ)</p></div>
+   <p class="small mute">${t.fromHealth?`งบวันนี้ใช้พลังงานกิจกรรมรวม ${fmt(t.burn)} kcal จาก ${esc(L.health.energySource||L.health.source||'นาฬิกา')} แล้ว`:`${r1(stepKm(t.steps))} กม. · เผาผลาญเพิ่ม ~${fmt(t.bs)} kcal (คิดจากส่วนสูงและน้ำหนักของคุณ)`}</p>${t.fromHealth?'<button class="chip" data-act="healthClearEnergy">กลับไปใช้พลังงานประมาณ</button>':''}</div>
   <div class="card stack"><h2>🔥 เพิ่มการออกกำลังกาย</h2><div class="act-grid">${ACTS.map((a,i)=>`<button data-act="pickAct" data-i="${i}" aria-pressed="${w.i===i}">${a[2]}<br>${esc(a[0])}</button>`).join('')}</div>
    <div class="grid2"><label class="f">ระยะเวลา (นาที)<input type="number" id="wMin" inputmode="numeric" min="1" value="${w.min}"></label>
    <label class="f">พลังงานที่เผา (kcal)<input type="number" id="wKcal" inputmode="numeric" min="0" value="${w.kcal}"></label></div>
@@ -1245,6 +1253,7 @@ function viewMe(){
   <div class="card stack"><h2 id="themeTitle">🎨 ธีมแอป</h2>
    <div class="seg" role="group" aria-labelledby="themeTitle">${[['system','ตามเครื่อง'],['light','สว่าง'],['dark','มืด']].map(([v,label])=>`<button type="button" data-act="theme" data-v="${v}" aria-pressed="${APP_THEME.preference===v}">${label}</button>`).join('')}</div>
    <p class="small mute">เลือก “ตามเครื่อง” เพื่อเปลี่ยนธีมอัตโนมัติตามการตั้งค่าอุปกรณ์</p></div>
+  <div class="card stack"><h2>⌚ ข้อมูลจากนาฬิกา</h2><p class="small mute">บันทึกก้าวเดิน พลังงานกิจกรรม และประวัติน้ำหนักจาก Apple Watch, Amazfit หรือ Galaxy Watch เมื่อคุณต้องการ</p><button class="btn alt" data-act="openHealth">บันทึก / นำเข้าข้อมูลสุขภาพ</button><p class="tiny mute">กรอกยอดเอง หรือเลือก Apple Health ZIP/XML และ CSV สรุปรายวัน</p></div>
   ${bodyCard()}${styleCard()}
   <div class="card stack"><h2>📏 ข้อมูลร่างกาย</h2>
    <div><div class="small mute" style="margin-bottom:6px">เพศ (ใช้ในสมการคำนวณ)</div><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div>
@@ -1757,7 +1766,7 @@ function beepContext(){
     user:{name:p.name||'',sex:p.sex==='m'?'male':'female',age:p.age,heightCm:p.height,weightKg:p.weight,bmi:r1(bmi(p))},
     goal:{mode:G.mode,targetKg:g.target,lossKgPerWeek:G.mode==='lose'?r1(G.kgDay*7):0,etaDate:G.eta||null,stepGoal:g.stepGoal},
     energy:{tdeeKcal:Math.round(G.tdee),baseBudgetKcal:G.budget},
-    today:{eatenKcal:Math.round(t.eaten),budgetKcal:Math.round(t.budget),leftKcal:Math.round(t.left),proteinG:Math.round(t.p),carbsG:Math.round(t.c),fatG:Math.round(t.f),steps:t.steps,burnedWorkoutKcal:t.bw,
+    today:{eatenKcal:Math.round(t.eaten),budgetKcal:Math.round(t.budget),leftKcal:Math.round(t.left),proteinG:Math.round(t.p),carbsG:Math.round(t.c),fatG:Math.round(t.f),steps:t.steps,burnedWorkoutKcal:t.bw,activityKcal:t.burn,activityEnergySource:t.fromHealth?'wearable daily total':'estimate',
       workouts:L.workouts.map(w=>({name:w.name,min:w.min,kcal:w.kcal})),meals:L.meals.map(m=>({meal:m.meal,name:m.name,kcal:m.kcal}))},
     fasting:(()=>{const f=fastState();return f.on?{active:true,planHours:f.hours,elapsedH:r1(f.el),stage:FAST_STAGES[f.si].t}:{active:false,planHours:f.hours}})(),
     last7:last7
@@ -1961,13 +1970,143 @@ function renderMain(){
   avLife();
 }
 
+/* ---------- manual wearable data and local file imports ---------- */
+let healthTools=null,healthWorker=null;
+const HEALTH_FIELDS=[['steps','ก้าวเดิน'],['activeKcal','พลังงานกิจกรรม (kcal)'],['weightKg','ประวัติน้ำหนัก (กก.)']];
+function openHealth(){
+  ui.sh={mode:'health',tab:'manual',stage:'entry',draft:{date:ui.date,source:'Apple Watch / Ultra',steps:'',activeKcal:'',weightKg:''},selected:{steps:true,activeKcal:true,weightKg:true},allDays:[],error:''};
+  $('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');navPush('sheet');renderSheet();
+  if(!healthTools)import('./health-import.mjs').then(m=>{healthTools=m;if(ui.sh?.mode==='health')renderSheet()}).catch(()=>{if(ui.sh?.mode==='health'){ui.sh.error='โหลดตัวอ่านข้อมูลไม่สำเร็จ ลองเชื่อมต่ออินเทอร์เน็ตแล้วเปิดแอปใหม่';renderSheet()}});
+}
+function healthRows(){const sh=ui.sh;return sh.allDays.filter(d=>d.date>=sh.from&&d.date<=sh.to&&d.date<=todayKey()&&HEALTH_FIELDS.some(([f])=>sh.selected[f]&&d[f]!==undefined))}
+function healthUpdatePreview(resetRange){
+  const sh=ui.sh;sh.error='';
+  try{
+    if(sh.data?.format==='apple')sh.allDays=healthTools.selectAppleDays(sh.data,sh.sources);
+    else if(sh.data?.format==='csv'){const out=healthTools.csvDays(sh.data,sh.mapping,sh.weightUnit);sh.allDays=out.days;sh.skipped=out.skipped}
+    const available=sh.allDays.filter(d=>d.date<=todayKey());
+    if(resetRange&&available.length){sh.to=available[available.length-1].date;sh.from=available[0].date>addDays(sh.to,-29)?available[0].date:addDays(sh.to,-29)}
+    if(!sh.from&&available.length){sh.to=available[available.length-1].date;sh.from=available[0].date}
+    if(!sh.allDays.length)sh.error='ไม่พบยอดรายวันที่อ่านได้ ตรวจคอลัมน์และวันที่ หรือเลือกกรอกยอดเอง';
+  }catch(e){sh.allDays=[];sh.error=e.message}
+  sh.stage='preview';renderSheet();
+}
+function healthManualPreview(){
+  const sh=ui.sh,d=sh.draft;sh.error='';
+  const date=healthTools.dateKey(d.date),row={date};
+  if(!date||date>todayKey()){sh.error='เลือกวันที่ที่ถูกต้อง ไม่เกินวันนี้';renderSheet();return}
+  for(const [f,label] of HEALTH_FIELDS){
+    if(d[f]==='')continue;
+    const value=healthTools.validNumber(d[f],f);
+    if(value===undefined){sh.error='ตรวจค่า '+label+' ให้ถูกต้อง';renderSheet();return}
+    row[f]=value;
+  }
+  if(!HEALTH_FIELDS.some(([f])=>row[f]!==undefined)){sh.error='กรอกข้อมูลอย่างน้อยหนึ่งรายการ';renderSheet();return}
+  sh.allDays=[row];sh.from=date;sh.to=date;sh.stage='preview';renderSheet();
+}
+function readHealthFile(file){
+  if(!file||ui.sh?.mode!=='health')return;
+  if(healthWorker)healthWorker.terminate();
+  const sh=ui.sh;sh.tab='file';sh.busy=true;sh.progress=0;sh.error='';sh.data=null;sh.allDays=[];sh.stage='entry';renderSheet();
+  try{
+    const worker=new Worker('health-import-worker.js',{type:'module'});healthWorker=worker;
+    worker.onmessage=({data})=>{
+      if(ui.sh!==sh||healthWorker!==worker)return;
+      if(data.progress!==undefined){sh.progress=data.progress;const p=$('#healthProgress');if(p)p.textContent='กำลังอ่านไฟล์ '+sh.progress+'%';return}
+      sh.busy=false;healthWorker.terminate();healthWorker=null;
+      if(data.error){sh.error=data.error;renderSheet();return}
+      sh.data=data.result;sh.weightUnit='kg';sh.skipped=0;
+      if(sh.data.format==='csv')sh.mapping={...sh.data.mapping};
+      else{
+        sh.sources={};
+        for(const [f] of HEALTH_FIELDS){
+          const choices=sh.data.sources.filter(s=>s.days.some(d=>d[f]!==undefined));
+          choices.sort((a,b)=>(/watch/i.test(b.source)?1:0)-(/watch/i.test(a.source)?1:0)||b.days.filter(d=>d[f]!==undefined).length-a.days.filter(d=>d[f]!==undefined).length);
+          sh.sources[f]=choices[0]?.source||'';
+        }
+      }
+      healthUpdatePreview(true);
+    };
+    worker.onerror=()=>{if(ui.sh!==sh||healthWorker!==worker)return;sh.busy=false;sh.error='อ่านไฟล์ไม่สำเร็จ ลองเลือก CSV สรุปรายวันหรือกรอกยอดเอง';renderSheet();worker.terminate();healthWorker=null};
+    worker.postMessage({file});
+  }catch(e){sh.busy=false;sh.error='เครื่องนี้เปิดตัวอ่านไฟล์ไม่ได้ ใช้การกรอกยอดเองได้';renderSheet()}
+}
+function renderHealthSheet(){
+  const sh=ui.sh,d=sh.draft,ready=!!healthTools;
+  let h=`<div class="row between"><h2>⌚ ข้อมูลจากนาฬิกา</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
+  <div class="seg" role="group" aria-label="วิธีบันทึกข้อมูลสุขภาพ"><button data-act="healthTab" data-v="manual" aria-pressed="${sh.tab==='manual'}">กรอกยอดเอง</button><button data-act="healthTab" data-v="file" aria-pressed="${sh.tab==='file'}">เลือกไฟล์</button></div>`;
+  if(!ready)h+='<p class="small mute">กำลังเตรียมตัวอ่านข้อมูล...</p>';
+  if(sh.tab==='manual'&&sh.stage==='entry'){
+    h+=`<p class="small mute">อ่านยอดจาก Apple Health, Zepp หรือ Samsung Health แล้วกรอกเฉพาะข้อมูลที่ต้องการบันทึก</p>
+    <label class="f">อุปกรณ์ / แอป<select data-health-field="source">${['Apple Watch / Ultra','Amazfit / Zepp','Samsung Health','อื่นๆ'].map(s=>`<option ${d.source===s?'selected':''}>${s}</option>`).join('')}</select></label>
+    <label class="f">วันที่<input type="date" data-health-field="date" max="${todayKey()}" value="${esc(d.date)}"></label>
+    <label class="f">ก้าวเดินรวมของวัน<input type="number" inputmode="numeric" min="0" max="200000" data-health-field="steps" value="${esc(d.steps)}" placeholder="เช่น 8000"></label>
+    <label class="f">พลังงานกิจกรรมรวมของวัน (kcal)<input type="number" inputmode="decimal" min="0" max="20000" step="any" data-health-field="activeKcal" value="${esc(d.activeKcal)}" placeholder="เช่น 420"></label>
+    <p class="tiny mute">ใช้ค่า Active Energy / Active Calories ซึ่งรวมการเคลื่อนไหวทั้งวัน ไม่ใช่พลังงานรวมที่มีพลังงานพัก</p>
+    <label class="f">น้ำหนัก (กก.) · เพิ่มในประวัติน้ำหนัก<input type="number" inputmode="decimal" min="5" max="500" step="any" data-health-field="weightKg" value="${esc(d.weightKg)}" placeholder="เว้นว่างได้"></label>
+    <button class="btn" data-act="healthPreview" ${ready?'':'disabled'}>ดูตัวอย่างก่อนบันทึก</button>`;
+  }
+  if(sh.tab==='file'){
+    h+=`<button class="btn alt" data-act="healthChoose" ${!ready||sh.busy?'disabled':''}>📂 เลือก Apple Health ZIP/XML หรือ CSV</button>
+    <p class="tiny mute">ZIP/XML ไม่เกิน 100 MB · CSV ไม่เกิน 10 MB · รองรับก้าวเดิน พลังงานกิจกรรมรวม และน้ำหนัก</p>
+    <details class="small"><summary>วิธีเตรียมไฟล์จากแต่ละแอป</summary><div class="stack" style="margin-top:8px"><p><b>Apple Watch / Ultra:</b> เปิดแอปสุขภาพ → รูปโปรไฟล์ → ส่งออกข้อมูลสุขภาพทั้งหมด → บันทึกไปยังไฟล์ แล้วเลือก ZIP ที่นี่</p>
+    <p><b>Amazfit / Helio Strap:</b> ถ้า Zepp แชร์ข้อมูลเข้า Apple Health แล้ว ใช้ไฟล์ Apple Health ได้ หรือเลือก CSV สรุปรายวันที่มีวันที่และจำนวนก้าว</p>
+    <p><b>Galaxy Watch:</b> ส่งออกข้อมูลส่วนตัวจาก Samsung Health แล้วเลือก CSV สรุปก้าวรายวันจากไฟล์ที่แตก ZIP แล้ว เช่น step_daily_trend หากมี หรือกรอกยอดจากแอป</p>
+    <p>CSV ต้องเป็นยอดสรุปรายวัน เลือกคอลัมน์ให้ตรงกับข้อมูล ไม่ใช้ไฟล์ตัวอย่างรายนาที</p><button class="btn sm alt" data-act="healthTemplate">ดาวน์โหลด CSV สำหรับกรอกยอดรายวัน</button></div></details>`;
+    if(sh.busy)h+=`<p id="healthProgress" role="status">กำลังอ่านไฟล์ ${sh.progress}%</p>`;
+    if(sh.data?.format==='csv'){
+      h+=`<h3>เลือกคอลัมน์จาก CSV</h3><p class="tiny mute">${esc(sh.data.filename)} · ช่องที่ไม่ต้องการให้นำเข้าเลือก “ไม่ใช้”</p>`;
+      for(const [f,label] of [['date','วันที่'],...HEALTH_FIELDS])h+=`<label class="f">${label}<select data-health-map="${f}"><option value="-1">ไม่ใช้</option>${sh.data.columns.map((c,i)=>`<option value="${i}" ${sh.mapping[f]===i?'selected':''}>${esc(c||'คอลัมน์ '+(i+1))}</option>`).join('')}</select></label>`;
+      if(sh.mapping.weightKg>=0)h+=`<label class="f">หน่วยน้ำหนักในไฟล์<select data-health-unit><option value="kg" ${sh.weightUnit==='kg'?'selected':''}>กิโลกรัม (kg)</option><option value="lb" ${sh.weightUnit==='lb'?'selected':''}>ปอนด์ (lb)</option></select></label>`;
+      h+='<p class="tiny mute">เลือกพลังงานกิจกรรมเฉพาะคอลัมน์ Active Calories ที่ไม่รวมพลังงานพัก</p>';
+    }else if(sh.data?.format==='apple'){
+      h+='<h3>เลือกหนึ่งแหล่งข้อมูลต่อประเภท</h3><p class="tiny mute">เลือก Apple Watch หรือแอปที่ต้องการ เพื่อหลีกเลี่ยงการรวมก้าวจากหลายอุปกรณ์ซ้ำกัน</p>';
+      for(const [f,label] of HEALTH_FIELDS){
+        const choices=sh.data.sources.filter(s=>s.days.some(day=>day[f]!==undefined));
+        if(choices.length)h+=`<label class="f">${label}<select data-health-source="${f}"><option value="">ไม่นำเข้า</option>${choices.map(s=>`<option value="${esc(s.source)}" ${sh.sources[f]===s.source?'selected':''}>${esc(s.source)}</option>`).join('')}</select></label>`;
+      }
+    }
+  }
+  if(sh.stage==='preview'){
+    if(sh.tab==='manual')h+=`<button class="btn sm alt" data-act="healthEdit">‹ แก้ตัวเลข</button>`;
+    else if(sh.allDays.length)h+=`<div class="grid2"><label class="f">ตั้งแต่<input type="date" data-health-range="from" max="${todayKey()}" value="${esc(sh.from||'')}"></label><label class="f">ถึง<input type="date" data-health-range="to" max="${todayKey()}" value="${esc(sh.to||'')}"></label></div>`;
+    const rows=healthRows();
+    for(const [f,label] of HEALTH_FIELDS)if(sh.allDays.some(row=>row[f]!==undefined))h+=`<label class="health-check"><input type="checkbox" data-health-selected="${f}" ${sh.selected[f]?'checked':''}>${label}</label>`;
+    if(rows.length){
+      const preview=healthTools.applyHealthDays(S,rows,sh.selected,'preview','preview',todayKey());
+      h+=`<h3>ตัวอย่าง ${rows.length} วัน · มีค่าเปลี่ยน ${preview.changes.days} วัน</h3><table class="health-table"><thead><tr><th>วันที่</th><th>ก้าว</th><th>กิจกรรม kcal</th><th>กก.</th></tr></thead><tbody>${rows.slice(-7).map(row=>`<tr><td>${esc(row.date)}</td>${HEALTH_FIELDS.map(([f])=>`<td>${sh.selected[f]&&row[f]!==undefined?esc(f==='steps'?fmt(row[f]):r1(row[f])):'—'}</td>`).join('')}</tr>`).join('')}</tbody></table>${rows.length>7?'<p class="tiny mute">ตารางแสดง 7 วันท้ายของช่วงที่เลือก</p>':''}`;
+      if(sh.selected.activeKcal&&rows.some(row=>row.activeKcal!==undefined))h+='<p class="health-note">พลังงานกิจกรรมรวมที่บันทึกจะใช้แทนยอดประมาณจากก้าวและรายการออกกำลังของวันนั้น เพื่อไม่นับแคลซ้ำ</p>';
+      h+='<p class="tiny mute">ข้อมูลที่เลือกจะใช้แทนค่าของวันที่มีอยู่แล้ว นำเข้าไฟล์เดิมซ้ำจะไม่บวกยอดเพิ่ม</p>';
+      h+=`<button class="btn" data-act="healthConfirm" ${preview.changes.days?'':'disabled'}>${preview.changes.days?'ยืนยันบันทึก '+preview.changes.days+' วัน':'ค่าตรงกับที่บันทึกไว้แล้ว'}</button>`;
+    }else if(sh.allDays.length)h+='<p class="warn">ไม่มีข้อมูลในช่วงวันที่หรือประเภทที่เลือก</p>';
+    if(sh.skipped)h+=`<p class="tiny mute">ข้าม ${sh.skipped} แถวที่ไม่มีวันที่หรือค่าที่อ่านได้</p>`;
+  }
+  if(sh.error)h+=`<p class="warn" role="alert">${esc(sh.error)}</p>`;
+  h+=`<p class="tiny mute">อ่านไฟล์บนเครื่องของคุณ เก็บเฉพาะยอดที่ยืนยัน${USER?'และซิงก์เข้าบัญชี Supabase ของคุณ':'ในเบราว์เซอร์นี้'}</p>`;
+  $('#sheet').innerHTML=h;
+}
+function confirmHealth(){
+  const sh=ui.sh,rows=healthRows();
+  const source=sh.tab==='manual'?sh.draft.source:sh.data?.format==='apple'?'Apple Health':'CSV · '+(sh.data?.filename||'ข้อมูลสุขภาพ');
+  const out=healthTools.applyHealthDays(S,rows,sh.selected,source,new Date().toISOString(),todayKey());
+  if(!out.changes.days)return;
+  out.state.rev=Date.now();
+  try{localStorage.setItem(KEY,JSON.stringify(out.state))}catch(e){sh.error='พื้นที่เก็บข้อมูลไม่พอ ลองเลือกช่วงวันที่สั้นลง หรือลบรูปอาหารเก่าก่อน';renderSheet();return}
+  S=out.state;ui.body=null;queueCloud();closeSheet();render();toast('บันทึกข้อมูลสุขภาพ '+out.changes.days+' วันแล้ว');
+}
+function healthTemplate(){
+  const content='\uFEFFdate,steps,active_kcal,weight_kg\n'+todayKey()+',,,\n';
+  const url=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
+  a.href=url;a.download='cal-goal-health-daily.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
 /* ---------- add-food sheet ---------- */
 function openAdd(meal,ask){
   ui.sh={meal:meal,step:ask?'meal':'choose',tab:'search',cat:'ทั้งหมด',q:'',sel:null,qty:1,
     ai:{text:'',img:null,blob:null,loading:false,items:null,err:'',note:''},cu:{name:'',kcal:'',p:'',c:'',f:'',keep:true}};
   $('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');navPush('sheet');renderSheet();
 }
-function closeSheet(){ui.sh=null;document.body.classList.remove('sheet-open');$('#sheetWrap').classList.remove('open','full','srch');$('#sheet').innerHTML='';navUnwind(k=>k==='sheet'||k==='step')}
+function closeSheet(){if(healthWorker){healthWorker.terminate();healthWorker=null}ui.sh=null;document.body.classList.remove('sheet-open');$('#sheetWrap').classList.remove('open','full','srch');$('#sheet').innerHTML='';navUnwind(k=>k==='sheet'||k==='step')}
 /* ---------- ปัดย้อนกลับ / ปุ่ม Back: แต่ละขั้นที่เปิดจะ push history 1 รายการ ---------- */
 const NAV=[];let navIgnore=0;
 try{history.replaceState({cg:1},'')}catch(e){}
@@ -2036,6 +2175,8 @@ function aiTotal(){const it=ui.sh.ai.items||[];return it.reduce((a,x)=>a+(+x.kca
 function renderSheet(){
   const sh=ui.sh;if(!sh)return;
   $('#sheetWrap').classList.remove('full','srch');
+  $('#sheet').setAttribute('aria-label',sh.mode==='health'?'บันทึกและนำเข้าข้อมูลสุขภาพ':'เพิ่มอาหาร');
+  if(sh.mode==='health'){renderHealthSheet();return}
   if(sh.mode==='avatar'){renderAvatarSheet();return}
   if(sh.mode==='fast'){fastSi=-1;renderFastSheet();return}
   if(sh.step==='meal'){
@@ -2213,6 +2354,7 @@ async function callApi(a){
 function setPath(root,path,val){const ks=path.split('.');let o=root;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=val}
 document.addEventListener('input',e=>{
   const el=e.target;
+  if(el.dataset.healthField&&ui.sh?.mode==='health'){ui.sh.draft[el.dataset.healthField]=el.value;return}
   if(el.dataset.live){setPath(S,el.dataset.live,el.type==='range'?parseFloat(el.value):el.value);save();refreshAv();return}
   if(el.dataset.model){
     const v=el.dataset.num!==undefined?(el.value===''?'':parseFloat(el.value)):el.value;
@@ -2227,6 +2369,14 @@ document.addEventListener('input',e=>{
 function pv(){const f=ui.sh.sel,q=ui.sh.qty;$('#pvK').textContent=fmt(f.kcal*q);if(f.nomac){const g=$('#pvG');if(g)g.textContent=f.g?fmt(f.g*q)+' ก.':'—';return}$('#pvP').textContent=Math.round(f.p*q)+'g';$('#pvCF').textContent=Math.round(f.c*q)+'/'+Math.round(f.f*q)+'g'}
 document.addEventListener('change',e=>{
   const el=e.target;
+  if(ui.sh?.mode==='health'){
+    if(el.dataset.healthField){ui.sh.draft[el.dataset.healthField]=el.value;return}
+    if(el.dataset.healthMap){ui.sh.mapping[el.dataset.healthMap]=+el.value;healthUpdatePreview(false);return}
+    if(el.dataset.healthSource){ui.sh.sources[el.dataset.healthSource]=el.value;healthUpdatePreview(false);return}
+    if(el.hasAttribute('data-health-unit')){ui.sh.weightUnit=el.value;healthUpdatePreview(false);return}
+    if(el.dataset.healthRange){ui.sh[el.dataset.healthRange]=el.value;renderSheet();return}
+    if(el.dataset.healthSelected){ui.sh.selected[el.dataset.healthSelected]=el.checked;renderSheet();return}
+  }
   if(el.dataset.live){render();return}
   if(el.id==='cuKeep'&&ui.sh)ui.sh.cu.keep=el.checked;
   if(el.id==='fastT'&&S.fast.start&&el.value){const [hh,mm]=el.value.split(':').map(Number),d=new Date();d.setHours(hh,mm,0,0);if(d.getTime()>Date.now())d.setDate(d.getDate()-1);S.fast.start=d.getTime();S.fast.notified=null;fastDoneSeen=false;save();renderSheet();fastTick();fastSchedule();toast('แก้เวลาเริ่มเป็น '+dayClock(S.fast.start));return}
@@ -2250,6 +2400,14 @@ document.addEventListener('click',e=>{
   if(!el){if(e.target.id==='sheetWrap')closeSheet();return}
   const a=el.dataset.act,v=el.dataset.v,sh=ui.sh;
   switch(a){
+    case 'openHealth':openHealth();break;
+    case 'healthTab':{if(healthWorker){healthWorker.terminate();healthWorker=null}sh.busy=false;sh.tab=v;sh.stage='entry';sh.error='';if(v==='file'&&sh.data)healthUpdatePreview(false);else renderSheet();break}
+    case 'healthChoose':$('#healthFile').click();break;
+    case 'healthPreview':healthManualPreview();break;
+    case 'healthEdit':sh.stage='entry';sh.error='';renderSheet();break;
+    case 'healthConfirm':confirmHealth();break;
+    case 'healthTemplate':healthTemplate();break;
+    case 'healthClearEnergy':{const log=ensureLog(ui.date);if(log.health)delete log.health.activeKcal;save();render();toast('ใช้พลังงานประมาณจากก้าวและการออกกำลังแล้ว');break}
     case 'theme':APP_THEME.set(v);break;
     case 'tab':{const prev=ui.tab;ui.tab=v;ui.confirmReset=false;ui.body=null;
       if(prev==='today'&&v!=='today')navPush('tab');else if(v==='today')navUnwind(k=>k==='tab');
@@ -2369,6 +2527,7 @@ $('#photoCam').addEventListener('change',e=>{onPhoto(e.target.files[0]);e.target
 $('#photoPick').addEventListener('change',e=>{onPhoto(e.target.files[0]);e.target.value=''});
 $('#avatarIn').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
 $('#avatarCam').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
+$('#healthFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';readHealthFile(f)});
 document.addEventListener('focusin',e=>{if(e.target.id==='q'){const s=$('#sheet');if(s)s.classList.add('searching')}});
 document.addEventListener('focusout',e=>{if(e.target.id==='q'){setTimeout(()=>{const s=$('#sheet');if(s&&document.activeElement&&document.activeElement.id!=='q')s.classList.remove('searching')},120)}});
 function setVV(){const vv=window.visualViewport;const r=document.documentElement.style;r.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px');r.setProperty('--vvt',(vv?vv.offsetTop:0)+'px')}
