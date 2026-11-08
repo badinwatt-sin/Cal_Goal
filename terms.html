@@ -4,14 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>เงื่อนไขการใช้งาน · Cal Goal</title>
-<style>
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:720px;margin:0 auto;padding:24px 16px 64px;line-height:1.7;color:#1B2038;background:#F5F6FA}
-h1{font-size:26px}h2{font-size:18px;margin-top:28px}a{color:#3B5BFF}
-.en{color:#55608A;border-top:1px solid #E3E6F0;margin-top:36px;padding-top:8px}
-@media (prefers-color-scheme:dark){body{background:#0E1120;color:#F1F3FB}a{color:#8A9CFF}.en{color:#9199B8;border-color:#2A3152}}
-</style>
+<script>
+(function(){const apply=()=>{let mode='system';try{mode=localStorage.getItem('calgoal.theme')||'system'}catch(e){}document.documentElement.dataset.theme=mode==='dark'||mode==='system'&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'};apply();matchMedia('(prefers-color-scheme:dark)').addEventListener('change',apply);window.addEventListener('storage',apply)})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Kanit:wght@500;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
 </head>
-<body>
+<body class="legal-page">
+<nav class="legal-nav" aria-label="เมนู"><span class="brand">Cal Goal</span><a href="./">‹ กลับไปที่แอป</a></nav>
 <h1>เงื่อนไขการใช้งาน (Cal Goal)</h1>
 <p>มีผลตั้งแต่ 2 พฤศจิกายน 2569 การใช้แอปถือว่าคุณยอมรับเงื่อนไขต่อไปนี้</p>
 

@@ -1,6 +1,6 @@
 // Service worker: เปิดแอปได้เร็วและใช้ออฟไลน์ได้ (เฉพาะหน้าแอป) ไม่แคช API / Supabase
-const VER = 'calgoal-v14';
-const SHELL = ['./', 'index.html', 'foods-th.js', 'foods-more.js', 'config.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', 'terms.html', 'assets/beep_wave_base.png', 'assets/beep_wave_hand.png', 'assets/beep_head.png', 'beep-3d.js', 'assets/vendor/three/three.module.min.js', 'assets/vendor/three/three.core.min.js', 'health-import.mjs', 'health-import-worker.js', 'assets/vendor/fflate/fflate.mjs'];
+const VER = 'calgoal-v15';
+const SHELL = ['./', 'index.html', 'app.css', 'foods-th.js', 'foods-more.js', 'config.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', 'terms.html', 'assets/beep_wave_base.png', 'assets/beep_wave_hand.png', 'assets/beep_head.png', 'beep-3d.js', 'assets/vendor/three/three.module.min.js', 'assets/vendor/three/three.core.min.js', 'health-import.mjs', 'health-import-worker.js', 'assets/vendor/fflate/fflate.mjs'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VER).then((c) => Promise.allSettled(SHELL.map((u) => c.add(u)))).then(() => self.skipWaiting()));

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Cal Goal</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0A0C0F">
+<meta name="theme-color" content="#101B18">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Cal Goal">
@@ -20,7 +20,7 @@ const APP_THEME=(()=>{
   function apply(){
     const theme=preference==='system'?(device.matches?'dark':'light'):preference;
     document.documentElement.dataset.theme=theme;
-    document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#0A0C0F':'#F4F8F7';
+    document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#101B18':'#F6F7F2';
     document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content=theme==='dark'?'black':'default';
     document.querySelectorAll('[data-act="theme"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===preference)));
   }
@@ -42,7 +42,7 @@ const APP_THEME=(()=>{
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Kanit:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Kanit:wght@500;600&display=swap" rel="stylesheet">
 <style>
 /* Layout: single-column phone app, sticker-style cards (thick ink outline + hard shadow), bottom tab bar with a raised "+" button */
 :root{
@@ -579,6 +579,7 @@ body.cam-open .beep-dock{display:none}
 .health-check input{accent-color:var(--lime);width:18px;height:18px;flex:none}
 .health-note{padding:10px 12px;border-radius:14px;background:var(--tint);font-size:12px;line-height:1.6}
 </style>
+<link rel="stylesheet" href="app.css">
 
 </head>
 <body>
@@ -941,8 +942,16 @@ function totals(k){
 }
 
 /* ---------- UI utils ---------- */
-let toastT;
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200)}
+let toastT,pendingUndo=null;
+function toast(m,undo=null){
+  const t=$('#toast');pendingUndo=undo;t.textContent=m;
+  if(undo){const b=document.createElement('button');b.type='button';b.className='toast-action';b.dataset.act='undoDelete';b.textContent='เลิกทำ';t.appendChild(b)}
+  t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>{t.classList.remove('show');pendingUndo=null},undo?5000:2500);
+}
+function removeLogEntry(list,id){
+  const date=ui.date,items=ensureLog(date)[list],index=items.findIndex(x=>x.id===id);if(index<0)return;
+  const item=items.splice(index,1)[0];save();render();toast('ลบรายการแล้ว',{list,date,item,index});
+}
 const IC={
  today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
  work:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg>',
@@ -955,6 +964,58 @@ const IC={
  cam:'<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>'
 };
 const initial=n=>(n||'').trim().charAt(0)||'?';
+function lineIcon(content){return `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${content}</svg>`}
+Object.assign(IC,{
+ leaf:lineIcon('<path d="M20 4c-7-1-14 1-14 8a6 6 0 0 0 6 6c7 0 9-7 8-14Z"/><path d="m4 21 11-11M8 16l-1-5m5 1 5 1"/>'),
+ camera:lineIcon('<path d="M9 5h6l2 3h3a1 1 0 0 1 1 1v10H3V9a1 1 0 0 1 1-1h3Z"/><circle cx="12" cy="13" r="3.5"/>'),
+ search:lineIcon('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>'),
+ clock:lineIcon('<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/>'),
+ sun:lineIcon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>'),
+ sunrise:lineIcon('<path d="M3 17h18M5 21h14M12 2v4M4 8l2 2m14-2-2 2M7 17a5 5 0 0 1 10 0"/>'),
+ moon:lineIcon('<path d="M20 15A8 8 0 0 1 9 4a8.5 8.5 0 1 0 11 11Z"/>'),
+ cup:lineIcon('<path d="M4 8h12v6a6 6 0 0 1-12 0Zm12 1h2a3 3 0 0 1 0 6h-2M7 3v2m5-2v2M3 22h15"/>'),
+ steps:lineIcon('<path d="M4 13V7a3 3 0 0 1 6 0v6Zm10 4v-6a3 3 0 0 1 6 0v6ZM4 17v1a3 3 0 0 0 6 0v-1Zm10 4v-1h6v1"/>'),
+ watch:lineIcon('<rect x="6" y="6" width="12" height="12" rx="4"/><path d="m8 6 1-4h6l1 4m-8 12 1 4h6l1-4m-4-9v3l2 1"/>'),
+ target:lineIcon('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/>'),
+ flame:lineIcon('<path d="M13 3c0 5-6 6-6 11a5 5 0 0 0 10 0c0-2-1-3-2-4 .2 2-.6 3-2 3 1-4 2-6 0-10Z"/>'),
+ sparkle:lineIcon('<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/>'),
+ chevron:lineIcon('<path d="m7 10 5 5 5-5"/>'),
+ edit:lineIcon('<path d="m15 4 5 5M4 20l5-1L21 7l-5-5L4 14Z"/>'),
+ info:lineIcon('<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/>'),
+ palette:lineIcon('<path d="M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 0-4h-1a2 2 0 0 1 0-4h5a4 4 0 0 0 4-4c0-4-5-6-9-6Z"/><circle cx="7" cy="10" r=".7"/><circle cx="10" cy="6.5" r=".7"/><circle cx="15" cy="7" r=".7"/>'),
+ settings:lineIcon('<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--card)"/><circle cx="15" cy="12" r="2" fill="var(--card)"/><circle cx="8" cy="18" r="2" fill="var(--card)"/>'),
+ folder:lineIcon('<path d="M3 6h7l2 2h9v12H3Z"/>'),
+ download:lineIcon('<path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/>'),
+ upload:lineIcon('<path d="M12 16V4m-4 4 4-4 4 4M4 16v5h16v-5"/>'),
+ shield:lineIcon('<path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8 12 3 3 5-6"/>')
+});
+function focusState(root){
+  const node=document.activeElement;if(!node||!root.contains(node)||node===root)return null;
+  let selector=node.id?'#'+CSS.escape(node.id):'';
+  if(!selector){const attrs=['data-bind','data-model','data-act','data-v','data-i','data-n','data-k','data-meal','data-health-map','data-health-source','data-health-field','data-health-selected','data-health-range'];selector=attrs.filter(a=>node.hasAttribute(a)).map(a=>`[${a}="${CSS.escape(node.getAttribute(a))}"]`).join('')}
+  if(!selector)return null;
+  return{selector,node,start:node.selectionStart,end:node.selectionEnd};
+}
+function restoreFocus(root,state){
+  const el=state&&(state.node.isConnected&&root.contains(state.node)?state.node:root.querySelector(state.selector));
+  if(!el)return false;el.focus({preventScroll:true});
+  if(state.start!=null&&el.setSelectionRange){try{el.setSelectionRange(state.start,state.end)}catch(e){}}
+  return true;
+}
+function updateBoundSummary(){
+  const p=S.profile,G=goalCalc(),values={height:p.height,weight:r1(p.weight),bmi:r1(bmi(p))};
+  document.querySelectorAll('[data-profile-metric]').forEach(el=>{el.textContent=values[el.dataset.profileMetric]});
+  const name=$('#profileDisplayName');if(name)name.textContent=p.name||'โปรไฟล์ของฉัน';
+  if(!p.avatar&&!p.emoji)document.querySelectorAll('#app .avatar:not(img)').forEach(el=>el.textContent=initial(p.name||'ฉัน'));
+  const box=$('.goal-overview');
+  if(box){
+    const weights=[...S.weights].sort((a,b)=>a.d.localeCompare(b.d)),start=weights[0]?.w||p.weight,total=Math.abs(start-S.goal.target),progress=G.mode==='maintain'?0:total?Math.max(0,Math.min(1,(start-p.weight)/(start-S.goal.target))):0;
+    box.querySelector('h2').textContent=G.mode==='maintain'?'รักษาสมดุลในทุกวัน':'เส้นทางสู่เป้าหมาย';
+    const nums=box.querySelectorAll('.goal-metrics .num');nums[0].innerHTML=r1(p.weight)+'<small> กก.</small>';nums[1].innerHTML=r1(S.goal.target)+'<small> กก.</small>';
+    const bar=box.querySelector('.goal-progress');bar.setAttribute('aria-valuenow',Math.round(progress*100));bar.querySelector('i').style.width=progress*100+'%';
+    box.querySelector(':scope > p').textContent=G.mode==='maintain'?'เป้าพลังงาน '+fmt(G.budget)+' kcal ต่อวัน':'เหลืออีก '+r1(Math.max(p.weight-S.goal.target,0))+' กก. ถึงเป้าที่ตั้งไว้';
+  }
+}
 function avatarHTML(cls){const p=S.profile;if(p.avatar)return `<img class="avatar ${cls||''}" src="${p.avatar}" alt="รูปโปรไฟล์">`;if(p.emoji)return `<div class="avatar ${cls||''}" style="font-size:${cls?'54px':'26px'};background:var(--tint)">${p.emoji}</div>`;return `<div class="avatar ${cls||''}">${esc(p.name?initial(p.name):'ฉัน')}</div>`}
 function defaultMeal(){const h=new Date().getHours();return h<10?'b':h<15?'l':h<20?'d':'s'}
 
@@ -962,8 +1023,8 @@ function defaultMeal(){const h=new Date().getHours();return h<10?'b':h<15?'l':h<
 function ringColor(e,b){const r=b>0?e/b:0;return r>1?'var(--over)':r>=0.85?'var(--warn)':'var(--good)'}
 function ringSVG(eaten,budget){
   const R=88,C=2*Math.PI*R,pr=budget>0?Math.min(eaten/budget,1):0,over=eaten>budget;
-  return `<svg viewBox="0 0 216 216" aria-hidden="true"><circle cx="108" cy="108" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="22"/>
-  <circle cx="108" cy="108" r="${R}" fill="none" stroke="${ringColor(eaten,budget)}" stroke-width="22" stroke-linecap="round" stroke-dasharray="${(C*pr).toFixed(1)} ${C.toFixed(1)}"/></svg>`}
+  return `<svg viewBox="0 0 216 216" aria-hidden="true"><circle cx="108" cy="108" r="${R}" fill="none" stroke="var(--ring-track)" stroke-width="18"/>
+  ${pr>0?`<circle cx="108" cy="108" r="${R}" fill="none" stroke="${ringColor(eaten,budget)}" stroke-width="18" stroke-linecap="round" stroke-dasharray="${(C*pr).toFixed(1)} ${C.toFixed(1)}"/>`:''}</svg>`}
 
 function weekChart(){
   const keys=[];for(let i=6;i>=0;i--)keys.push(addDays(ui.date,-i));
@@ -1025,8 +1086,8 @@ function hms(h){const s=Math.floor(h*3600);return Math.floor(s/3600)+':'+String(
 function clock(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
 function dayClock(ts){const d=new Date(ts),k=dk(d),t=todayKey();return (k===t?'วันนี้ ':k===addDays(t,-1)?'เมื่อวาน ':k===addDays(t,1)?'พรุ่งนี้ ':d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' ')+clock(ts)}
 function fastRing(st,R,sw,size){
-  const C=2*Math.PI*R,c=size/2,col=st.on?(st.done?'var(--good)':'var(--sky)'):'rgba(255,255,255,.18)';
-  return `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="${sw}"/>${st.on?`<circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(C*st.pr).toFixed(1)} ${C.toFixed(1)}"/>`:''}</svg>`}
+  const C=2*Math.PI*R,c=size/2,col=st.on?(st.done?'var(--good)':'var(--sky)'):'var(--ring-track)';
+  return `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="var(--ring-track)" stroke-width="${sw}"/>${st.on?`<circle data-fast-progress cx="${c}" cy="${c}" r="${R}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(C*st.pr).toFixed(1)} ${C.toFixed(1)}"/>`:''}</svg>`}
 function fastMini(){
   const st=fastState();
   return `${fastRing(st,30,7,72)}<span class="fm-in">${st.on?(st.done?`<b class="ok-t">ครบ!</b><small>${hm(st.el)}</small>`:`<b>${hm(st.left)}</b><small>เหลือ</small>`):`<b>IF</b><small>เริ่ม</small>`}</span>`}
@@ -1038,16 +1099,17 @@ function fastLive(){
     <button class="btn" data-act="fastStart">▶︎ เริ่ม Fast ตอนนี้</button>
     <p class="tiny mute" style="text-align:center">กดหลังกินมื้อสุดท้ายเสร็จ · ลืมกด? เริ่มแล้วค่อยแก้เวลาเริ่มได้${last?`<br>ครั้งล่าสุด ${r1((last.e-last.s)/36e5)} ชม. (${dayClock(last.e)})`:''}</p>`}
   const S0=FAST_STAGES[st.si];
-  return `<div class="fbig">${fastRing(st,92,16,216)}<div class="mid"><span class="small mute">${st.done?'ครบเป้าแล้ว 🎉 ผ่านมา':'เหลืออีก'}</span><span class="num big" style="font-size:40px${st.done?';color:var(--good)':''}">${hms(st.done?st.el:st.left)}</span><span class="small mute">ฟาสต์ไปแล้ว ${r1(st.el)} / ${st.hours} ชม.</span></div></div>
+  return `<div class="fbig">${fastRing(st,92,16,216)}<div class="mid"><span class="small mute">${st.done?'ครบเป้าแล้ว 🎉 ผ่านมา':'เหลืออีก'}</span><span class="num big" data-fast-counter style="font-size:40px${st.done?';color:var(--good)':''}">${hms(st.done?st.el:st.left)}</span><span class="small mute" data-fast-elapsed>ฟาสต์ไปแล้ว ${r1(st.el)} / ${st.hours} ชม.</span></div></div>
   <div class="eq" style="grid-template-columns:1fr 1fr"><div><span class="tiny mute">เริ่ม</span><b>${dayClock(F.start)}</b></div><div><span class="tiny mute">ครบเป้า</span><b>${dayClock(st.end)}</b></div></div>
   <div class="fnow"><span class="fic">${S0.ic}</span><div><span class="tiny mute">ตอนนี้ร่างกายอยู่ช่วง</span><b>${S0.t}</b><span class="small">${S0.k}</span></div></div>
   <button class="btn ${st.done?'':'alt'}" data-act="fastEnd">${st.done?'🍽️ Break fast ได้เลย':ui.fcf?'แตะอีกครั้งเพื่อยืนยันหยุดฟาสต์':'⏹ Break fast ก่อนครบ'}</button>`}
+function fastSignature(st){return [S.fast.start,S.fast.hours,st.done,!!ui.fcf].join('|')}
 function renderFastSheet(){
   const st=fastState(),F=S.fast,young=S.profile.age<18;
   const hist=(F.hist||[]).slice(0,7);
   $('#sheet').innerHTML=`<div class="row between"><h2>⏱️ Intermittent Fasting</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${IC.x}</button></div>
   ${young?`<div class="warn">อายุต่ำกว่า 18 ปี ร่างกายยังเจริญเติบโต ไม่แนะนำให้อดอาหารเป็นช่วงยาว ใช้ได้แค่แผน 12:12 (เว้นมื้อดึก) เท่านั้น</div>`:''}
-  <div id="fastLive" class="stack">${fastLive()}</div>
+  <div id="fastLive" class="stack" data-signature="${fastSignature(st)}">${fastLive()}</div>
   ${notifRow()}
   ${st.on?`<label class="f">แก้เวลาเริ่ม (ถ้าลืมกด)<input type="time" id="fastT" value="${new Date(F.start).toTimeString().slice(0,5)}"></label>`:''}
   <h3 style="margin-top:6px">เลือกแผน IF</h3>
@@ -1058,6 +1120,7 @@ function renderFastSheet(){
   ${hist.length?`<h3 style="margin-top:6px">ประวัติล่าสุด</h3><div class="fhist">${hist.map(x=>{const h=(x.e-x.s)/36e5,ok=h>=x.h;return `<div class="item"><div class="grow"><div class="nm">${ok?'✅':'⏸️'} ${r1(h)} ชม. <span class="tiny mute">/ เป้า ${x.h}</span></div><div class="tiny mute">${dayClock(x.s)} → ${dayClock(x.e)}</div></div></div>`}).join('')}</div>`:''}
   <div class="warn small"><b>ใครไม่ควรทำ IF เอง:</b> ตั้งครรภ์/ให้นมบุตร · เบาหวานหรือใช้ยาลดน้ำตาล/อินซูลิน · มีประวัติโรคการกินผิดปกติ · อายุต่ำกว่า 18 · มีโรคประจำตัวหรือกินยาที่ต้องกินพร้อมอาหาร ควรปรึกษาแพทย์ก่อน<br>ระหว่างฟาสต์ดื่มน้ำเปล่า ชา/กาแฟดำไม่ใส่น้ำตาลได้</div>
   <p class="tiny mute">ช่วงเวลาแต่ละระยะเป็นค่าประมาณ ขึ้นกับมื้อสุดท้าย กิจกรรม และร่างกายแต่ละคน · อ้างอิง: de Cabo &amp; Mattson, NEJM 2019; Anton et al., Obesity 2018; Liu et al., NEJM 2022</p>`;
+  fastSi=st.si;
 }
 function fastStages(st){
   return FAST_STAGES.map((s,i)=>{const cur=st.on&&i===st.si,past=st.on&&i<st.si;
@@ -1065,11 +1128,26 @@ function fastStages(st){
 function openFast(){ui.sh={mode:'fast'};$('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');navPush('sheet');renderSheet()}
 let fastSi=-1,fastDoneSeen=false;
 function fastTick(){
-  const m=$('#fastMini');if(m)m.innerHTML=fastMini();
-  if(ui.sh&&ui.sh.mode==='fast'){const st=fastState(),l=$('#fastLive');if(l&&document.activeElement?.closest('#fastLive')==null)l.innerHTML=fastLive();
-    if(st.si!==fastSi){fastSi=st.si;const s=$('#fastStages');if(s)s.innerHTML=fastStages(st)}}
   const st=fastState();
-  if(st.on&&st.done&&!fastDoneSeen&&S.fast.notified!==S.fast.start){fastDoneSeen=true;S.fast.notified=S.fast.start;saveLocal();localFastNotif(st);toast('⏱️ ครบ '+st.hours+' ชม. แล้ว! Break fast ได้เลย 🎉')}
+  if(!document.hidden){
+    const label=$('#fastQuickLabel'),text=st.on?`IF · ${st.done?'ครบแล้ว':hm(st.left)}`:'จับเวลา IF';
+    if(label&&label.textContent!==text)label.textContent=text;
+    const mini=$('#fastMini');if(mini)mini.innerHTML=fastMini();
+    if(ui.sh?.mode==='fast'){
+      const live=$('#fastLive'),signature=fastSignature(st);
+      if(live){
+        if(live.dataset.signature!==signature){const focus=focusState(live);live.innerHTML=fastLive();live.dataset.signature=signature;restoreFocus(live,focus)}
+        else{
+          const counter=live.querySelector('[data-fast-counter]'),elapsed=live.querySelector('[data-fast-elapsed]');
+          if(counter)counter.textContent=hms(st.done?st.el:st.left);
+          if(elapsed)elapsed.textContent=`ฟาสต์ไปแล้ว ${r1(st.el)} / ${st.hours} ชม.`;
+          live.querySelectorAll('[data-fast-progress]').forEach(circle=>{const length=2*Math.PI*+circle.getAttribute('r');circle.setAttribute('stroke-dasharray',`${(length*st.pr).toFixed(1)} ${length.toFixed(1)}`)});
+        }
+      }
+      if(st.si!==fastSi){fastSi=st.si;const stages=$('#fastStages');if(stages)stages.innerHTML=fastStages(st)}
+    }
+  }
+  if(st.on&&st.done&&!fastDoneSeen&&S.fast.notified!==S.fast.start){fastDoneSeen=true;S.fast.notified=S.fast.start;saveLocal();localFastNotif(st);toast('ครบ '+st.hours+' ชม. แล้ว เริ่มมื้อถัดไปเมื่อคุณพร้อมได้เลย')}
 }
 function fastGuide(){
   const G=goalCalc(),p=S.profile,young=p.age<18;
@@ -1121,65 +1199,73 @@ function notifRow(){
   if(p==='granted')return `<div class="fnote">🔔 <span>เปิดแจ้งเตือนแล้ว จะเด้งบอกเมื่อฟาสต์ครบ${FPUSH&&!FPUSH.configured?' (ตอนนี้แจ้งได้เฉพาะตอนแอปยังเปิดค้างอยู่)':''}</span></div>`;
   if(p==='denied')return `<div class="fnote">🔕 <span>การแจ้งเตือนถูกปิดไว้ เปิดได้ที่ ตั้งค่าเครื่อง/เบราว์เซอร์ → การแจ้งเตือน → Cal Goal</span></div>`;
   return `<button class="btn sm alt" data-act="fastNotif">🔔 เปิดแจ้งเตือนเมื่อฟาสต์ครบ</button>`}
+function appHeader(title,subtitle){
+  return `<header class="app-head"><button class="brand" data-act="tab" data-v="today" aria-label="Cal Goal หน้าหลัก"><span class="brand-mark">${IC.leaf}</span><span>Cal Goal</span></button><div class="head-actions">${streak()?`<span class="status-pill neutral">${IC.flame}<span>${streak()} วันต่อเนื่อง</span></span>`:''}<button class="profile-trigger" data-act="tab" data-v="me" aria-label="เปิดโปรไฟล์">${avatarHTML()}</button></div></header><div class="page-heading"><div class="page-copy"><h1 class="page-title">${title}</h1><p class="page-subtitle">${subtitle}</p></div><div id="beepSlot" class="beep-slot"></div></div>`;
+}
+
+function dateNavigation(){
+  const today=ui.date===todayKey(),date=fromKey(ui.date);
+  return `<div class="log-date-nav"><button class="icon-btn" data-act="day" data-v="-1" aria-label="วันก่อนหน้า">${IC.left}</button><label class="log-date-label" for="logDate"><span>${today?'วันนี้':date.toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short'})}</span><span class="tiny mute">${date.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'})}</span><input type="date" id="logDate" value="${ui.date}" max="${todayKey()}" aria-label="เลือกวันที่บันทึก"></label><button class="icon-btn" data-act="${today?'day':'goToday'}" data-v="1" aria-label="${today?'วันถัดไป':'กลับไปวันนี้'}" ${today?'disabled':''}>${today?IC.right:IC.today}</button></div>`;
+}
+
+function sectionHeading(title,note='',action=''){
+  return `<div class="section-heading"><div class="grow"><h2>${title}</h2>${note?`<p class="section-note">${note}</p>`:''}</div>${action}</div>`;
+}
+
+function profileSection(id,icon,title,subtitle,content){
+  const expanded=!!ui.profileOpen?.[id];
+  return `<details class="profile-section card" data-profile-section="${id}" ${expanded?'open':''}><summary><span class="settings-icon">${icon}</span><span class="grow"><b>${title}</b><span>${subtitle}</span></span>${IC.chevron}</summary><div class="settings-content" data-profile-content="${id}">${content}</div></details>`;
+}
+
 function viewToday(){
-  const k=ui.date,t=totals(k),L=getLog(k),isToday=k===todayKey(),p=S.profile,G=goalCalc();
-  const over=t.left<0;
-  const lbl=isToday?'วันนี้':fromKey(k).toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short'});
-  const kcalPer=t.p*4+t.c*4+t.f*9||1;
-  const pc=Math.round(t.p*4/kcalPer*100),cc=Math.round(t.c*4/kcalPer*100),fc=Math.max(0,100-pc-cc);
-  let h=`<div class="top">${avatarHTML()}<div class="grow"><h1 style="font-size:20px">สวัสดี ${esc(p.name||'เพื่อน')} 👋</h1><p class="small mute">${isToday?'วันนี้กินอะไรดี':'ย้อนดูบันทึก'}</p></div>${streak()?`<span class="chip streak">🔥 ${streak()} วันติด</span>`:''}</div>`;
-  if(!p.set)h+=`<div class="card banner"><b>ตั้งค่าโปรไฟล์ก่อนนะ</b><p class="small" style="margin:4px 0 10px">ตอนนี้ใช้ค่าตัวอย่าง (หญิง 25 ปี 165 ซม. 60 กก.) กรอกข้อมูลจริงเพื่อให้ TDEE ตรงกับตัวคุณ</p><button class="btn sm alt" data-act="tab" data-v="me">ไปกรอกโปรไฟล์</button></div>`;
-  h+=`<div class="card hero"><div class="date-nav"><button class="icon-btn" data-act="day" data-v="-1" aria-label="วันก่อนหน้า">${IC.left}</button><span class="lbl">${esc(lbl)}</span><button class="icon-btn" data-act="day" data-v="1" aria-label="วันถัดไป" ${isToday?'disabled style="opacity:.35"':''}>${IC.right}</button></div>
-  <div class="stage"><div class="ring">${ringSVG(t.eaten,t.budget)}<div class="mid"><span class="small mute">${over?'กินเกินมา':'เหลืออีก'}</span><span class="num big" style="color:${over?'var(--over)':'var(--ink)'}">${fmt(Math.abs(t.left))}</span><span class="small mute">kcal</span></div></div>${isToday?`<button class="fmini ${S.fast.start?'on':''}" id="fastMini" data-act="openFast" aria-label="ตัวจับเวลา Intermittent Fasting">${fastMini()}</button>`:''}${mascotBlock(k,t)}</div>
-  <div class="eq"><div><span class="tiny mute">กินแล้ว</span><b>${fmt(t.eaten)}</b></div><div><span class="tiny mute">งบกินวันนี้</span><b>${fmt(t.budget)}</b></div><div><span class="tiny mute">${t.fromHealth?'พลังงานกิจกรรม':'เผาจากออกกำลัง'}</span><b>+${fmt(t.burn)}</b></div></div>
-  <p class="tiny mute" style="margin-top:8px;text-align:center">งบ = เป้าประจำวัน ${fmt(t.base)} + ${t.fromHealth?`พลังงานกิจกรรมที่บันทึก ${fmt(t.burn)}`:`ออกกำลังกาย ${fmt(t.bw)} + ก้าวเดิน ${fmt(t.bs)}`} · TDEE ของคุณ ${fmt(G.tdee)}</p></div>`;
-  h+=`<div class="card stack"><div class="row between"><h2>💪 สารอาหารวันนี้</h2><span class="small mute">ประมาณการ</span></div>
-   <div class="grid3 num" style="text-align:center"><div><b style="font-size:20px">${Math.round(t.p)}</b><div class="tiny mute">โปรตีน (ก.)</div></div><div><b style="font-size:20px">${Math.round(t.c)}</b><div class="tiny mute">คาร์บ (ก.)</div></div><div><b style="font-size:20px">${Math.round(t.f)}</b><div class="tiny mute">ไขมัน (ก.)</div></div></div>
-   <div class="split" role="img" aria-label="สัดส่วนพลังงาน โปรตีน ${pc}% คาร์บ ${cc}% ไขมัน ${fc}%">${t.eaten>0?`<i style="width:${pc}%;background:var(--sky)"></i><i style="width:${cc}%;background:var(--sun)"></i><i style="width:${fc}%;background:var(--pink)"></i>`:''}</div>
-   <div class="row tiny mute wrap" style="gap:14px"><span><b style="color:var(--sky)">■</b> โปรตีน ${t.eaten>0?pc:0}%</span><span><b style="color:var(--sun)">■</b> คาร์บ ${t.eaten>0?cc:0}%</span><span><b style="color:var(--pink)">■</b> ไขมัน ${t.eaten>0?fc:0}%</span></div></div>`;
-  const sp=Math.min(t.steps/S.goal.stepGoal,1);
-  h+=`<div class="card stack"><div class="row between"><h2>👟 ก้าวเดิน</h2><button class="btn sm alt" data-act="tab" data-v="work">อัปเดต</button></div>
-   <div class="bar" role="progressbar" aria-valuenow="${t.steps}" aria-valuemax="${S.goal.stepGoal}"><i class="${sp===0?'zero':''}" style="width:${sp*100}%"></i></div>
-   <div class="row between small"><span class="num"><b>${fmt(t.steps)}</b> / ${fmt(S.goal.stepGoal)} ก้าว</span><span class="mute">${r1(stepKm(t.steps))} กม.${t.fromHealth?'':` · ${fmt(t.bs)} kcal`}</span></div></div>`;
-  MEALS.forEach(m=>{
+  const k=ui.date,t=totals(k),L=getLog(k),p=S.profile,G=goalCalc(),isToday=k===todayKey(),over=t.left<0;
+  const percent=t.budget>0?Math.round(t.eaten/t.budget*100):0,st=fastState();
+  let h=appHeader(`สวัสดี${p.name?', '+esc(p.name):' วันนี้เป็นอย่างไรบ้าง'}`,'ดูแลตัวเอง เริ่มจากมื้อเล็ก ๆ ในวันนี้')+dateNavigation();
+  if(!p.set)h+=`<div class="card banner"><b>เริ่มจากข้อมูลของคุณ</b><p class="small">กรอกส่วนสูง น้ำหนัก และกิจกรรม เพื่อให้เป้าพลังงานเหมาะกับคุณ</p><button class="btn sm alt" data-act="tab" data-v="me">ตั้งค่าโปรไฟล์ ${IC.right}</button></div>`;
+  h+=`<section class="card energy-card hero" aria-labelledby="energyTitle"><div class="energy-heading"><h2 id="energyTitle">พลังงานวันนี้</h2><span class="status-pill ${over?'warn':'neutral'}">${over?'บันทึกเกินเป้า':t.eaten?percent+'% ของเป้า':'เริ่มต้นมื้อแรก'}</span></div>
+    <div class="energy-body"><div><p class="small mute">${over?'พลังงานเกินเป้า':'ยังทานได้อีก'}</p><div class="energy-number" ${over?'style="color:var(--over)"':''}><strong class="num">${fmt(Math.abs(t.left))}</strong><span class="energy-unit">kcal</span></div><p class="tiny mute">จากเป้า ${fmt(t.budget)} kcal</p></div><div class="energy-ring ring">${ringSVG(t.eaten,t.budget)}<div class="mid">${IC.leaf}<span class="tiny mute">${Math.min(percent,999)}%</span></div></div></div>
+    <div class="energy-stats"><div><span>ทานแล้ว</span><b class="num">${fmt(t.eaten)} <small>kcal</small></b></div><div><span>เป้าประจำวัน</span><b class="num">${fmt(t.base)} <small>kcal</small></b></div><div><span>${t.fromHealth?'จากนาฬิกา':'กิจกรรม'}</span><b class="num">+${fmt(t.burn)} <small>kcal</small></b></div></div>
+    <button class="btn energy-add" data-act="add" data-ask="1" data-meal="${defaultMeal()}">${IC.plus} บันทึกอาหาร</button>
+    </section>`;
+  h+=`<div class="quick-actions" aria-label="ทางลัด"><button class="quick-action" data-act="quickCam">${IC.camera}<span>ถ่ายรูปอาหาร</span></button><button class="quick-action" data-act="quickSearch">${IC.search}<span>ค้นหาเมนู</span></button><button class="quick-action" data-act="openFast">${IC.clock}<span id="fastQuickLabel">${st.on?`IF · ${st.done?'ครบแล้ว':hm(st.left)}`:'จับเวลา IF'}</span></button></div>`;
+  h+=`<section class="meal-diary card" aria-labelledby="mealTitle">${sectionHeading('<span id="mealTitle">มื้ออาหารของคุณ</span>',`${L.meals.length} รายการ · ${isToday?'วันนี้':fromKey(k).toLocaleDateString('th-TH',{day:'numeric',month:'short'})}`)}`;
+  for(const m of MEALS){
     const items=L.meals.filter(x=>x.meal===m[0]),sum=items.reduce((a,x)=>a+x.kcal,0);
-    h+=`<div class="card"><div class="meal-h"><div><h3><span class="mi mi-${m[0]}">${m[2]}</span>${m[1]}</h3><span class="small mute num">${fmt(sum)} kcal</span></div><button class="btn sm" data-act="add" data-meal="${m[0]}">+ เพิ่ม</button></div>`;
-    if(!items.length)h+=`<p class="empty">ยังไม่มีรายการ แตะ “เพิ่ม” เพื่อบันทึก</p>`;
-    items.forEach(x=>{h+=`<div class="item">${x.img?`<img class="thumb" src="${x.img}" alt="">`:`<div class="thumb" style="background:var(--soft);font-size:24px">${foodEmoji(x.name)}</div>`}
-      <div class="grow"><div class="nm">${esc(x.name)}</div><div class="tiny mute">${x.qty!==1?x.qty+' × ':''}${esc(x.serving||'')} · ${(x.p+x.c+x.f)>0?`P${Math.round(x.p)} C${Math.round(x.c)} F${Math.round(x.f)}`:'ไม่มีข้อมูลสารอาหาร'}</div></div>
-      <span class="kc">${fmt(x.kcal)}</span><button class="icon-btn" data-act="delMeal" data-id="${x.id}" aria-label="ลบ ${esc(x.name)}">${IC.x}</button></div>`});
-    h+='</div>'});
-  if(L.workouts.length){h+=`<div class="card"><h3>🔥 ออกกำลังกายวันนี้</h3>`;L.workouts.forEach(w=>{h+=`<div class="item"><div class="grow"><div class="nm">${w.ic||'🔥'} ${esc(w.name)}</div><div class="tiny mute">${w.min} นาที</div></div><span class="kc" style="color:var(--mute)">−${fmt(w.kcal)}</span></div>`});h+='</div>'}
-  h+=`<div class="card"><h2 style="margin-bottom:6px">📈 7 วันล่าสุด</h2>${weekChart()}<p class="tiny mute">แท่ง = แคลที่กิน · เส้นประ = งบของวันนั้น</p></div>`;
+    h+=`<div class="meal-section"><div class="meal-head"><span class="meal-symbol" data-meal="${m[0]}" aria-hidden="true">${({b:IC.sunrise,l:IC.sun,d:IC.moon,s:IC.cup})[m[0]]}</span><div class="grow"><h3>${m[1]}</h3><p class="meal-empty">${items.length?items.length+' รายการ':'พร้อมเมื่อคุณอยากบันทึก'}</p></div>${items.length?`<span class="meal-total num">${fmt(sum)}<small> kcal</small></span>`:''}<button class="icon-btn" data-act="add" data-meal="${m[0]}" aria-label="เพิ่มอาหาร ${m[1]}">${IC.plus}</button></div>`;
+    for(const x of items)h+=`<div class="item">${x.img?`<img class="thumb" src="${x.img}" loading="lazy" alt="">`:`<span class="thumb" aria-hidden="true">${foodEmoji(x.name)}</span>`}<div class="grow"><div class="nm">${esc(x.name)}</div><div class="tiny mute">${x.qty!==1?x.qty+' × ':''}${esc(x.serving||'1 หน่วย')}${x.p+x.c+x.f>0?` · P${Math.round(x.p)} C${Math.round(x.c)} F${Math.round(x.f)}`:''}</div></div><span class="kc">${fmt(x.kcal)}<small> kcal</small></span><button class="icon-btn item-delete" data-act="delMeal" data-id="${x.id}" aria-label="ลบ ${esc(x.name)}">${IC.x}</button></div>`;
+    h+='</div>';
+  }
+  h+='</section>';
+  const total=t.p*4+t.c*4+t.f*9||1;
+  h+=`<section class="card macro-card">${sectionHeading('สารอาหารของวันนี้','สัดส่วนจากอาหารที่บันทึก')}<div class="macro-grid">${[['โปรตีน',t.p,4,'var(--sky)'],['คาร์บ',t.c,4,'var(--sun)'],['ไขมัน',t.f,9,'var(--pink)']].map(([label,value,factor,color])=>`<div class="macro-item" style="--macro-color:${color}"><span class="small"><i class="macro-dot"></i>${label}</span><div class="macro-value num">${Math.round(value)}<small> ก.</small></div><div class="macro-track"><i class="macro-fill" style="width:${Math.min(100,value*factor/total*100)}%"></i></div></div>`).join('')}</div></section>`;
+  const sp=Math.min(t.steps/S.goal.stepGoal,1);
+  h+=`<section class="card stack">${sectionHeading('ทุกก้าวมีความหมาย',`${r1(stepKm(t.steps))} กม. โดยประมาณ`,`<button class="icon-btn" data-act="tab" data-v="work" aria-label="บันทึกก้าวเดิน">${IC.right}</button>`)}<div class="row between"><div class="step-value num">${fmt(t.steps)} <small>ก้าว</small></div><span class="small mute">เป้า ${fmt(S.goal.stepGoal)}</span></div><div class="bar" role="progressbar" aria-label="ก้าวเดิน" aria-valuenow="${t.steps}" aria-valuemin="0" aria-valuemax="${S.goal.stepGoal}"><i style="width:${sp*100}%"></i></div></section>`;
+  if(L.workouts.length)h+=`<section class="card">${sectionHeading('ขยับร่างกายวันนี้','ทำไปแล้ว '+L.workouts.reduce((sum,w)=>sum+w.min,0)+' นาที',`<button class="icon-btn" data-act="tab" data-v="work" aria-label="ดูการออกกำลังกาย">${IC.right}</button>`)}${L.workouts.map(w=>`<div class="item"><span class="thumb" aria-hidden="true">${w.ic||IC.work}</span><div class="grow"><b>${esc(w.name)}</b><p class="tiny mute">${w.min} นาที</p></div><span class="kc">${fmt(w.kcal)}<small> kcal</small></span></div>`).join('')}</section>`;
+  h+=`<section class="card">${sectionHeading('จังหวะของคุณใน 7 วัน','พลังงานที่ทานเทียบกับเป้าประจำวัน')}${weekChart()}<p class="tiny mute">แท่งสี = ทานแล้ว · เส้นประ = เป้าของวัน</p></section>`;
+  h+=`<details class="energy-footnote card"><summary>เป้านี้คำนวณอย่างไร ${IC.chevron}</summary><p>งบ = เป้าประจำวัน ${fmt(t.base)} + ${t.fromHealth?`พลังงานกิจกรรมที่บันทึก ${fmt(t.burn)}`:`ออกกำลังกาย ${fmt(t.bw)} + ก้าวเดิน ${fmt(t.bs)}`} kcal · TDEE ${fmt(G.tdee)} kcal${t.fromHealth?' · ใช้พลังงานจากนาฬิกาแทนยอดประมาณแล้ว':''}</p></details>`;
+  h+=`<button class="coach-inline" data-act="beepToggle"><span class="settings-icon">${IC.sparkle}</span><span class="grow"><b>มี Beep เป็นเพื่อนดูแลคุณ</b><span class="small mute">คุยเรื่องมื้อถัดไปหรือกิจกรรมที่เหมาะกับวันนี้</span></span>${IC.right}</button>`;
   return h;
 }
 
 function viewWork(){
   const k=ui.date,L=getLog(k),t=totals(k),w=ui.w;
-  let h=`<div class="top"><h1 style="font-size:22px" class="grow">🏃 ออกกำลังกาย</h1><button class="btn sm alt" data-act="openHealth">⌚ นาฬิกา</button></div>
-  <div class="card stack"><div class="row between"><h2>👟 ก้าวเดิน${k===todayKey()?'วันนี้':''}</h2><span class="small mute">เป้า ${fmt(S.goal.stepGoal)}</span></div>
-   <div class="bar"><i class="${t.steps===0?'zero':''}" style="width:${Math.min(t.steps/S.goal.stepGoal,1)*100}%"></i></div>
-   <div class="row"><input type="number" id="stepIn" inputmode="numeric" min="0" step="100" value="${t.steps||''}" placeholder="จำนวนก้าว" aria-label="จำนวนก้าว"><button class="btn" data-act="saveSteps">บันทึก</button></div>
-   <div class="row wrap"><button class="chip" data-act="stepAdd" data-v="1000">+1,000</button><button class="chip" data-act="stepAdd" data-v="2000">+2,000</button><button class="chip" data-act="stepAdd" data-v="5000">+5,000</button></div>
-   <p class="small mute">${t.fromHealth?`งบวันนี้ใช้พลังงานกิจกรรมรวม ${fmt(t.burn)} kcal จาก ${esc(L.health.energySource||L.health.source||'นาฬิกา')} แล้ว`:`${r1(stepKm(t.steps))} กม. · เผาผลาญเพิ่ม ~${fmt(t.bs)} kcal (คิดจากส่วนสูงและน้ำหนักของคุณ)`}</p>${t.fromHealth?'<button class="chip" data-act="healthClearEnergy">กลับไปใช้พลังงานประมาณ</button>':''}</div>
-  <div class="card stack"><h2>🔥 เพิ่มการออกกำลังกาย</h2><div class="act-grid">${ACTS.map((a,i)=>`<button data-act="pickAct" data-i="${i}" aria-pressed="${w.i===i}">${a[2]}<br>${esc(a[0])}</button>`).join('')}</div>
-   <div class="grid2"><label class="f">ระยะเวลา (นาที)<input type="number" id="wMin" inputmode="numeric" min="1" value="${w.min}"></label>
-   <label class="f">พลังงานที่เผา (kcal)<input type="number" id="wKcal" inputmode="numeric" min="0" value="${w.kcal}"></label></div>
-   <p class="tiny mute">คำนวณจาก MET × น้ำหนัก × เวลา ถ้าอ่านค่าจากนาฬิกา/สมาร์ตวอทช์ได้ ให้พิมพ์ทับช่อง kcal ได้เลย</p>
-   <button class="btn" data-act="addWork">เพิ่ม ${ACTS[w.i][2]} ${esc(ACTS[w.i][0])}</button></div>`;
-  h+=`<div class="card"><h3>รายการของวัน ${k===todayKey()?'นี้':'ที่เลือก'}</h3>`;
-  if(!L.workouts.length)h+='<p class="empty">ยังไม่มีการออกกำลังกาย</p>';
-  L.workouts.forEach(x=>{h+=`<div class="item"><div class="grow"><div class="nm">${x.ic||'🔥'} ${esc(x.name)}</div><div class="tiny mute">${x.min} นาที</div></div><span class="kc">−${fmt(x.kcal)}</span><button class="icon-btn" data-act="delWork" data-id="${x.id}" aria-label="ลบ">${IC.x}</button></div>`});
-  h+='</div>';
-  h+=`<div class="card"><h3>เชื่อมแอปสุขภาพของมือถือ</h3><p class="small mute" style="margin-top:6px">เว็บแอปอ่านข้อมูลจาก Apple Health หรือ Health Connect (Android) ตรงๆ ไม่ได้ เพราะระบบเปิดให้เฉพาะแอปที่ติดตั้งจริง ตอนนี้ให้เปิดแอปสุขภาพดูจำนวนก้าวและแคลที่เผา แล้วพิมพ์ใส่ช่องด้านบน ถ้าจะให้ดึงอัตโนมัติ ต้องห่อโปรเจกต์นี้เป็นแอปมือถือ (Capacitor + HealthKit / Health Connect) อีกขั้นหนึ่ง</p></div>`;
-  return h;
+  const common=[1,2,4,6,7,8],shown=ui.workExpanded?ACTS.map((_,i)=>i):[...new Set(common.concat(w.i))];
+  let h=appHeader('ขยับในแบบของคุณ','เก็บทุกก้าว และกิจกรรมที่ทำให้วันนี้ดีขึ้น')+dateNavigation();
+  h+=`<section class="card activity-summary">${sectionHeading('ภาพรวมกิจกรรม',t.fromHealth?'ยอดพลังงานจากนาฬิกาที่คุณบันทึก':'พลังงานจากกิจกรรมที่บันทึก')}<div class="activity-summary-grid"><div><span class="settings-icon">${IC.flame}</span><b class="num">${fmt(t.burn)}<small> kcal</small></b><span class="small mute">พลังงานกิจกรรม</span></div><div><span class="settings-icon">${IC.clock}</span><b class="num">${L.workouts.reduce((sum,x)=>sum+x.min,0)}<small> นาที</small></b><span class="small mute">ออกกำลังวันนี้</span></div></div>${t.fromHealth?`<p class="health-note">ใช้พลังงานรวมจาก ${esc(L.health.energySource||L.health.source||'นาฬิกา')} แทนยอดประมาณของวันนี้แล้ว <button class="text-btn" data-act="healthClearEnergy">ใช้ค่าประมาณแทน</button></p>`:''}</section>`;
+  h+=`<section class="card stack">${sectionHeading('ก้าวเดิน','เป้าหมาย '+fmt(S.goal.stepGoal)+' ก้าวต่อวัน',`<span class="settings-icon">${IC.steps}</span>`)}<div class="step-value num">${fmt(t.steps)}<small> ก้าว</small></div><div class="bar" role="progressbar" aria-label="ก้าวเดิน" aria-valuenow="${t.steps}" aria-valuemin="0" aria-valuemax="${S.goal.stepGoal}"><i style="width:${Math.min(t.steps/S.goal.stepGoal,1)*100}%"></i></div><label class="f" for="stepIn">จำนวนก้าวรวมของวันที่เลือก</label><div class="row"><input type="number" id="stepIn" inputmode="numeric" min="0" step="100" value="${t.steps||''}" placeholder="เช่น 8000" aria-label="จำนวนก้าว"><button class="btn" data-act="saveSteps">บันทึก</button></div><div class="row wrap"><button class="chip" data-act="stepAdd" data-v="1000">+1,000</button><button class="chip" data-act="stepAdd" data-v="2000">+2,000</button><button class="chip" data-act="stepAdd" data-v="5000">+5,000</button></div><p class="tiny mute">ระยะทางประมาณ ${r1(stepKm(t.steps))} กม.${t.fromHealth?'':' · พลังงานประมาณ '+fmt(t.bs)+' kcal'}</p></section>`;
+  h+=`<button class="settings-row card" data-act="openHealth"><span class="settings-icon">${IC.watch}</span><span class="grow"><b>บันทึกข้อมูลจากนาฬิกา</b><span>กรอกยอดเอง หรือนำเข้าไฟล์สุขภาพ</span></span>${IC.right}</button>`;
+  h+=`<section class="card stack">${sectionHeading('เพิ่มกิจกรรม','เลือกสิ่งที่คุณทำ แล้วใส่ระยะเวลา')}<div class="activity-options act-grid">${shown.map(i=>`<button data-act="pickAct" data-i="${i}" aria-pressed="${w.i===i}"><span class="act-symbol">${ACTS[i][2]}</span><span class="act-name">${esc(ACTS[i][0])}</span></button>`).join('')}</div><button class="text-btn" data-act="workExpand" aria-expanded="${!!ui.workExpanded}">${ui.workExpanded?'แสดงกิจกรรมที่ใช้บ่อย':'ดูกิจกรรมทั้งหมด '+ACTS.length+' แบบ'} ${IC.chevron}</button><div class="duration-chips chips" role="group" aria-label="ระยะเวลาออกกำลังกาย">${[15,30,45,60].map(min=>`<button class="chip" data-act="workDuration" data-v="${min}" aria-pressed="${w.min===min}">${min} นาที</button>`).join('')}</div><div class="grid2"><label class="f">ระยะเวลา (นาที)<input type="number" id="wMin" inputmode="numeric" min="1" value="${w.min}"></label><label class="f">พลังงาน (kcal)<input type="number" id="wKcal" inputmode="numeric" min="0" value="${w.kcal}"></label></div><p class="tiny mute">ประมาณจากชนิดกิจกรรม น้ำหนัก และเวลา หรือใส่ค่าที่อ่านจากนาฬิกาได้เลย</p><button class="btn" data-act="addWork">${IC.plus} บันทึก${esc(ACTS[w.i][0])}</button></section>`;
+  h+=`<section class="card">${sectionHeading('กิจกรรมที่บันทึก',L.workouts.length+' รายการในวันที่เลือก')}`;
+  if(!L.workouts.length)h+=`<div class="empty-state">${IC.work}<b>เริ่มได้จากกิจกรรมเล็ก ๆ</b><p>เดิน ยืดเส้น หรือออกกำลังกายที่คุณชอบ<br>แล้วบันทึกไว้ตรงนี้</p></div>`;
+  for(const x of L.workouts)h+=`<div class="item"><span class="thumb" aria-hidden="true">${x.ic||IC.work}</span><div class="grow"><div class="nm">${esc(x.name)}</div><div class="tiny mute">${x.min} นาที</div></div><span class="kc">${fmt(x.kcal)}<small> kcal</small></span><button class="icon-btn item-delete" data-act="delWork" data-id="${x.id}" aria-label="ลบ ${esc(x.name)}">${IC.x}</button></div>`;
+  return h+'</section>';
 }
 
 function goalBox(){
   const G=goalCalc(),p=S.profile,g=S.goal;
   let h='';
   if(G.mode==='maintain'){
-    h+=`<div class="ok">น้ำหนักเป้าหมายไม่สูงกว่าน้ำหนักปัจจุบัน ตอนนี้แอปคำนวณเป็นโหมดรักษาน้ำหนัก กินได้ ${fmt(G.budget)} kcal ต่อวัน</div>`;
+    h+=`<div class="ok">เป้าหมายนี้ใช้แผนรักษาน้ำหนัก กินได้ ${fmt(G.budget)} kcal ต่อวัน</div>`;
   }else{
     const kg=G.kgDay;
     h+=`<div class="grid3 num" style="text-align:center"><div class="eq" style="display:block;margin:0"><div style="background:none;padding:0"><b>${r1(kg*7)}</b><span class="tiny mute">กก./สัปดาห์</span></div></div><div class="eq" style="display:block;margin:0"><div style="background:none;padding:0"><b>${r1(kg*30)}</b><span class="tiny mute">กก./เดือน</span></div></div><div class="eq" style="display:block;margin:0"><div style="background:none;padding:0"><b>${r1(kg*365)}</b><span class="tiny mute">กก./ปี</span></div></div></div>
@@ -1209,35 +1295,14 @@ function weightChart(){
 }
 
 function viewGoal(){
-  const g=S.goal,p=S.profile;
-  const sug=g.target<p.weight?'10,000':'8,000';
-  return `<div class="top"><h1 style="font-size:22px">🏆 เป้าหมาย</h1></div>
-  <div class="card stack"><h2>🎯 เป้าหมายน้ำหนัก</h2>
-   <div class="grid2"><label class="f">น้ำหนักตอนนี้ (กก.)<input type="number" step="0.1" inputmode="decimal" data-bind="profile.weight" data-num value="${p.weight}"></label>
-   <label class="f">น้ำหนักที่อยากได้ (กก.)<input type="number" step="0.1" inputmode="decimal" data-bind="goal.target" data-num value="${g.target}"></label></div>
-   <div><div class="small mute" style="margin-bottom:6px">ตั้งความเร็วเป็นรอบ</div><div class="seg">${['week','month','year'].map(x=>`<button data-act="period" data-v="${x}" aria-pressed="${g.period===x}">รายสัปดาห์${''}</button>`.replace('รายสัปดาห์','ราย'+PL[x])).join('')}</div></div>
-   <label class="f">อยากลดกี่กิโลต่อ${PL[g.period]}<input type="number" step="0.1" min="0" inputmode="decimal" data-bind="goal.amount" data-num value="${g.amount}"></label>
-   <div id="goalBox" class="stack">${goalBox()}</div></div>
-  ${fastGuide()}
-  <div class="card stack"><h2>🏅 เป้าหมายก้าวเดิน</h2>
-   <label class="f">ก้าวต่อวัน<input type="number" step="500" min="1000" inputmode="numeric" data-bind="goal.stepGoal" data-num value="${g.stepGoal}"></label>
-   <p class="small mute">ค่าแนะนำสำหรับคุณ ~${sug} ก้าว/วัน งานวิจัยพบว่าความเสี่ยงเสียชีวิตก่อนวัยลดลงชัดเจนที่ราว 7,000–10,000 ก้าว/วัน</p></div>
-  <div class="card stack"><div class="row between"><h2>⚖️ น้ำหนักของฉัน</h2></div>
-   <div class="row"><input type="number" id="wtIn" step="0.1" inputmode="decimal" placeholder="น้ำหนักวันนี้ (กก.)" aria-label="น้ำหนักวันนี้"><button class="btn" data-act="logWeight">บันทึก</button></div>
-   ${weightChart()}</div>
-  <div class="card"><details><summary>ข้อมูลอ้างอิงที่ใช้คำนวณ</summary><ul>
-   <li>BMR: สมการ Mifflin–St Jeor (1990) จาก เพศ อายุ ส่วนสูง น้ำหนัก</li>
-   <li>TDEE = BMR × ตัวคูณกิจกรรม 1.2 / 1.375 / 1.55 / 1.725 (ใช้ระดับกิจกรรมนอกเหนือจากการออกกำลังกายที่บันทึกในแอป)</li>
-   <li>ไขมัน 1 กก. ≈ 7,700 kcal เป็นค่าประมาณที่ใช้กันทั่วไป (Wishnofsky 1958) ตัวเลขจริงแตกต่างกันตามบุคคล</li>
-   <li>อัตราลดน้ำหนักที่แนะนำ 0.25–1 กก./สัปดาห์ (ไม่เกิน ~1% ของน้ำหนักตัว) และไม่ต่ำกว่า 1,200 kcal (หญิง) / 1,500 kcal (ชาย) ต่อวันหากไม่มีแพทย์ดูแล</li>
-   <li>พลังงานจากออกกำลังกาย: (MET − 1) × น้ำหนัก × ชั่วโมง ใช้ค่า MET จาก Compendium of Physical Activities (Ainsworth et al.)</li>
-   <li>พลังงานจากก้าวเดิน: ความยาวก้าว ≈ ส่วนสูง × 0.415 และใช้ ~0.5 kcal ต่อ กก. ต่อ กม.</li>
-   <li>เป้าก้าวเดิน: งานวิเคราะห์อภิมาน (Paluch et al., Lancet Public Health 2022) และคำแนะนำกิจกรรมทางกาย WHO 2020 (150–300 นาที/สัปดาห์)</li>
-   <li>BMI ใช้เกณฑ์เอเชีย-แปซิฟิกของ WHO (ปกติ 18.5–22.9)</li>
-   <li>เมนูที่มีป้าย “กรมอนามัย” ใช้ค่าพลังงานจาก สำนักโภชนาการ กรมอนามัย “ตารางแสดงคุณค่าทางโภชนาการของอาหารไทย” พ.ศ. 2561 (ส่วนใหญ่เป็นค่าต่อ 100 กรัมส่วนที่กินได้ ไม่ใช่ต่อจาน) ชื่อเมนูถอดจากเอกสารด้วย OCR และแก้ไขแล้ว อาจยังมีสะกดผิดบางรายการ ข้อมูลชุดนี้มีเฉพาะพลังงาน ไม่มีโปรตีน คาร์บ ไขมัน</li>
-   <li>เมนูที่มีป้าย “ฉลากผู้ผลิต” (บะหมี่ Nissin) ใช้ค่าจากฉลากโภชนาการของผู้ผลิต</li>
-   <li>เมนูอื่นเป็นค่าเฉลี่ยโดยประมาณต่อหนึ่งหน่วยเสิร์ฟทั่วไป ยังไม่ได้ตรวจเทียบกับฐานข้อมูลทางการ ปริมาณจริงขึ้นกับร้านและขนาดจาน</li>
-   <li>แอปนี้ให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการแพทย์ ผู้มีโรคประจำตัว ตั้งครรภ์ หรือต้องการลดน้ำหนักมาก ควรปรึกษาแพทย์/นักกำหนดอาหาร</li></ul></details></div>`;
+  const g=S.goal,p=S.profile,G=goalCalc(),weights=[...S.weights].sort((a,b)=>a.d.localeCompare(b.d)),start=weights[0]?.w||p.weight;
+  const total=Math.abs(start-g.target),progress=G.mode==='maintain'?0:total?Math.max(0,Math.min(1,(start-p.weight)/(start-g.target))):0;
+  const refs=`<details class="profile-section card"><summary><span class="settings-icon">${IC.info}</span><span class="grow"><b>เข้าใจตัวเลขของคุณ</b><span>วิธีคำนวณและข้อมูลอ้างอิง</span></span>${IC.chevron}</summary><div class="settings-content"><ul class="small flist"><li>BMR ใช้สมการ Mifflin–St Jeor (1990) จากเพศ อายุ ส่วนสูง และน้ำหนัก</li><li>TDEE = BMR × ระดับกิจกรรมนอกเหนือจากการออกกำลังที่บันทึก พลังงานจากออกกำลัง = (MET − 1) × น้ำหนัก × ชั่วโมง (Compendium of Physical Activities)</li><li>ไขมัน 1 กก. ใช้ค่าประมาณ 7,700 kcal ตัวเลขจริงขึ้นกับแต่ละบุคคล</li><li>อัตราลดน้ำหนักทั่วไป 0.25–1 กก./สัปดาห์ และไม่เกินประมาณ 1% ของน้ำหนักต่อสัปดาห์ งบไม่ต่ำกว่า 1,200 kcal สำหรับหญิง / 1,500 kcal สำหรับชายหากไม่มีแพทย์ดูแล</li><li>ก้าวเดินประมาณจากส่วนสูง × 0.415 และพลังงาน ~0.5 kcal ต่อ กก. ต่อ กม. อ้างอิงกิจกรรม WHO 2020 และ Paluch et al., Lancet Public Health 2022</li><li>BMI ใช้เกณฑ์เอเชีย-แปซิฟิก อาหารที่มีป้ายกรมอนามัยอ้างอิงตารางคุณค่าอาหารไทย พ.ศ. 2561 ต่อ 100 กรัมส่วนที่กินได้ อาหารอื่นเป็นค่าประมาณ ปริมาณจริงขึ้นกับร้านและขนาดจาน</li><li>ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการแพทย์ ผู้มีโรคประจำตัว ตั้งครรภ์ หรือมีประวัติความผิดปกติทางการกิน ควรปรึกษาแพทย์หรือนักกำหนดอาหาร</li></ul></div></details>`;
+  return appHeader('เป้าหมายในจังหวะของคุณ','ค่อย ๆ ไปต่อ ด้วยแผนที่เหมาะกับร่างกาย')+`<section class="card goal-overview">${sectionHeading(G.mode==='maintain'?'รักษาสมดุลในทุกวัน':'เส้นทางสู่เป้าหมาย',G.mode==='maintain'?'ดูแลพลังงานและติดตามน้ำหนักอย่างสม่ำเสมอ':'ทุกความก้าวหน้าเล็ก ๆ มีความหมาย',`<span class="settings-icon">${IC.target}</span>`)}<div class="goal-metrics"><div><span>ปัจจุบัน</span><b class="num">${r1(p.weight)}<small> กก.</small></b></div><span class="goal-arrow">${IC.right}</span><div><span>เป้าหมาย</span><b class="num">${r1(g.target)}<small> กก.</small></b></div></div><div class="goal-progress bar" role="progressbar" aria-label="ความก้าวหน้าสู่เป้าน้ำหนัก" aria-valuenow="${Math.round(progress*100)}" aria-valuemin="0" aria-valuemax="100"><i style="width:${progress*100}%"></i></div><p class="small mute">${G.mode==='maintain'?'เป้าพลังงาน '+fmt(G.budget)+' kcal ต่อวัน':'เหลืออีก '+r1(Math.max(p.weight-g.target,0))+' กก. ถึงเป้าที่ตั้งไว้'}</p></section>
+  <section class="card stack">${sectionHeading('ติดตามน้ำหนัก','บันทึกตามจริง แล้วดูแนวโน้มไปด้วยกัน')}<label class="f" for="wtIn">น้ำหนักวันนี้ (กก.)</label><div class="row"><input type="number" id="wtIn" min="20" max="300" step="0.1" inputmode="decimal" placeholder="เช่น 60.5" aria-label="น้ำหนักวันนี้"><button class="btn" data-act="logWeight">บันทึก</button></div><div class="weight-chart">${weightChart()}</div></section>
+  <section class="card stack">${sectionHeading('ปรับแผนของคุณ','เลือกเป้าหมายที่ทำได้ต่อเนื่อง')}<div class="grid2"><label class="f">น้ำหนักปัจจุบัน (กก.)<input type="number" min="20" max="300" step="0.1" inputmode="decimal" data-bind="profile.weight" data-num value="${p.weight}"></label><label class="f">น้ำหนักเป้าหมาย (กก.)<input type="number" min="20" max="300" step="0.1" inputmode="decimal" data-bind="goal.target" data-num value="${g.target}"></label></div><div class="seg" role="group" aria-label="รอบเป้าหมายน้ำหนัก">${['week','month','year'].map(x=>`<button data-act="period" data-v="${x}" aria-pressed="${g.period===x}">ราย${PL[x]}</button>`).join('')}</div><label class="f">น้ำหนักที่อยากลดต่อ${PL[g.period]} (กก.)<input type="number" step="0.1" min="0" inputmode="decimal" data-bind="goal.amount" data-num value="${g.amount}"></label><div id="goalBox" class="stack">${goalBox()}</div></section>
+  <section class="card stack">${sectionHeading('เป้าก้าวเดินของคุณ','เริ่มจากระดับที่เหมาะกับชีวิตประจำวัน')}<label class="f">จำนวนก้าวต่อวัน<input type="number" step="500" min="1000" inputmode="numeric" data-bind="goal.stepGoal" data-num value="${g.stepGoal}"></label><p class="tiny mute">เลือกเป้าที่คุณทำได้ต่อเนื่อง แล้วค่อยปรับเพิ่มเมื่อพร้อม</p></section>
+  <details class="profile-section card"><summary><span class="settings-icon">${IC.clock}</span><span class="grow"><b>ช่วงเวลากินและการฟาสต์</b><span>เปิดตัวจับเวลา หรือทำความเข้าใจ IF</span></span>${IC.chevron}</summary><div class="settings-content"><button class="btn alt" data-act="openFast">${IC.clock} เปิดตัวจับเวลา IF</button>${fastGuide()||'<p class="small mute">เลือกใช้ตามความเหมาะสมกับสุขภาพและกิจวัตรของคุณ</p>'}</div></details>${refs}`;
 }
 
 function statsBox(){
@@ -1245,26 +1310,18 @@ function statsBox(){
   return `<div class="eq"><div><span class="tiny mute">BMR</span><b>${fmt(bmr(p))}</b></div><div><span class="tiny mute">TDEE</span><b>${fmt(tdee(p))}</b></div><div><span class="tiny mute">BMI</span><b>${r1(b)}</b><span class="tiny mute">${bmiLabel(b)}</span></div></div>`;
 }
 function viewMe(){
-  const p=S.profile;
-  if(!ui.body)ui.body={h:p.height,w:p.weight};
-  return `<div class="top"><h1 style="font-size:22px">โปรไฟล์</h1></div>
-  <div class="card stack" style="align-items:center"><button data-act="avatar" style="background:none;border:0;padding:0;border-radius:50%" aria-label="เปลี่ยนรูปโปรไฟล์">${avatarHTML('big')}</button><button class="btn sm alt" data-act="avatar">เปลี่ยนรูป</button>
-  <label class="f" style="width:100%">ชื่อเล่น<input type="text" data-bind="profile.name" maxlength="24" value="${esc(p.name)}" placeholder="เช่น มิ้นท์"></label></div>
-  <div class="card stack"><h2 id="themeTitle">🎨 ธีมแอป</h2>
-   <div class="seg" role="group" aria-labelledby="themeTitle">${[['system','ตามเครื่อง'],['light','สว่าง'],['dark','มืด']].map(([v,label])=>`<button type="button" data-act="theme" data-v="${v}" aria-pressed="${APP_THEME.preference===v}">${label}</button>`).join('')}</div>
-   <p class="small mute">เลือก “ตามเครื่อง” เพื่อเปลี่ยนธีมอัตโนมัติตามการตั้งค่าอุปกรณ์</p></div>
-  <div class="card stack"><h2>⌚ ข้อมูลจากนาฬิกา</h2><p class="small mute">บันทึกก้าวเดิน พลังงานกิจกรรม และประวัติน้ำหนักจาก Apple Watch, Amazfit หรือ Galaxy Watch เมื่อคุณต้องการ</p><button class="btn alt" data-act="openHealth">บันทึก / นำเข้าข้อมูลสุขภาพ</button><p class="tiny mute">กรอกยอดเอง หรือเลือก Apple Health ZIP/XML และ CSV สรุปรายวัน</p></div>
-  ${bodyCard()}${styleCard()}
-  <div class="card stack"><h2>📏 ข้อมูลร่างกาย</h2>
-   <div><div class="small mute" style="margin-bottom:6px">เพศ (ใช้ในสมการคำนวณ)</div><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div>
-   <label class="f">อายุ (ปี)<input type="number" inputmode="numeric" data-bind="profile.age" data-num value="${p.age}"></label>
-   <label class="f">ระดับกิจกรรมในชีวิตประจำวัน<select data-bind="profile.act" data-num>${ACT_LV.map(a=>`<option value="${a[0]}" ${p.act===a[0]?'selected':''}>${a[1]} · ${a[2]}</option>`).join('')}</select></label>
-   <div id="stats">${statsBox()}</div>
-   <p class="tiny mute">ไม่ต้องนับการออกกำลังกายในระดับกิจกรรม เพราะแอปบวกจากที่คุณบันทึกให้แยกต่างหาก</p></div>
-  ${installCard()}${accountCard()}<div class="card stack"><h2>💾 ข้อมูลของฉัน</h2><p class="small mute">${USER?'ข้อมูลสำรองอยู่ในบัญชีของคุณและซิงก์อัตโนมัติ ปุ่มด้านล่างเป็นการสำรองเป็นไฟล์เพิ่มเติม':'ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ถ้าล้างเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย แนะนำให้สำรองไฟล์ไว้'}</p>
-   <div class="row wrap"><button class="btn alt" data-act="export">สำรองข้อมูล</button><button class="btn alt" data-act="import">นำเข้าข้อมูล</button></div>
-   <button class="btn alt" data-act="obRestart">🔁 ตั้งค่าเริ่มต้นใหม่ (ไม่ลบข้อมูลอาหาร)</button>
-   <button class="btn pink" data-act="reset">${ui.confirmReset?'กดอีกครั้งเพื่อยืนยันลบทั้งหมด':'ลบข้อมูลทั้งหมด'}</button></div>`;
+  const p=S.profile;if(!ui.body)ui.body={h:p.height,w:p.weight};
+  const body=`<div class="grid2"><label class="f">ส่วนสูง (ซม.)<input type="number" min="100" max="230" inputmode="decimal" data-bind="profile.height" data-num value="${p.height}"></label><label class="f">น้ำหนัก (กก.)<input type="number" min="20" max="300" step="0.1" inputmode="decimal" data-bind="profile.weight" data-num value="${p.weight}"></label></div><div class="grid2"><label class="f">อายุ (ปี)<input type="number" min="10" max="100" inputmode="numeric" data-bind="profile.age" data-num value="${p.age}"></label><div><p class="small mute" style="margin:0 0 6px">เพศที่ใช้คำนวณ</p><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div></div><label class="f">กิจกรรมในชีวิตประจำวัน<select data-bind="profile.act" data-num>${ACT_LV.map(a=>`<option value="${a[0]}" ${p.act===a[0]?'selected':''}>${a[1]} · ${a[2]}</option>`).join('')}</select></label><div id="stats">${statsBox()}</div><p class="tiny mute">เลือกระดับกิจวัตรทั่วไป ส่วนการออกกำลังที่บันทึกจะนำมาคำนวณเพิ่ม</p>`;
+  const data=`<p class="small mute">${USER?'ข้อมูลบันทึกอยู่ในบัญชีของคุณ สำรองเป็นไฟล์เพิ่มเติมได้':'ข้อมูลบันทึกอยู่ในเบราว์เซอร์นี้ แนะนำให้สำรองก่อนเปลี่ยนเครื่องหรือล้างข้อมูล'}</p><div class="grid2"><button class="btn alt" data-act="export">${IC.download} สำรองข้อมูล</button><button class="btn alt" data-act="import">${IC.upload} นำเข้าไฟล์สำรอง</button></div><p class="tiny mute">ไฟล์สำรอง Cal Goal เป็น JSON สำหรับกู้โปรไฟล์ เป้าหมาย และบันทึกของคุณ</p>`;
+  return appHeader('พื้นที่ของคุณ','ปรับแอปให้เข้ากับตัวคุณและชีวิตประจำวัน')+`<section class="card profile-overview"><div class="row"><button class="profile-avatar" data-act="avatar" aria-label="เปลี่ยนรูปโปรไฟล์">${avatarHTML('big')}<span>${IC.edit}</span></button><div class="grow"><h2 id="profileDisplayName">${esc(p.name||'โปรไฟล์ของฉัน')}</h2><p class="profile-caption">${USER?'บันทึกเข้าบัญชีของคุณ':'บันทึกบนเครื่องนี้'}</p><button class="text-btn" data-act="avatar">เปลี่ยนรูป ${IC.right}</button></div></div><label class="f">ชื่อที่อยากให้เรียก<input type="text" data-bind="profile.name" maxlength="24" value="${esc(p.name)}" placeholder="เช่น มิ้นท์"></label><div class="profile-metrics"><div><span>ส่วนสูง</span><b class="num"><span data-profile-metric="height">${p.height}</span><small> ซม.</small></b></div><div><span>น้ำหนัก</span><b class="num"><span data-profile-metric="weight">${r1(p.weight)}</span><small> กก.</small></b></div><div><span>BMI</span><b class="num" data-profile-metric="bmi">${r1(bmi(p))}</b></div></div></section>
+  ${profileSection('body',IC.me,'ข้อมูลร่างกาย','ส่วนสูง น้ำหนัก และระดับกิจกรรม',body)}
+  <section class="card settings-group"><div class="section-heading"><h2 id="themeTitle">บรรยากาศที่คุณชอบ</h2><span class="settings-icon">${IC.palette}</span></div><div class="seg" role="group" aria-labelledby="themeTitle">${[['system','ตามเครื่อง'],['light','สว่าง'],['dark','มืด']].map(([v,label])=>`<button type="button" data-act="theme" data-v="${v}" aria-pressed="${APP_THEME.preference===v}">${label}</button>`).join('')}</div><p class="tiny mute">เลือกตามเครื่อง เพื่อให้แอปเปลี่ยนธีมตามอุปกรณ์</p></section>
+  <button class="settings-row card" data-act="openHealth"><span class="settings-icon">${IC.watch}</span><span class="grow"><b>ข้อมูลจากนาฬิกา</b><span>กรอกยอดเอง หรือนำเข้าไฟล์สุขภาพ</span></span>${IC.right}</button>
+  ${accountCard()}
+  ${profileSection('appearance',IC.sparkle,'ตัวละครในแบบของคุณ','ดูรูปร่างและแต่งตัวอวตาร',ui.profileOpen?.appearance?bodyCard()+styleCard():'')}
+  ${profileSection('data',IC.folder,'ข้อมูลและไฟล์สำรอง','สำรอง นำเข้า และจัดการบันทึก',data)}
+  ${profileSection('help',IC.info,'เกี่ยวกับ Cal Goal','ติดตั้งแอป ความเป็นส่วนตัว และคำแนะนำ',installCard()+`<a class="settings-row" href="privacy.html" target="_blank" rel="noopener"><span class="settings-icon">${IC.shield}</span><span class="grow"><b>ความเป็นส่วนตัว</b><span>ข้อมูลของคุณถูกใช้อย่างไร</span></span>${IC.right}</a><a class="settings-row" href="terms.html" target="_blank" rel="noopener"><span class="settings-icon">${IC.info}</span><span class="grow"><b>ข้อกำหนดการใช้งาน</b><span>สิ่งที่ควรรู้ก่อนใช้งาน</span></span>${IC.right}</a><p class="tiny mute">ค่าพลังงานและข้อมูลสุขภาพเป็นค่าประมาณทั่วไป ไม่ใช่คำแนะนำทางการแพทย์</p>`)}
+  <details class="profile-section profile-danger card" ${ui.confirmReset?'open':''}><summary><span class="settings-icon">${IC.settings}</span><span class="grow"><b>เริ่มต้นใหม่</b><span>ตั้งค่าใหม่ หรือจัดการการลบข้อมูล</span></span>${IC.chevron}</summary><div class="settings-content"><button class="btn alt" data-act="obRestart">ตั้งค่าเริ่มต้นอีกครั้ง</button><p class="tiny mute">ตั้งค่าโปรไฟล์และเป้าหมายอีกครั้ง โดยเก็บบันทึกอาหารไว้</p><button class="btn pink" data-act="reset">${ui.confirmReset?'ยืนยันลบข้อมูลทั้งหมด':'ลบข้อมูลทั้งหมด'}</button><p class="tiny mute">การลบข้อมูลทั้งหมดจะลบบันทึกและโปรไฟล์ ควรสำรองข้อมูลก่อน</p></div></details>`;
 }
 
 function cheer(t){
@@ -1571,7 +1628,7 @@ function startIdle(first){
 function avLife(){
   stopAv();
   if(ui.react==='eat')setTimeout(()=>beepSmartTip('meal'),1600);
-  if(ui.tab!=='today'){ui.react=null;return}
+  if(ui.tab!=='today'||!$('.mascot')||matchMedia('(prefers-reduced-motion: reduce)').matches){ui.react=null;return}
   const r=ui.react;ui.react=null;
   if(r)actT=setTimeout(()=>playAct(r),500);
   startIdle(r?4200:1600);
@@ -1589,12 +1646,12 @@ function obView(){
   const o=ui.ob||(ui.ob={step:0}),st=o.step,p=S.profile,g=S.goal;
   if(!o.mode)o.mode=(p.age<18||g.target>=p.weight)?'keep':'lose';
   const dots=[0,1,2,3,4].map(i=>`<i class="od ${i<=st?'on':''}"></i>`).join('');
-  const av=`<div class="ob-av">${mascot(st===4?'cheer':'happy',{id:'o'})}</div>`;
+  const av=`<div class="auth-character"><img src="assets/beep_head.png" alt="Beep พร้อมดูแลคุณ" width="142" height="142"></div>`;
   const back=st>0?`<button class="btn alt" data-act="obBack">‹ ย้อนกลับ</button>`:'';
   let h=`<div class="ob-dots" role="img" aria-label="ขั้นที่ ${st+1} จาก 5">${dots}</div>`;
   if(st===0){
-    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:24px">สวัสดี! ยินดีต้อนรับสู่ Cal Goal 👋</h1>
-    <p class="small mute">ตอบไม่กี่ข้อ แอปจะคำนวณพลังงานและเป้าหมายที่เหมาะกับคุณ ใช้เวลาไม่ถึง 1 นาที ไม่ต้องล็อกอิน</p>
+    h+=`<div class="card stack" style="text-align:center">${av}<h1 style="font-size:24px">สุขภาพดี ในแบบของคุณ</h1>
+    <p class="small mute">เริ่มจากข้อมูลเล็กน้อย เพื่อวางเป้าพลังงานและกิจกรรมให้เหมาะกับคุณ</p>
     <label class="f" style="text-align:left">เรียกคุณว่าอะไรดี<input type="text" data-bind="profile.name" maxlength="24" value="${esc(p.name)}" placeholder="เช่น มิ้นท์"></label>
     <div style="text-align:left"><div class="small mute" style="margin-bottom:6px">เพศ (ใช้ในสมการคำนวณพลังงาน)</div><div class="seg"><button data-act="sex" data-v="f" aria-pressed="${p.sex==='f'}">หญิง</button><button data-act="sex" data-v="m" aria-pressed="${p.sex==='m'}">ชาย</button></div></div>
     <button class="btn" data-act="obNext">ต่อไป ›</button></div>`;
@@ -1633,7 +1690,7 @@ function obView(){
     <p class="tiny mute" style="text-align:left">แอปนี้ให้ข้อมูลทั่วไป ไม่ใช่คำแนะนำทางการแพทย์ ค่าแคลอรี่อาหารเป็นค่าประมาณ ผู้มีโรคประจำตัว ตั้งครรภ์ หรือมีประวัติความผิดปกติทางการกิน ควรปรึกษาแพทย์ก่อนใช้ ข้อมูลทั้งหมดเก็บในเครื่องนี้ ปรับแก้ได้ทุกเมื่อในแท็บโปรไฟล์และเป้าหมาย</p>
     <div class="row">${back}<button class="btn grow" data-act="obDone">รับทราบ เริ่มเลย 🚀</button></div></div>`;
   }
-  return h;
+  return `<div class="onboarding-shell"><div class="onboarding-header"><span class="auth-brand">${IC.leaf} Cal Goal</span><span class="eyebrow">เริ่มต้น ${st+1}/5</span></div><div class="onboarding-step">${h}</div></div>`;
 }
 function obCheck(st){
   const p=S.profile,g=S.goal,o=ui.ob;
@@ -1701,11 +1758,11 @@ async function authInit(){
   }catch(e){AUTH_FAIL=true}
   AUTHREADY=true;render();
 }
-function authLoading(){return `<div class="card stack" style="text-align:center;margin-top:60px"><div class="ob-av">${mascot('happy',{id:'l'})}</div><p class="small mute"><span class="spin"></span> กำลังเตรียมแอป...</p></div>`}
+function authLoading(){return `<div class="auth-shell"><span class="auth-brand">${IC.leaf} Cal Goal</span><div class="auth-card"><div class="auth-character"><img src="assets/beep_head.png" alt="" width="142" height="142"></div><h1>กำลังเตรียมพื้นที่ของคุณ</h1><p class="small mute" role="status">อีกสักครู่ แล้วมาเริ่มดูแลตัวเองไปด้วยกัน</p></div></div>`}
 function loginView(){
   const a=ui.auth||(ui.auth={email:'',code:'',sent:false,busy:false,err:''});
-  let h=`<div class="card stack" style="text-align:center;margin-top:24px"><div class="ob-av">${mascot('happy',{id:'l'})}</div>
-  <h1 style="font-size:28px">Cal Goal</h1><p style="font-family:var(--f-display);font-style:italic;font-weight:700;color:var(--lime);margin-top:-4px">สุขภาพดีต้องมีเป้าหมาย</p><p class="small mute">เข้าสู่ระบบเพื่อเก็บข้อมูลไว้ในบัญชี เปิดใช้ได้ทุกเครื่อง ข้อมูลไม่หาย</p>`;
+  let h=`<div class="auth-shell"><span class="auth-brand">${IC.leaf} Cal Goal</span><div class="auth-card"><div class="auth-character"><img src="assets/beep_head.png" alt="Beep ผู้ช่วยของคุณ" width="142" height="142"></div>
+  <h1>สุขภาพดี เริ่มจากวันนี้</h1><p class="small mute">บันทึกอาหาร ขยับร่างกาย และค่อย ๆ ไปถึงเป้าหมายของคุณ</p><p class="small mute">เข้าสู่ระบบเพื่อเก็บข้อมูลไว้ในบัญชี เปิดใช้ได้ทุกเครื่อง ข้อมูลไม่หาย</p>`;
   if(CFG.google!==false)h+=`<button class="btn" data-act="gLogin" ${a.busy?'disabled':''}>เข้าสู่ระบบด้วย Google</button><div class="small mute">หรือ</div>`;
   if(!a.sent){
     h+=`<label class="f" style="text-align:left">อีเมล<input type="email" id="authEmail" data-model="auth.email" inputmode="email" autocomplete="email" placeholder="you@example.com" value="${esc(a.email)}"></label>
@@ -1717,7 +1774,7 @@ function loginView(){
   }
   if(a.err)h+=`<div class="warn" style="text-align:left">${esc(a.err)}</div>`;
   h+=`<button class="chip" data-act="guest" style="align-self:center">ใช้งานโดยไม่ล็อกอิน</button>
-  <p class="tiny mute">ไม่ล็อกอิน ข้อมูลเก็บในเครื่องนี้เท่านั้น ล้างเบราว์เซอร์แล้วจะหาย</p></div>`;
+  <p class="tiny mute">ไม่ล็อกอิน ข้อมูลเก็บในเครื่องนี้เท่านั้น ล้างเบราว์เซอร์แล้วจะหาย</p></div></div>`;
   return h;
 }
 function syncText(){return ui.sync==='pending'?'รอซิงก์...':ui.sync==='error'?'ซิงก์ไม่สำเร็จ จะลองใหม่เมื่อมีการบันทึกครั้งถัดไป':ui.sync==='ok'?'ซิงก์แล้ว '+new Date(ui.syncAt||Date.now()).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}
@@ -1772,10 +1829,8 @@ function beepContext(){
     last7:last7
   };
 }
-/* ---------- Beep: ผู้ช่วยลอยข้างจอ (ลากได้ เด้งเตือนตามสถานการณ์ แชตเปิดค้างระหว่างใช้แอป) ---------- */
-const BEEP_POS_KEY='chompy.beepPos',BEEP_CHAT_KEY='chompy.chat',BEEP_INTRO_KEY='chompy.beepIntro';
-let beepPos={side:'r',y:null};
-try{const sp=JSON.parse(localStorage.getItem(BEEP_POS_KEY)||'null');if(sp&&(sp.side==='l'||sp.side==='r'))beepPos=sp}catch(e){}
+/* ---------- Beep: ผู้ช่วยข้างหัวข้อหน้า แชตเปิดค้างระหว่างใช้แอป ---------- */
+const BEEP_CHAT_KEY='chompy.chat',BEEP_INTRO_KEY='chompy.beepIntro';
 ui.chat={msgs:[],busy:false};
 try{const sv=JSON.parse(localStorage.getItem(BEEP_CHAT_KEY)||'null');if(Array.isArray(sv))ui.chat.msgs=sv.filter(m=>m&&(m.role==='user'||m.role==='assistant')&&typeof m.text==='string').slice(-20)}catch(e){}
 ui.beepOpen=false;
@@ -1787,14 +1842,12 @@ const BEEP_CHIPS={
   me:['ดูแลตัวเองยังไงให้สุขภาพดี 💚','ควรนอนกี่ชั่วโมง 😴']
 };
 function saveChat(){try{localStorage.setItem(BEEP_CHAT_KEY,JSON.stringify(ui.chat.msgs.slice(-20)))}catch(e){}}
-function beepY(){const h=window.innerHeight;const y=beepPos.y==null?h-200:beepPos.y;return Math.max(70,Math.min(y,h-150))}
 function renderBeepDock(){
   const root=$('#beepRoot');if(!root)return;
   const show=!!(S.onboarded&&AUTHREADY&&(!AUTH_ON||USER||GUEST||AUTH_FAIL));
   root.hidden=!show;if(!show)return;
   if(!$('#beepDock')){
-    root.innerHTML=`<div id="beepDock" class="beep-dock" data-side="${beepPos.side}" style="top:${beepY()}px"><div id="beepTip" class="beep-tip" hidden></div><button id="beepBtn" class="beep-btn" data-act="beepToggle" aria-label="คุยกับ Beep">${beepCharHTML()}<span class="bchat">💬</span></button><button id="beepJump" class="beep-jump" data-act="beepJump" aria-label="ให้ Beep กระโดด" title="ให้ Beep กระโดด" hidden>↟</button></div><div id="beepPanelMount"></div>`;
-    initBeepDrag();
+    root.innerHTML=`<div id="beepDock" class="beep-dock"><div id="beepTip" class="beep-tip" hidden></div><button id="beepBtn" class="beep-btn" data-act="beepToggle" aria-label="คุยกับ Beep">${beepCharHTML()}<span class="bchat">💬</span></button><button id="beepJump" class="beep-jump" data-act="beepJump" aria-label="ให้ Beep กระโดด" title="ให้ Beep กระโดด" hidden>↟</button></div><div id="beepPanelMount"></div>`;
     const host=$('#beepBtn .bchar');
     import('./beep-3d.js').then(({mountBeep})=>{
       if(!host.isConnected)return;
@@ -1805,35 +1858,10 @@ function renderBeepDock(){
   if(!beepStarted){
     beepStarted=true;
     let seen=false;try{seen=localStorage.getItem(BEEP_INTRO_KEY)==='1';localStorage.setItem(BEEP_INTRO_KEY,'1')}catch(e){}
-    if(!seen)setTimeout(()=>beepTip('สวัสดี! Beep อยู่ตรงนี้นะ ถามเรื่องกินหรือออกกำลังกายได้ตลอด ลากย้ายที่ได้ด้วย 💬','แนะนำตัวหน่อยว่าช่วยอะไรได้บ้าง',12000,true),2500);
+    if(!seen)setTimeout(()=>beepTip('สวัสดี! Beep อยู่ตรงนี้นะ ถามเรื่องกินหรือออกกำลังกายได้ตลอด กดที่ตัว Beep เพื่อคุยกันได้เลย 💬','แนะนำตัวหน่อยว่าช่วยอะไรได้บ้าง',12000,true),2500);
     setInterval(eveningNudge,60000);setInterval(fastTick,1000);fastPushCfg();
     if(/[?&]fast=1/.test(location.search)){try{history.replaceState({cg:1},'',location.pathname)}catch(e){}setTimeout(openFast,300)}
   }
-}
-function initBeepDrag(){
-  const dock=$('#beepDock'),btn=$('#beepBtn');
-  let sx=0,sy=0,ox=0,oy=0,drag=false,pid=null;
-  btn.addEventListener('pointerdown',e=>{pid=e.pointerId;sx=e.clientX;sy=e.clientY;const r=dock.getBoundingClientRect();ox=r.left;oy=r.top;drag=false;try{btn.setPointerCapture(pid)}catch(x){}});
-  btn.addEventListener('pointermove',e=>{
-    if(pid==null)return;
-    const dx=e.clientX-sx,dy=e.clientY-sy;
-    if(!drag&&Math.hypot(dx,dy)>8)drag=true;
-    if(drag){dock.classList.add('dragging');dock.style.left=(ox+dx)+'px';dock.style.right='auto';dock.style.top=Math.max(60,Math.min(oy+dy,window.innerHeight-150))+'px'}
-  });
-  const end=()=>{
-    if(pid==null)return;
-    try{btn.releasePointerCapture(pid)}catch(x){}
-    pid=null;
-    if(drag){
-      const r=dock.getBoundingClientRect();
-      beepPos={side:(r.left+r.width/2<window.innerWidth/2)?'l':'r',y:r.top};
-      try{localStorage.setItem(BEEP_POS_KEY,JSON.stringify(beepPos))}catch(x){}
-      dock.classList.remove('dragging');dock.style.left='';dock.style.right='';dock.dataset.side=beepPos.side;dock.style.top=beepY()+'px';
-      ui._noClick=true;setTimeout(()=>{ui._noClick=false},60);
-    }
-  };
-  btn.addEventListener('pointerup',end);btn.addEventListener('pointercancel',end);
-  window.addEventListener('resize',()=>{const d=$('#beepDock');if(d)d.style.top=beepY()+'px'});
 }
 function beepCharHTML(){
   // Original artwork is shown while the 3D module loads or WebGL is unavailable.
@@ -1846,17 +1874,16 @@ function beepTip(text,q,ms,force){
   const now=Date.now();
   if(ui.beepOpen||ui.sh||(!force&&(tipCount>=6||now-lastTipAt<150000)))return;
   const t=$('#beepTip');if(!t)return;
-  t.innerHTML=`<button class="bt-go" data-act="beepTipGo" data-q="${esc(q||'')}">${esc(text)}</button><button class="bt-x" data-act="beepTipX" aria-label="ปิด">×</button>`;
-  t.hidden=false;if(!force){tipCount++;lastTipAt=now}
+  ui.beepHint={text,q:q||''};t.hidden=true;if(!force){tipCount++;lastTipAt=now}
   const dk=$('#beepDock');if(dk)dk.classList.add('waving');
   clearTimeout(tipT);tipT=setTimeout(hideTip,ms||10000);
-  const b=$('#beepBtn');if(b){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle')}
+  const b=$('#beepBtn');if(b){b.classList.add('unread');b.title=text;b.setAttribute('aria-label','คุยกับ Beep · '+text)}
 }
 function beepSmartTip(kind){
   if(!S.onboarded)return;
   const k=todayKey(),t=totals(k);
   if(kind==='meal'){
-    if(t.left<0)beepTip('เกินงบ '+fmt(-t.left)+' kcal แล้วนะ ให้ Beep แนะนำวิธีชดเชยไหม? 🏃','กินเกินงบแล้ว ควรทำอะไรดีวันนี้');
+    if(t.left<0)beepTip('วันนี้บันทึกเกินเป้า '+fmt(-t.left)+' kcal อยากวางแผนมื้อถัดไปกับ Beep ไหม?','ช่วยวางแผนมื้อถัดไปแบบสมดุลให้หน่อย');
     else beepTip('เพิ่มแล้ว! เหลืออีก '+fmt(t.left)+' kcal 💪 ให้ Beep แนะนำมื้อต่อไปไหม?','แนะนำมื้อต่อไปให้หน่อย');
   }else if(kind==='workout')beepTip('เยี่ยม! ออกกำลังกายแล้ว 🔥 ให้ Beep ช่วยสรุปวันนี้ไหม?','สรุปวันนี้ให้หน่อย');
 }
@@ -1871,11 +1898,12 @@ function openBeepPanel(){
   const m=$('#beepPanelMount');if(!m)return;
   m.innerHTML=`<div class="beep-panel" role="dialog" aria-label="แชตกับ Beep">
     <div class="bp-head"><span class="beep-av"><img src="assets/beep_head.png" alt=""></span><div class="grow"><b>Beep</b><div class="tiny mute">ออนไลน์ · รู้ข้อมูลวันนี้ของคุณ</div></div><button class="icon-btn" data-act="beepClear" aria-label="ล้างแชต">🗑</button><button class="icon-btn" data-act="beepToggle" aria-label="ย่อแชต">${IC.x}</button></div>
+    ${ui.beepHint?`<button class="coach-inline" data-act="beepTipGo" data-q="${esc(ui.beepHint.q)}"><span class="settings-icon">${IC.sparkle}</span><span class="grow">${esc(ui.beepHint.text)}</span></button>`:''}
     <div id="chatList" class="chat-list">${chatList()}</div>
     <div id="chatChips" class="chips"></div>
     <div class="bp-in"><input type="text" id="chatIn" maxlength="300" placeholder="ถาม Beep ได้เลย..." autocomplete="off"><button class="btn" data-act="beepSend">ส่ง</button></div>
     <p class="tiny mute bp-note">Beep เป็น AI ให้คำแนะนำทั่วไป ไม่ใช่แพทย์ หากมีอาการผิดปกติควรพบแพทย์</p></div>`;
-  const b=$('#beepBtn');if(b)b.classList.remove('unread');
+  const b=$('#beepBtn');if(b){b.classList.remove('unread');b.removeAttribute('title');b.setAttribute('aria-label','คุยกับ Beep')}
   updateBeepChips();refreshChat();
   setTimeout(()=>{const i=$('#chatIn');if(i&&!ui.chat.busy)i.focus({preventScroll:true})},120);
 }
@@ -1955,17 +1983,21 @@ function installCard(){
 const VIEWS={today:viewToday,work:viewWork,goal:viewGoal,me:viewMe};
 function tabbar(){
   const T=(id,ic,label)=>`<button class="tab" data-act="tab" data-v="${id}" ${ui.tab===id?'aria-current="page"':''}><span class="dot">${ic}</span>${label}</button>`;
-  return `<nav class="tabbar" aria-label="เมนูหลัก"><div class="in">${T('today',IC.today,'วันนี้')}${T('work',IC.work,'ออกกำลัง')}<button class="fab" data-act="add" data-ask="1" data-meal="${defaultMeal()}" aria-label="เพิ่มอาหาร">${IC.plus}</button>${T('goal',IC.goal,'เป้าหมาย')}${T('me',IC.me,'โปรไฟล์')}</div></nav>`;
+  return `<nav class="tabbar" aria-label="เมนูหลัก"><div class="in">${T('today',IC.today,'วันนี้')}${T('work',IC.work,'กิจกรรม')}<div class="fab-wrap"><button class="fab" data-act="add" data-ask="1" data-meal="${defaultMeal()}" aria-label="เพิ่มอาหาร">${IC.plus}</button><span class="fab-label">บันทึก</span></div>${T('goal',IC.goal,'เป้าหมาย')}${T('me',IC.me,'โปรไฟล์')}</div></nav>`;
 }
 function render(){renderMain();renderBeepDock();updateBeepChips()}
 function renderMain(){
+  const beepRoot=$('#beepRoot');if(beepRoot&&$('#app').contains(beepRoot))document.body.appendChild(beepRoot);
+  document.body.dataset.page=S.onboarded?ui.tab:'onboarding';
   if(AUTH_ON&&!AUTHREADY){stopAv();$('#app').innerHTML=authLoading();return}
   if(AUTH_ON&&!USER&&!GUEST&&!AUTH_FAIL){stopAv();$('#app').innerHTML=loginView();window.scrollTo(0,0);return}
   if(!S.onboarded){stopAv();$('#app').innerHTML=obView();window.scrollTo(0,0);return}
   if(ui.tab==='work'&&!ui.w)ui.w={i:1,min:30,kcal:actKcal(ACTS[1][1],30)};
-  const sy=window.scrollY,changed=ui._rt!==ui.tab;ui._rt=ui.tab;
+  const sy=window.scrollY,changed=ui._rt!==ui.tab,focus=!changed?focusState($('#app')):null;ui._rt=ui.tab;
   $('#app').classList.toggle('enter',changed);
   $('#app').innerHTML=VIEWS[ui.tab]()+tabbar();
+  if(beepRoot)$('#beepSlot')?.appendChild(beepRoot);
+  if(focus)restoreFocus($('#app'),focus);
   window.scrollTo({top:sy,left:0,behavior:'instant'});
   avLife();
 }
@@ -2106,7 +2138,14 @@ function openAdd(meal,ask){
     ai:{text:'',img:null,blob:null,loading:false,items:null,err:'',note:''},cu:{name:'',kcal:'',p:'',c:'',f:'',keep:true}};
   $('#sheetWrap').classList.add('open');document.body.classList.add('sheet-open');navPush('sheet');renderSheet();
 }
-function closeSheet(){if(healthWorker){healthWorker.terminate();healthWorker=null}ui.sh=null;document.body.classList.remove('sheet-open');$('#sheetWrap').classList.remove('open','full','srch');$('#sheet').innerHTML='';navUnwind(k=>k==='sheet'||k==='step')}
+let sheetOpener=null;
+function closeSheet(){
+  if(healthWorker){healthWorker.terminate();healthWorker=null}
+  ui.sh=null;document.body.classList.remove('sheet-open');$('#sheetWrap').classList.remove('open','full','srch');$('#sheet').innerHTML='';
+  $('#app').inert=false;$('#app').removeAttribute('aria-hidden');$('#beepRoot').inert=false;
+  if(!restoreFocus($('#app'),sheetOpener))$('.fab')?.focus({preventScroll:true});
+  sheetOpener=null;navUnwind(k=>k==='sheet'||k==='step');
+}
 /* ---------- ปัดย้อนกลับ / ปุ่ม Back: แต่ละขั้นที่เปิดจะ push history 1 รายการ ---------- */
 const NAV=[];let navIgnore=0;
 try{history.replaceState({cg:1},'')}catch(e){}
@@ -2170,12 +2209,31 @@ function renderResults(){
   const c=$('#rcount');if(c)c.textContent=countText();
   const x=document.querySelector('.sbox .sx');if(x)x.hidden=!ui.sh.q;
 }
+let searchFrame=0,avatarFrame=0,liveSaveTimer=null;
+function scheduleSearch(){cancelAnimationFrame(searchFrame);searchFrame=requestAnimationFrame(()=>{searchFrame=0;if(ui.sh?.tab==='search'&&!ui.sh.sel)renderResults()})}
+function flushLiveSave(){if(liveSaveTimer){clearTimeout(liveSaveTimer);liveSaveTimer=null;save()}}
+function scheduleAvatar(){
+  if(!avatarFrame)avatarFrame=requestAnimationFrame(()=>{avatarFrame=0;refreshAv()});
+  clearTimeout(liveSaveTimer);liveSaveTimer=setTimeout(()=>{liveSaveTimer=null;save()},250);
+}
 function aiTotal(){const it=ui.sh.ai.items||[];return it.reduce((a,x)=>a+(+x.kcal||0),0)}
 
 function renderSheet(){
+  if(!ui.sh)return;
+  const sheet=$('#sheet'),key=[ui.sh.mode||'food',ui.sh.step,ui.sh.tab,ui.sh.sel?.name,ui.sh.stage].join('|'),same=sheet.dataset.viewKey===key,focus=same?focusState(sheet):null,scroll=sheet.scrollTop;
+  if(!sheetOpener)sheetOpener=focusState($('#app'))||{selector:'.fab',node:document.body};
+  renderSheetContent();
+  sheet.dataset.viewKey=key;
+  $('#app').inert=true;$('#app').setAttribute('aria-hidden','true');$('#beepRoot').inert=true;
+  const title=sheet.querySelector('h2');
+  if(title){title.id='sheetTitle';title.tabIndex=-1;sheet.setAttribute('aria-labelledby','sheetTitle')}
+  if(!restoreFocus(sheet,focus))title?.focus({preventScroll:true});
+  sheet.scrollTop=same?scroll:0;
+}
+function renderSheetContent(){
   const sh=ui.sh;if(!sh)return;
   $('#sheetWrap').classList.remove('full','srch');
-  $('#sheet').setAttribute('aria-label',sh.mode==='health'?'บันทึกและนำเข้าข้อมูลสุขภาพ':'เพิ่มอาหาร');
+  $('#sheet').setAttribute('aria-label',sh.mode==='health'?'บันทึกและนำเข้าข้อมูลสุขภาพ':sh.mode==='fast'?'ตัวจับเวลา Intermittent Fasting':sh.mode==='avatar'?'เปลี่ยนรูปโปรไฟล์':'เพิ่มอาหาร');
   if(sh.mode==='health'){renderHealthSheet();return}
   if(sh.mode==='avatar'){renderAvatarSheet();return}
   if(sh.mode==='fast'){fastSi=-1;renderFastSheet();return}
@@ -2261,12 +2319,14 @@ function stopCamera(){
   const c=ui.cam;ui.cam=null;
   if(c&&c.stream)c.stream.getTracks().forEach(t=>t.stop());
   const v=$('#camView');if(v)v.remove();document.body.classList.remove('cam-open');
+  $('#sheet').inert=false;$('#sheet').removeAttribute('aria-hidden');
+  if(c?.opener&&!restoreFocus($('#sheet'),c.opener))$('#sheet h2')?.focus({preventScroll:true});
 }
 function closeCamera(){if(!ui.cam)return;stopCamera();navUnwind(k=>k==='cam')}
 async function startStream(facing){
-  const c=ui.cam;if(c.stream){c.stream.getTracks().forEach(t=>t.stop());c.stream=null}
+  const c=ui.cam;if(!c)return;if(c.stream){c.stream.getTracks().forEach(t=>t.stop());c.stream=null}
   const tries=[{video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}},audio:false},{video:true,audio:false}];
-  let err;for(const cons of tries){try{c.stream=await navigator.mediaDevices.getUserMedia(cons);break}catch(e){err=e}}
+  let err;for(const cons of tries){try{const stream=await navigator.mediaDevices.getUserMedia(cons);if(ui.cam!==c){stream.getTracks().forEach(t=>t.stop());return}c.stream=stream;break}catch(e){err=e;if(ui.cam!==c)return}}
   if(!c.stream)throw err||new Error('no camera');
   const v=$('#camVideo');if(v){v.srcObject=c.stream;v.classList.toggle('mirror',facing==='user');try{await v.play()}catch(e){}}
   c.facing=facing;
@@ -2274,12 +2334,14 @@ async function startStream(facing){
 async function openCamera(){
   if(ui.cam)return;
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.isSecureContext){$('#photoCam').click();return}
-  ui.cam={stream:null,facing:'environment'};
-  const d=document.createElement('div');d.id='camView';
+  ui.cam={stream:null,facing:'environment',opener:focusState($('#sheet'))};
+  const d=document.createElement('div');d.id='camView';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','ถ่ายรูปอาหาร');
   d.innerHTML=`<video id="camVideo" playsinline muted autoplay></video><div class="cam-top"><button class="cam-x" data-act="camClose" aria-label="ปิดกล้อง">${IC.x}</button><span class="cam-hint">จัดอาหารให้อยู่ในกรอบ แล้วกดถ่าย</span></div><div class="cam-bar"><button class="cam-side" data-act="photoPick2" aria-label="เลือกจากเครื่อง">🖼️</button><button class="cam-shot" data-act="camShot" aria-label="ถ่ายรูป"></button><button class="cam-side" data-act="camFlip" aria-label="สลับกล้อง">🔄</button></div><div class="cam-flash"></div>`;
   document.body.appendChild(d);document.body.classList.add('cam-open');navPush('cam');
+  $('#sheet').inert=true;$('#sheet').setAttribute('aria-hidden','true');d.querySelector('[data-act="camClose"]').focus();
   try{await startStream('environment')}
   catch(e){
+    if(!ui.cam)return;
     closeCamera();
     const den=e&&(e.name==='NotAllowedError'||e.name==='SecurityError');
     toast(den?'ยังไม่ได้อนุญาตกล้อง ใช้กล้องของเครื่องแทนนะ':'เปิดกล้องในแอปไม่ได้ ใช้กล้องของเครื่องแทนนะ');
@@ -2355,11 +2417,11 @@ function setPath(root,path,val){const ks=path.split('.');let o=root;for(let i=0;
 document.addEventListener('input',e=>{
   const el=e.target;
   if(el.dataset.healthField&&ui.sh?.mode==='health'){ui.sh.draft[el.dataset.healthField]=el.value;return}
-  if(el.dataset.live){setPath(S,el.dataset.live,el.type==='range'?parseFloat(el.value):el.value);save();refreshAv();return}
+  if(el.dataset.live){setPath(S,el.dataset.live,el.type==='range'?parseFloat(el.value):el.value);scheduleAvatar();return}
   if(el.dataset.model){
     const v=el.dataset.num!==undefined?(el.value===''?'':parseFloat(el.value)):el.value;
     setPath(ui,el.dataset.model,v);
-    if(el.dataset.after==='results')renderResults();
+    if(el.dataset.after==='results')scheduleSearch();
     if(el.dataset.after==='aitotal'){const t=$('#aiTot');if(t)t.textContent=fmt(aiTotal())+' kcal';const mc=$('#aiMac');if(mc)mc.innerHTML=aiMacHTML()}
   }
   if(el.id==='qtyIn'&&ui.sh&&ui.sh.sel){const q=Math.max(0.5,parseFloat(el.value)||1);ui.sh.qty=q;pv()}
@@ -2369,6 +2431,10 @@ document.addEventListener('input',e=>{
 function pv(){const f=ui.sh.sel,q=ui.sh.qty;$('#pvK').textContent=fmt(f.kcal*q);if(f.nomac){const g=$('#pvG');if(g)g.textContent=f.g?fmt(f.g*q)+' ก.':'—';return}$('#pvP').textContent=Math.round(f.p*q)+'g';$('#pvCF').textContent=Math.round(f.c*q)+'/'+Math.round(f.f*q)+'g'}
 document.addEventListener('change',e=>{
   const el=e.target;
+  if(el.id==='logDate'){
+    if(/^\d{4}-\d{2}-\d{2}$/.test(el.value)&&el.value<=todayKey()){ui.date=el.value;render()}
+    return;
+  }
   if(ui.sh?.mode==='health'){
     if(el.dataset.healthField){ui.sh.draft[el.dataset.healthField]=el.value;return}
     if(el.dataset.healthMap){ui.sh.mapping[el.dataset.healthMap]=+el.value;healthUpdatePreview(false);return}
@@ -2377,20 +2443,29 @@ document.addEventListener('change',e=>{
     if(el.dataset.healthRange){ui.sh[el.dataset.healthRange]=el.value;renderSheet();return}
     if(el.dataset.healthSelected){ui.sh.selected[el.dataset.healthSelected]=el.checked;renderSheet();return}
   }
-  if(el.dataset.live){render();return}
+  if(el.dataset.live){flushLiveSave();render();return}
   if(el.id==='cuKeep'&&ui.sh)ui.sh.cu.keep=el.checked;
   if(el.id==='fastT'&&S.fast.start&&el.value){const [hh,mm]=el.value.split(':').map(Number),d=new Date();d.setHours(hh,mm,0,0);if(d.getTime()>Date.now())d.setDate(d.getDate()-1);S.fast.start=d.getTime();S.fast.notified=null;fastDoneSeen=false;save();renderSheet();fastTick();fastSchedule();toast('แก้เวลาเริ่มเป็น '+dayClock(S.fast.start));return}
   if(el.dataset.bind){
     let v=el.value;
-    if(el.dataset.num!==undefined){v=parseFloat(v);if(isNaN(v)||v<0){render();return}}
+    if(el.dataset.num!==undefined){
+      v=parseFloat(v);
+      if(!Number.isFinite(v)||v<0||(el.hasAttribute('min')&&v<+el.min)||(el.hasAttribute('max')&&v>+el.max)){
+        const old=el.dataset.bind.split('.').reduce((o,k)=>o?.[k],S);el.value=old;el.setAttribute('aria-invalid','true');toast('ตรวจตัวเลขให้ตรงกับช่วงที่ระบุในช่องนี้');return;
+      }
+    }
+    el.removeAttribute('aria-invalid');
     setPath(S,el.dataset.bind,v);
     if(el.dataset.bind.indexOf('profile.')===0&&S.onboarded)S.profile.set=true;
     if(el.dataset.bind==='profile.weight')upsertWeight(S.profile.weight);
-    ui.body=null;
+    ui.body={h:S.profile.height,w:S.profile.weight};
     save();
     const gb=$('#goalBox');if(gb)gb.innerHTML=goalBox();
     const sb=$('#stats');if(sb)sb.innerHTML=statsBox();
-    if(S.onboarded&&(el.dataset.bind==='profile.name'||el.dataset.bind==='goal.stepGoal'||el.dataset.bind==='goal.period'))render();
+    updateBoundSummary();
+    if(el.dataset.bind==='profile.height'||el.dataset.bind==='profile.weight'){
+      const h=document.querySelector('[data-model="body.h"]'),w=document.querySelector('[data-model="body.w"]');if(h)h.value=S.profile.height;if(w)w.value=S.profile.weight;refreshAv();
+    }
   }
 });
 function upsertWeight(w){const d=todayKey(),x=S.weights.find(r=>r.d===d);if(x)x.w=w;else S.weights.push({d:d,w:w})}
@@ -2400,6 +2475,11 @@ document.addEventListener('click',e=>{
   if(!el){if(e.target.id==='sheetWrap')closeSheet();return}
   const a=el.dataset.act,v=el.dataset.v,sh=ui.sh;
   switch(a){
+    case 'undoDelete':{if(!pendingUndo)break;const u=pendingUndo,items=ensureLog(u.date)[u.list];if(!items.some(x=>x.id===u.item.id))items.splice(Math.min(u.index,items.length),0,u.item);save();render();toast('คืนรายการแล้ว');break}
+    case 'goToday':ui.date=todayKey();render();break;
+    case 'quickSearch':openAdd(defaultMeal());ui.sh.step='main';ui.sh.tab='search';renderSheet();break;
+    case 'workExpand':ui.workExpanded=!ui.workExpanded;render();break;
+    case 'workDuration':ui.w.min=+v;ui.w.kcal=actKcal(ACTS[ui.w.i][1],ui.w.min);render();break;
     case 'openHealth':openHealth();break;
     case 'healthTab':{if(healthWorker){healthWorker.terminate();healthWorker=null}sh.busy=false;sh.tab=v;sh.stage='entry';sh.error='';if(v==='file'&&sh.data)healthUpdatePreview(false);else renderSheet();break}
     case 'healthChoose':$('#healthFile').click();break;
@@ -2409,7 +2489,7 @@ document.addEventListener('click',e=>{
     case 'healthTemplate':healthTemplate();break;
     case 'healthClearEnergy':{const log=ensureLog(ui.date);if(log.health)delete log.health.activeKcal;save();render();toast('ใช้พลังงานประมาณจากก้าวและการออกกำลังแล้ว');break}
     case 'theme':APP_THEME.set(v);break;
-    case 'tab':{const prev=ui.tab;ui.tab=v;ui.confirmReset=false;ui.body=null;
+    case 'tab':{const prev=ui.tab;if(prev===v){window.scrollTo({top:0,behavior:'instant'});break}ui.tab=v;ui.confirmReset=false;ui.body=null;
       if(prev==='today'&&v!=='today')navPush('tab');else if(v==='today')navUnwind(k=>k==='tab');
       render();window.scrollTo(0,0);break}
     case 'day':{const n=addDays(ui.date,+v);if(n<=todayKey()){ui.date=n;render()}break}
@@ -2452,8 +2532,8 @@ document.addEventListener('click',e=>{
       pushMeal(o);
       if(c.keep&&!S.custom.some(x=>x.name===o.name))S.custom.push({name:o.name,serving:'1 หน่วย',kcal:o.kcal,p:o.p,c:o.c,f:o.f});
       noteRecent(o.name);save();closeSheet();render();toast('เพิ่มแล้ว');break}
-    case 'delMeal':{const L=ensureLog(ui.date);L.meals=L.meals.filter(m=>m.id!==el.dataset.id);save();render();break}
-    case 'delWork':{const L=ensureLog(ui.date);L.workouts=L.workouts.filter(m=>m.id!==el.dataset.id);save();render();break}
+    case 'delMeal':removeLogEntry('meals',el.dataset.id);break;
+    case 'delWork':removeLogEntry('workouts',el.dataset.id);break;
     case 'pickAct':ui.w.i=+el.dataset.i;ui.w.kcal=actKcal(ACTS[ui.w.i][1],ui.w.min);render();break;
     case 'addWork':{
       const w=ui.w,L=ensureLog(ui.date);
@@ -2507,9 +2587,9 @@ document.addEventListener('click',e=>{
     case 'avPick':$('#avatarIn').click();break;
     case 'setEmoji':S.profile.emoji=v;S.profile.avatar='';if(S.onboarded)S.profile.set=true;save();closeSheet();render();break;
     case 'avClear':S.profile.emoji='';S.profile.avatar='';save();closeSheet();render();break;
-    case 'beepToggle':if(ui._noClick)break;ui.beepOpen?closeBeepPanel():openBeepPanel();break;
+    case 'beepToggle':ui.beepOpen?closeBeepPanel():openBeepPanel();break;
     case 'beepJump':if(beepActor)beepActor.play('jump');break;
-    case 'beepTipGo':{hideTip();const q=el.dataset.q;openBeepPanel();if(q)beepSend(q);break}
+    case 'beepTipGo':{hideTip();const q=el.dataset.q;ui.beepHint=null;openBeepPanel();if(q)beepSend(q);break}
     case 'beepTipX':hideTip();break;
     case 'beepClear':ui.chat.msgs=[];saveChat();refreshChat();break;
     case 'beepSend':beepSend(($('#chatIn')||{}).value);break;
@@ -2528,6 +2608,37 @@ $('#photoPick').addEventListener('change',e=>{onPhoto(e.target.files[0]);e.targe
 $('#avatarIn').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
 $('#avatarCam').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';setAvatarFile(f)});
 $('#healthFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';readHealthFile(f)});
+document.addEventListener('toggle',e=>{
+  const details=e.target;if(!details.matches?.('details[data-profile-section]')||!$('#app').contains(details))return;
+  const id=details.dataset.profileSection;(ui.profileOpen||(ui.profileOpen={}))[id]=details.open;
+  if(id==='appearance'&&details.open){
+    const slot=details.querySelector('[data-profile-content]');
+    if(!slot.children.length){if(!ui.body)ui.body={h:S.profile.height,w:S.profile.weight};slot.innerHTML=bodyCard()+styleCard()}
+  }
+},true);
+let formPointerDown=false,formRevealFrame=0;
+function isEditingForm(){return !!document.activeElement?.matches('input,select,textarea')&&$('#app').contains(document.activeElement)}
+function updateFormEditing(){
+  cancelAnimationFrame(formRevealFrame);
+  if(isEditingForm()){document.body.classList.add('form-editing');return}
+  if(formPointerDown)return;
+  formRevealFrame=requestAnimationFrame(()=>{if(!formPointerDown&&!isEditingForm())document.body.classList.remove('form-editing')});
+}
+document.addEventListener('pointerdown',()=>{formPointerDown=true},true);
+function finishFormPointer(){formPointerDown=false;updateFormEditing()}
+document.addEventListener('pointerup',finishFormPointer,true);
+document.addEventListener('pointercancel',finishFormPointer,true);
+window.addEventListener('blur',finishFormPointer);
+document.addEventListener('focusin',updateFormEditing);
+document.addEventListener('focusout',()=>queueMicrotask(updateFormEditing));
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Tab')return;
+  const scope=ui.cam?$('#camView'):ui.sh?$('#sheet'):null;if(!scope)return;
+  const nodes=[...scope.querySelectorAll('button:not(:disabled),input:not([type="hidden"]):not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href],[tabindex]:not([tabindex="-1"])')].filter(n=>n.getClientRects().length&&getComputedStyle(n).visibility!=='hidden');
+  if(!nodes.length){e.preventDefault();return}
+  const first=nodes[0],last=nodes[nodes.length-1],current=document.activeElement;
+  if(!nodes.includes(current)||(e.shiftKey&&current===first)||(!e.shiftKey&&current===last)){e.preventDefault();(e.shiftKey?last:first).focus()}
+},true);
 document.addEventListener('focusin',e=>{if(e.target.id==='q'){const s=$('#sheet');if(s)s.classList.add('searching')}});
 document.addEventListener('focusout',e=>{if(e.target.id==='q'){setTimeout(()=>{const s=$('#sheet');if(s&&document.activeElement&&document.activeElement.id!=='q')s.classList.remove('searching')},120)}});
 function setVV(){const vv=window.visualViewport;const r=document.documentElement.style;r.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px');r.setProperty('--vvt',(vv?vv.offsetTop:0)+'px')}
@@ -2538,7 +2649,12 @@ async function doExport(){
   const data=JSON.stringify(S);
   const name='calgoal-backup-'+todayKey()+'.json';
   if(HAS_DL){try{await HAS_DL.save({filename:name,data:data});toast('สำรองข้อมูลแล้ว');return}catch(e){if(e&&e.code==='cancelled')return}}
-  try{await navigator.clipboard.writeText(data);toast('คัดลอกข้อมูลสำรองแล้ว วางเก็บไว้ในโน้ตได้เลย')}catch(e){toast('สำรองข้อมูลไม่สำเร็จ ลองเปิดผ่าน Claude')}
+  try{
+    const url=URL.createObjectURL(new Blob([data],{type:'application/json'})),link=document.createElement('a');
+    link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);toast('ดาวน์โหลดไฟล์สำรองแล้ว');
+  }catch(e){
+    try{await navigator.clipboard.writeText(data);toast('คัดลอกข้อมูลสำรองแล้ว วางเก็บไว้ในโน้ตได้เลย')}catch(e){toast('สำรองข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง')}
+  }
 }
 $('#importIn').addEventListener('change',e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
@@ -2547,11 +2663,11 @@ $('#importIn').addEventListener('change',e=>{
     const d=defaults();S={...d,...o,profile:{...d.profile,...o.profile},goal:{...d.goal,...o.goal}};save();render();toast('นำเข้าข้อมูลแล้ว')
   }catch(x){toast('ไฟล์นี้ไม่ใช่ข้อมูลสำรองของแอป')}};rd.readAsText(f);
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.sh)closeSheet()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(ui.cam)closeCamera();else if(ui.sh)closeSheet()}});
 render();
 if(AUTH_ON)authInit();
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)&&!window.claude){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
-window.addEventListener('pagehide',()=>{if(SB&&USER&&ui.sync==='pending')pushCloud()});
+window.addEventListener('pagehide',()=>{flushLiveSave();if(SB&&USER&&ui.sync==='pending')pushCloud()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&SB&&USER&&ui.sync==='pending')pushCloud()});
 })();
 </script>

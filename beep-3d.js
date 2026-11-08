@@ -231,7 +231,7 @@ export function mountBeep(host) {
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const look = {x: 0, y: 0}, targetLook = {x: 0, y: 0};
   const durations = {jump: 1.35, wave: 2.5, walk: 3.4};
-  let frame = 0, disposed = false, lost = false, visible = false, lastFrame = 0, lastWall = 0;
+  let frame = 0, disposed = false, lost = false, visible = false, inView = true, lastFrame = 0, lastWall = 0;
   let time = 0, action = 'wave', started = 0, nextAction = 6, sequence = 0;
   host.appendChild(canvas); host.dataset.renderer = 'webgl';
   function draw() {
@@ -267,7 +267,7 @@ export function mountBeep(host) {
   function sync() {
     if (disposed) return;
     if (!host.isConnected) {dispose(); return;}
-    visible = !root.hidden && !document.hidden && !document.body.matches('.beep-open,.sheet-open,.cam-open');
+    visible = inView && !root.hidden && !document.hidden && !document.body.matches('.beep-open,.sheet-open,.cam-open,.form-editing');
     cancelAnimationFrame(frame); frame = 0; lastWall = 0;
     if (!visible || lost) {host.dataset.animation = 'paused'; return;}
     if (motion.matches) {
@@ -293,6 +293,15 @@ export function mountBeep(host) {
   observer.observe(document.body, {attributes: true, attributeFilter: ['class']});
   observer.observe(root, {attributes: true, attributeFilter: ['hidden'], childList: true});
   observer.observe(dock, {attributes: true, attributeFilter: ['class']});
+  const viewportObserver = new IntersectionObserver(entries => {inView = entries[0].isIntersecting; sync();});
+  viewportObserver.observe(host);
+  const sizeObserver = new ResizeObserver(() => {
+    if (!disposed && host.clientWidth && host.clientHeight) {
+      renderer.setSize(host.clientWidth, host.clientHeight, false);
+      if (motion.matches) draw();
+    }
+  });
+  sizeObserver.observe(host);
   const contextLost = e => {
     e.preventDefault(); lost = true; canvas.hidden = true;
     host.dataset.renderer = 'fallback'; sync();
@@ -307,7 +316,7 @@ export function mountBeep(host) {
   motion.addEventListener('change', sync);
   function dispose() {
     if (disposed) return; disposed = true;
-    cancelAnimationFrame(frame); observer.disconnect();
+    cancelAnimationFrame(frame); observer.disconnect(); viewportObserver.disconnect(); sizeObserver.disconnect();
     document.removeEventListener('visibilitychange', sync); document.removeEventListener('pointermove', pointer);
     motion.removeEventListener('change', sync);
     canvas.removeEventListener('webglcontextlost', contextLost); canvas.removeEventListener('webglcontextrestored', contextRestored);
