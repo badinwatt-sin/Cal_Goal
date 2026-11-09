@@ -1054,7 +1054,7 @@ function macroCard(t){
  const targets=WELL.macroTargets(t.base,S.wellness.macroSplit),unknown=getLog(ui.date).meals.some(WELL.unknownNutrition);
  return `<section class="card macro-card">${sectionHeading('สารอาหารของวันนี้','เทียบเป้าที่คุณเลือกไว้',`<button class="icon-btn" data-act="openMacros" aria-label="ตั้งเป้าสารอาหาร">${IC.settings}</button>`)}<div class="macro-grid">${[['โปรตีน','p',t.p,'var(--sky)'],['คาร์บ','c',t.c,'var(--sun)'],['ไขมัน','f',t.f,'var(--pink)']].map(([label,key,value,color])=>`<div class="macro-item" style="--macro-color:${color}"><span><i class="macro-dot"></i>${label}</span><div class="macro-value num">${Math.round(value)}<small> ก.</small></div><p class="tiny mute">เป้า ${Math.round(targets[key])} ก.</p><div class="macro-track" role="progressbar" aria-label="${label}" aria-valuemin="0" aria-valuemax="${Math.round(targets[key])}" aria-valuenow="${Math.round(value)}"><i class="macro-fill" style="width:${Math.min(100,value/Math.max(1,targets[key])*100)}%"></i></div></div>`).join('')}</div><p class="tiny mute">${unknown?'บางเมนูไม่มีข้อมูลสารอาหาร ตัวเลขนี้จึงเป็นเพียงส่วนที่ทราบ':'เป้าคิดจากพลังงานประจำวัน '+fmt(t.base)+' kcal ไม่รวมกิจกรรม'}</p></section>`;
 }
-function wellnessSettingsCard(){return `<section class="card stack">${sectionHeading('เครื่องมือของคุณ','ใช้บ่อย เปิดจากตรงนี้ได้เลย')}<div class="feature-shortcuts">${[['openLibrary','bookmark','เมนูโปรด / มื้อประจำ'],['openWater','drop','น้ำดื่ม'],['openMacros','target','เป้าสารอาหาร'],['openInsights','chart','สรุป 7 วัน']].map(([act,ic,label])=>`<button class="feature-shortcut" data-act="${act}">${IC[ic]}<span>${label}</span>${IC.right}</button>`).join('')}</div></section>`}
+function wellnessSettingsCard(){return `<section class="card stack">${sectionHeading('เครื่องมือของคุณ','ใช้บ่อย เปิดจากตรงนี้ได้เลย')}<div class="feature-shortcuts">${[['openLibrary','bookmark','เมนูโปรด / มื้อประจำ'],['openWater','drop','น้ำดื่ม'],['openMacros','target','เป้าสารอาหาร'],['openInsights','chart','สรุป 7 วัน'],['openFast','clock','Intermittent Fasting']].map(([act,ic,label])=>`<button class="feature-shortcut" data-act="${act}">${IC[ic]}<span>${label}</span>${IC.right}</button>`).join('')}</div></section>`}
 function characterPortrait(config,faceOnly=false){
  const c=WELL.normalizeCharacter(config,S.profile),skin=c.skin,hair=c.hairColor,top=c.top,bottom=c.bottom;
  const hairPath={short:'M50 79Q43 28 80 31Q116 28 112 80L100 62 88 67 75 54 61 68Z',bob:'M44 105V64Q43 27 80 28Q117 27 116 66V105L103 100 101 61 60 62 56 104Z',long:'M43 150V66Q42 28 80 28Q119 28 118 67L119 150 103 141 100 61 60 61 58 145Z',curl:'M42 73Q29 57 43 49Q38 28 58 30Q69 16 82 29Q103 19 109 36Q131 37 119 58Q128 71 113 81L101 61 59 61Z',buzz:'M49 74Q45 31 80 31Q114 31 112 74L101 64 60 64Z'}[c.hair];
@@ -1264,6 +1264,26 @@ function fastRing(st,R,sw,size){
 function fastMini(){
   const st=fastState();
   return `${fastRing(st,30,7,72)}<span class="fm-in">${st.on?(st.done?`<b class="ok-t">ครบ!</b><small>${hm(st.el)}</small>`:`<b>${hm(st.left)}</b><small>เหลือ</small>`):`<b>IF</b><small>เริ่ม</small>`}</span>`}
+function fastHomeCard(){
+  const st=fastState(),plan=FAST_PLANS.find(p=>p.h===st.hours),status=st.on?(st.done?'ครบเป้าแล้ว · เวลาที่ฟาสต์':'เหลือเวลาฟาสต์'):'ยังไม่ได้เริ่ม';
+  const counter=st.on?hms(st.done?st.el:st.left):(plan?.n||st.hours+':'+(24-st.hours));
+  const summary=st.on?'เริ่ม '+dayClock(S.fast.start)+' · ครบ '+dayClock(st.end):'ฟาสต์ '+st.hours+' ชม. · ช่วงทาน '+(24-st.hours)+' ชม.';
+  return `<section class="card fast-home" id="fastHome" data-fast-state="${st.on?(st.done?'done':'running'):'idle'}" aria-labelledby="fastHomeTitle"><div class="fast-home-heading"><h2 id="fastHomeTitle">${IC.clock} Intermittent Fasting</h2><span class="status-pill ${st.on?'':'neutral'}" id="fastHomePlan">${plan?.n||st.hours+':'+(24-st.hours)}</span></div><div class="fast-home-body"><div class="grow"><span class="tiny mute" id="fastHomeLabel">${status}</span><strong class="num" id="fastHomeCounter" aria-live="off" ${st.on?'role="timer" aria-labelledby="fastHomeLabel"':''}>${counter}</strong></div><button class="btn sm ${st.on?'':'alt'}" data-act="openFast" id="fastHomeButton">${st.on?'ดูตัวจับเวลา':'เลือกแผนและเริ่ม'} ${IC.right}</button></div><p class="tiny mute fast-home-summary" id="fastHomeSummary">${summary}</p><div class="bar" id="fastHomeProgress" role="progressbar" aria-label="ความคืบหน้าการฟาสต์" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${st.on?Math.round(st.pr*100):0}" ${st.on?'':'hidden'}><i style="width:${st.on?st.pr*100:0}%"></i></div></section>`;
+}
+function syncFastHome(st){
+  const home=$('#fastHome');if(!home)return;
+  const setText=(id,value)=>{const el=$('#'+id);if(el&&el.textContent!==value)el.textContent=value};
+  const plan=FAST_PLANS.find(p=>p.h===st.hours),planText=plan?.n||st.hours+':'+(24-st.hours);
+  home.dataset.fastState=st.on?(st.done?'done':'running'):'idle';
+  setText('fastHomeLabel',st.on?(st.done?'ครบเป้าแล้ว · เวลาที่ฟาสต์':'เหลือเวลาฟาสต์'):'ยังไม่ได้เริ่ม');
+  setText('fastHomeCounter',st.on?hms(st.done?st.el:st.left):planText);setText('fastHomePlan',planText);
+  setText('fastHomeSummary',st.on?'เริ่ม '+dayClock(S.fast.start)+' · ครบ '+dayClock(st.end):'ฟาสต์ '+st.hours+' ชม. · ช่วงทาน '+(24-st.hours)+' ชม.');
+  const counter=$('#fastHomeCounter');if(st.on){counter.setAttribute('role','timer');counter.setAttribute('aria-labelledby','fastHomeLabel')}else{counter.removeAttribute('role');counter.removeAttribute('aria-labelledby')}
+  const button=$('#fastHomeButton'),label=st.on?'ดูตัวจับเวลา':'เลือกแผนและเริ่ม';
+  if(button.firstChild.nodeValue!==label+' ')button.firstChild.nodeValue=label+' ';
+  button.classList.toggle('alt',!st.on);$('#fastHomePlan').classList.toggle('neutral',!st.on);
+  const progress=$('#fastHomeProgress');progress.hidden=!st.on;progress.setAttribute('aria-valuenow',st.on?Math.round(st.pr*100):0);progress.firstElementChild.style.width=(st.on?st.pr*100:0)+'%';
+}
 function fastLive(){
   const st=fastState(),F=S.fast,plan=FAST_PLANS.find(p=>p.h===st.hours);
   if(!st.on){
@@ -1294,6 +1314,7 @@ function renderFastSheet(){
   <div class="warn small"><b>ใครไม่ควรทำ IF เอง:</b> ตั้งครรภ์/ให้นมบุตร · เบาหวานหรือใช้ยาลดน้ำตาล/อินซูลิน · มีประวัติโรคการกินผิดปกติ · อายุต่ำกว่า 18 · มีโรคประจำตัวหรือกินยาที่ต้องกินพร้อมอาหาร ควรปรึกษาแพทย์ก่อน<br>ระหว่างฟาสต์ดื่มน้ำเปล่า ชา/กาแฟดำไม่ใส่น้ำตาลได้</div>
   <p class="tiny mute">ช่วงเวลาแต่ละระยะเป็นค่าประมาณ ขึ้นกับมื้อสุดท้าย กิจกรรม และร่างกายแต่ละคน · อ้างอิง: de Cabo &amp; Mattson, NEJM 2019; Anton et al., Obesity 2018; Liu et al., NEJM 2022</p>`;
   fastSi=st.si;
+  syncFastHome(st);
 }
 function fastStages(st){
   return FAST_STAGES.map((s,i)=>{const cur=st.on&&i===st.si,past=st.on&&i<st.si;
@@ -1303,6 +1324,7 @@ let fastSi=-1,fastDoneSeen=false;
 function fastTick(){
   const st=fastState();
   if(!document.hidden){
+    syncFastHome(st);
     const label=$('#fastQuickLabel'),text=st.on?`IF · ${st.done?'ครบแล้ว':hm(st.left)}`:'จับเวลา IF';
     if(label&&label.textContent!==text)label.textContent=text;
     const mini=$('#fastMini');if(mini)mini.innerHTML=fastMini();
@@ -1401,6 +1423,7 @@ function viewToday(){
     <button class="btn energy-add" data-act="add" data-ask="1" data-meal="${defaultMeal()}">${IC.plus} บันทึกอาหาร</button>
     </section>`;
   h+=`<div class="quick-actions" aria-label="ทางลัด"><button class="quick-action" data-act="quickCam">${IC.camera}<span>ถ่ายรูปอาหาร</span></button><button class="quick-action" data-act="quickSearch">${IC.search}<span>ค้นหาเมนู</span></button><button class="quick-action" data-act="openFast">${IC.clock}<span id="fastQuickLabel">${st.on?`IF · ${st.done?'ครบแล้ว':hm(st.left)}`:'จับเวลา IF'}</span></button></div>`;
+  h+=fastHomeCard();
   h+=`<section class="meal-diary card" aria-labelledby="mealTitle">${sectionHeading('<span id="mealTitle">มื้ออาหารของคุณ</span>',`${L.meals.length} รายการ · ${isToday?'วันนี้':fromKey(k).toLocaleDateString('th-TH',{day:'numeric',month:'short'})}`,`<button class="icon-btn" data-act="openLibrary" aria-label="เมนูโปรดและมื้อประจำ">${IC.bookmark}</button>`)}`;
   for(const m of MEALS){
     const items=L.meals.filter(x=>x.meal===m[0]),sum=items.reduce((a,x)=>a+x.kcal,0);
@@ -1475,7 +1498,7 @@ function viewGoal(){
   <section class="card stack">${sectionHeading('ติดตามน้ำหนัก','บันทึกตามจริง แล้วดูแนวโน้มไปด้วยกัน')}<label class="f" for="wtIn">น้ำหนักวันนี้ (กก.)</label><div class="row"><input type="number" id="wtIn" min="20" max="300" step="0.1" inputmode="decimal" placeholder="เช่น 60.5" aria-label="น้ำหนักวันนี้"><button class="btn" data-act="logWeight">บันทึก</button></div><div class="weight-chart">${weightChart()}</div></section>
   <section class="card stack">${sectionHeading('ปรับแผนของคุณ','เลือกเป้าหมายที่ทำได้ต่อเนื่อง')}<div class="grid2"><label class="f">น้ำหนักปัจจุบัน (กก.)<input type="number" min="20" max="300" step="0.1" inputmode="decimal" data-bind="profile.weight" data-num value="${p.weight}"></label><label class="f">น้ำหนักเป้าหมาย (กก.)<input type="number" min="20" max="300" step="0.1" inputmode="decimal" data-bind="goal.target" data-num value="${g.target}"></label></div><div class="seg" role="group" aria-label="รอบเป้าหมายน้ำหนัก">${['week','month','year'].map(x=>`<button data-act="period" data-v="${x}" aria-pressed="${g.period===x}">ราย${PL[x]}</button>`).join('')}</div><label class="f">น้ำหนักที่อยากลดต่อ${PL[g.period]} (กก.)<input type="number" step="0.1" min="0" inputmode="decimal" data-bind="goal.amount" data-num value="${g.amount}"></label><div id="goalBox" class="stack">${goalBox()}</div></section>
   <section class="card stack">${sectionHeading('เป้าก้าวเดินของคุณ','เริ่มจากระดับที่เหมาะกับชีวิตประจำวัน')}<label class="f">จำนวนก้าวต่อวัน<input type="number" step="500" min="1000" inputmode="numeric" data-bind="goal.stepGoal" data-num value="${g.stepGoal}"></label><p class="tiny mute">เลือกเป้าที่คุณทำได้ต่อเนื่อง แล้วค่อยปรับเพิ่มเมื่อพร้อม</p></section>
-  <details class="profile-section card"><summary><span class="settings-icon">${IC.clock}</span><span class="grow"><b>ช่วงเวลากินและการฟาสต์</b><span>เปิดตัวจับเวลา หรือทำความเข้าใจ IF</span></span>${IC.chevron}</summary><div class="settings-content"><button class="btn alt" data-act="openFast">${IC.clock} เปิดตัวจับเวลา IF</button>${fastGuide()||'<p class="small mute">เลือกใช้ตามความเหมาะสมกับสุขภาพและกิจวัตรของคุณ</p>'}</div></details>${refs}`;
+  ${fastHomeCard()}<details class="profile-section card"><summary><span class="settings-icon">${IC.clock}</span><span class="grow"><b>ช่วงเวลากินและการฟาสต์</b><span>ทำความเข้าใจ IF และการเลือกแผน</span></span>${IC.chevron}</summary><div class="settings-content">${fastGuide()||'<p class="small mute">เลือกใช้ตามความเหมาะสมกับสุขภาพและกิจวัตรของคุณ</p>'}</div></details>${refs}`;
 }
 
 function statsBox(){

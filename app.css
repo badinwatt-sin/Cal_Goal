@@ -410,7 +410,29 @@ mark.hit { background:var(--tint); color:var(--ink); }
 .health-check { min-height:44px; gap:10px; font-size:13px; }
 .health-check input { width:21px; height:21px; }
 
-/* Fasting is a useful tool, with no visual competition for food logging. */
+/* Fasting stays visible on the daily dashboard with a live, stable counter. */
+.fast-home { padding:16px 18px; }
+.fast-home-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.fast-home-heading h2 { display:flex; align-items:center; gap:8px; font-size:15px; font-weight:600; }
+.fast-home-heading h2 svg { width:19px; height:19px; color:var(--lime); }
+.fast-home-body { display:flex; align-items:center; gap:12px; margin-top:10px; }
+.fast-home-body .grow { display:flex; flex-direction:column; gap:2px; }
+.fast-home-body strong { display:block; font-size:28px; line-height:1.25; font-weight:500; letter-spacing:-.02em; }
+.fast-home-body .tiny { font-size:11px; }
+.fast-home-body .btn { flex:none; gap:4px; font-size:11px; padding:8px 10px; }
+.fast-home-body .btn svg { width:15px; height:15px; }
+.fast-home-summary { margin-top:8px; font-size:10px; line-height:1.6; }
+.fast-home .bar { height:4px; margin-top:9px; }
+.fast-home[data-fast-state="running"],.fast-home[data-fast-state="done"] { border-color:color-mix(in srgb,var(--lime) 40%,var(--line)); }
+.fast-home[data-fast-state="done"] #fastHomeCounter { color:var(--lime); }
+@media(max-width:380px) {
+  .fast-home { padding:15px 16px; }
+  .fast-home-heading h2 { font-size:13px; gap:6px; }
+  .fast-home-heading h2 svg { width:17px; height:17px; }
+  .fast-home-body { gap:8px; }
+  .fast-home-body strong { font-size:26px; }
+  .fast-home-body .btn { padding:8px; font-size:10px; }
+}
 .fmini { color:var(--ink); }
 .fmini b,.fbig .big,.fplan b { font-family:var(--f-numbers); font-style:normal; font-weight:500; }
 .fbig { width:206px; height:206px; margin:8px auto; }

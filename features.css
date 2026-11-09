@@ -12,6 +12,7 @@
 .feature-shortcut>svg { flex:none; width:19px; height:19px; color:var(--lime); }
 .feature-shortcut>span { flex:1; }
 .feature-shortcut>svg:last-child { width:14px; }
+.feature-shortcut:last-child:nth-child(odd) { grid-column:1 / -1; }
 .save-meal-link { margin-top:8px; font-size:11px; }
 .favorite-toggle[aria-pressed="true"] { color:var(--warn); background:color-mix(in srgb,var(--warn) 12%,var(--card)); }
 .favorite-toggle[aria-pressed="true"] svg { fill:currentColor; }
